@@ -4,3 +4,9 @@
 <dict>
     <key>CFBundleDevelopmentRegion</key>
     <string>en</string>
+    <key>CFBundleExecutable</key>
+    <string>PodPointer</string>
+    <key>CFBundleIdentifier</key>
+    <string>io.github.abhav24.PodPointer</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
