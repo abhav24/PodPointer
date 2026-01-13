@@ -17,3 +17,10 @@ rm -rf "$app"
 mkdir -p "$app/Contents/MacOS"
 cp "$binary" "$app/Contents/MacOS/PodPointer"
 cp Resources/Info.plist "$app/Contents/Info.plist"
+
+identity="${CODESIGN_IDENTITY:-}"
+if [[ -z "$identity" ]]; then
+    identity="$(security find-identity -v -p codesigning | sed -n 's/.*"\(Apple Development:[^"]*\)".*/\1/p' | head -1)"
+fi
+identity="${identity:--}"
+
