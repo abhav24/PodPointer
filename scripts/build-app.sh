@@ -11,3 +11,9 @@ cd "$(dirname "$0")/.."
 
 swift build -c release
 binary="$(swift build -c release --show-bin-path)/PodPointer"
+
+app="build/PodPointer.app"
+rm -rf "$app"
+mkdir -p "$app/Contents/MacOS"
+cp "$binary" "$app/Contents/MacOS/PodPointer"
+cp Resources/Info.plist "$app/Contents/Info.plist"
