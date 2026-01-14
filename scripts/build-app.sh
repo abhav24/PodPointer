@@ -24,3 +24,10 @@ if [[ -z "$identity" ]]; then
 fi
 identity="${identity:--}"
 
+codesign --force --sign "$identity" "$app"
+if [[ "$identity" == "-" ]]; then
+    echo "Signed ad hoc."
+else
+    echo "Signed with an Apple Development certificate."
+fi
+echo "Built $app"
