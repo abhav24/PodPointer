@@ -19,3 +19,13 @@ public struct OneEuroFilter: Sendable {
 
     public mutating func filter(_ value: Double, at time: Double) -> Double {
         guard let previous = lastFiltered, let previousTime = lastTime else {
+            lastFiltered = value
+            lastTime = time
+            return value
+        }
+        let elapsed = time - previousTime
+        guard elapsed > 0 else { return previous }
+
+        let derivative = (value - previous) / elapsed
+        let derivativeAlpha = Self.alpha(cutoff: derivativeCutoff, elapsed: elapsed)
+        let smoothedDerivative = derivativeAlpha * derivative + (1 - derivativeAlpha) * lastDerivative
