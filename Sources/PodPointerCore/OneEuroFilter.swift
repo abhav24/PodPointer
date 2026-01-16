@@ -8,3 +8,14 @@ public struct OneEuroFilter: Sendable {
     public var derivativeCutoff: Double
 
     private var lastFiltered: Double?
+    private var lastDerivative = 0.0
+    private var lastTime: Double?
+
+    public init(minCutoff: Double = 1.0, beta: Double = 0.05, derivativeCutoff: Double = 1.0) {
+        self.minCutoff = minCutoff
+        self.beta = beta
+        self.derivativeCutoff = derivativeCutoff
+    }
+
+    public mutating func filter(_ value: Double, at time: Double) -> Double {
+        guard let previous = lastFiltered, let previousTime = lastTime else {
