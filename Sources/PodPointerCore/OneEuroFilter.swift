@@ -40,3 +40,14 @@ public struct OneEuroFilter: Sendable {
         return filtered
     }
 
+    public mutating func reset() {
+        lastFiltered = nil
+        lastDerivative = 0
+        lastTime = nil
+    }
+
+    private static func alpha(cutoff: Double, elapsed: Double) -> Double {
+        let timeConstant = 1 / (2 * Double.pi * cutoff)
+        return 1 / (1 + timeConstant / elapsed)
+    }
+}
