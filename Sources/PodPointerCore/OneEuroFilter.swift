@@ -29,3 +29,14 @@ public struct OneEuroFilter: Sendable {
         let derivative = (value - previous) / elapsed
         let derivativeAlpha = Self.alpha(cutoff: derivativeCutoff, elapsed: elapsed)
         let smoothedDerivative = derivativeAlpha * derivative + (1 - derivativeAlpha) * lastDerivative
+
+        let cutoff = minCutoff + beta * abs(smoothedDerivative)
+        let valueAlpha = Self.alpha(cutoff: cutoff, elapsed: elapsed)
+        let filtered = valueAlpha * value + (1 - valueAlpha) * previous
+
+        lastFiltered = filtered
+        lastDerivative = smoothedDerivative
+        lastTime = time
+        return filtered
+    }
+
