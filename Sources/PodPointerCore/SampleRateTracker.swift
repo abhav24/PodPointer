@@ -15,3 +15,12 @@ public struct SampleRateTracker: Sendable {
 
     public init(windowSeconds: Double = 5) {
         self.windowSeconds = windowSeconds
+    }
+
+    public mutating func record(_ time: Double) {
+        timestamps.append(time)
+        let oldestAllowed = time - windowSeconds
+        if let firstKept = timestamps.firstIndex(where: { $0 >= oldestAllowed }), firstKept > 0 {
+            timestamps.removeFirst(firstKept)
+        }
+    }
