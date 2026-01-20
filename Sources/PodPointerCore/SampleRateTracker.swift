@@ -24,3 +24,12 @@ public struct SampleRateTracker: Sendable {
             timestamps.removeFirst(firstKept)
         }
     }
+
+    public mutating func reset() {
+        timestamps.removeAll()
+    }
+
+    public var snapshot: SampleRateSnapshot {
+        guard timestamps.count >= 2, let first = timestamps.first, let last = timestamps.last, last > first else {
+            return .empty
+        }
