@@ -8,3 +8,13 @@ public struct PointerPoint: Equatable, Sendable {
     public init(x: Double, y: Double) {
         self.x = x
         self.y = y
+    }
+}
+
+public struct PointerConfiguration: Equatable, Sendable {
+    /// Degrees of head turn that cover the full width of the display.
+    public var horizontalRangeDegrees = 30.0
+    /// Degrees of head tilt that cover the full height of the display.
+    public var verticalRangeDegrees = 20.0
+    public var invertX = false
+    public var invertY = false
