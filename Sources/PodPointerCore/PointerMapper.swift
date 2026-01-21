@@ -58,3 +58,11 @@ public struct PointerMapper: Sendable {
         let yawDegrees = Self.degrees(Self.wrapped(yawRadians - (centerYaw ?? yawRadians)))
         let pitchDegrees = Self.degrees(Self.wrapped(pitchRadians - centerPitch))
 
+        // Core Motion yaw increases when turning left, and pitch increases when
+        // looking up. Screen x grows to the right, and y grows downward.
+        let xDirection = configuration.invertX ? 1.0 : -1.0
+        let yDirection = configuration.invertY ? 1.0 : -1.0
+        let rawX = 0.5 + xDirection * yawDegrees / configuration.horizontalRangeDegrees
+        let rawY = 0.5 + yDirection * pitchDegrees / configuration.verticalRangeDegrees
+
+        return PointerPoint(
