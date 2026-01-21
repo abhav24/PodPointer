@@ -18,3 +18,14 @@ public struct PointerConfiguration: Equatable, Sendable {
     public var verticalRangeDegrees = 20.0
     public var invertX = false
     public var invertY = false
+    /// Lower values are steadier but lag more when the head moves slowly.
+    public var minCutoff = 1.0
+    /// Higher values reduce lag during fast head movement.
+    public var beta = 0.05
+
+    public init() {}
+}
+
+/// Maps head orientation to a display position. The orientation at recenter
+/// time is the middle of the display.
+public struct PointerMapper: Sendable {
