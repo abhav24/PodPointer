@@ -29,3 +29,13 @@ public struct PointerConfiguration: Equatable, Sendable {
 /// Maps head orientation to a display position. The orientation at recenter
 /// time is the middle of the display.
 public struct PointerMapper: Sendable {
+    public var configuration: PointerConfiguration {
+        didSet { applyFilterConfiguration() }
+    }
+
+    private var centerYaw: Double?
+    private var centerPitch = 0.0
+    private var xFilter = OneEuroFilter()
+    private var yFilter = OneEuroFilter()
+
+    public init(configuration: PointerConfiguration = PointerConfiguration()) {
