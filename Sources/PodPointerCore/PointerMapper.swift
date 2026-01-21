@@ -66,3 +66,11 @@ public struct PointerMapper: Sendable {
         let rawY = 0.5 + yDirection * pitchDegrees / configuration.verticalRangeDegrees
 
         return PointerPoint(
+            x: Self.clamped(xFilter.filter(rawX * configuration.horizontalRangeDegrees, at: time) / configuration.horizontalRangeDegrees),
+            y: Self.clamped(yFilter.filter(rawY * configuration.verticalRangeDegrees, at: time) / configuration.verticalRangeDegrees)
+        )
+    }
+
+    private mutating func applyFilterConfiguration() {
+        xFilter.minCutoff = configuration.minCutoff
+        xFilter.beta = configuration.beta
