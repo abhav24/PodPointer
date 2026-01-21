@@ -82,3 +82,12 @@ public struct PointerMapper: Sendable {
     private static func wrapped(_ angle: Double) -> Double {
         atan2(sin(angle), cos(angle))
     }
+
+    private static func degrees(_ radians: Double) -> Double {
+        radians * 180 / .pi
+    }
+
+    private static func clamped(_ value: Double) -> Double {
+        min(max(value, 0), 1)
+    }
+}
