@@ -74,3 +74,11 @@ public struct PointerMapper: Sendable {
     private mutating func applyFilterConfiguration() {
         xFilter.minCutoff = configuration.minCutoff
         xFilter.beta = configuration.beta
+        yFilter.minCutoff = configuration.minCutoff
+        yFilter.beta = configuration.beta
+    }
+
+    /// Wraps an angle to -pi...pi so crossing the +/-180 degree seam is not a jump.
+    private static func wrapped(_ angle: Double) -> Double {
+        atan2(sin(angle), cos(angle))
+    }
