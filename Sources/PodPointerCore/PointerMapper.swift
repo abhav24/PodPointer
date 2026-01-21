@@ -39,3 +39,14 @@ public struct PointerMapper: Sendable {
     private var yFilter = OneEuroFilter()
 
     public init(configuration: PointerConfiguration = PointerConfiguration()) {
+        self.configuration = configuration
+        applyFilterConfiguration()
+    }
+
+    /// Makes the next sample the new center of the display.
+    public mutating func recenter() {
+        centerYaw = nil
+        xFilter.reset()
+        yFilter.reset()
+    }
+
