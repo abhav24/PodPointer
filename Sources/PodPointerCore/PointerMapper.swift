@@ -50,3 +50,11 @@ public struct PointerMapper: Sendable {
         yFilter.reset()
     }
 
+    public mutating func map(yawRadians: Double, pitchRadians: Double, at time: Double) -> PointerPoint {
+        if centerYaw == nil {
+            centerYaw = yawRadians
+            centerPitch = pitchRadians
+        }
+        let yawDegrees = Self.degrees(Self.wrapped(yawRadians - (centerYaw ?? yawRadians)))
+        let pitchDegrees = Self.degrees(Self.wrapped(pitchRadians - centerPitch))
+
