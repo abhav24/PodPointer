@@ -15,3 +15,11 @@ public enum StemAction: String, Sendable {
     public init(press: StemPress) {
         switch press {
         case .single: self = .nextSlide
+        case .double: self = .recenter
+        case .triple: self = .previousSlide
+        }
+    }
+}
+
+/// Collapses repeats of one press. A single press can arrive as more than one
+/// media command, such as play and toggle-play-pause.
