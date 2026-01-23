@@ -47,3 +47,16 @@ public struct SessionReport: Sendable {
         - Stem presses received: \(presses)
 
         ### Results (fill in)
+        - Stem presses work while slides are in front: yes / no
+        - Pointer feels usable while presenting: yes / no
+        - Laser overlay appears over the slideshow: yes / no
+        - Motion continues with one AirPod in: yes / no
+        - Motion continues with an AirPod held in the hand: yes / no
+
+        ### Event log
+        ```
+        \(events.joined(separator: "\n"))
+        ```
+        """
+    }
+}
