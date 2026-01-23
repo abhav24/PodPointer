@@ -22,3 +22,16 @@ public struct SessionReport: Sendable {
         self.macOSVersion = macOSVersion
         self.motion = motion
         self.sensorLocations = sensorLocations
+        self.pressCounts = pressCounts
+        self.events = events
+    }
+
+    public var markdown: String {
+        let locations = sensorLocations.isEmpty ? "none" : sensorLocations.joined(separator: ", ")
+        let presses = StemPress.allCases
+            .map { "\($0.rawValue): \(pressCounts[$0, default: 0])" }
+            .joined(separator: ", ")
+        return """
+        ## PodPointer test report
+
+        - App version: \(appVersion)
