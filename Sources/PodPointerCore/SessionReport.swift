@@ -35,3 +35,15 @@ public struct SessionReport: Sendable {
         ## PodPointer test report
 
         - App version: \(appVersion)
+        - macOS: \(macOSVersion)
+        - AirPods model: (fill in)
+        - Slide app and version: (fill in)
+
+        ### Measured
+        - Motion rate: \(String(format: "%.1f", motion.hertz)) Hz
+        - p95 sample interval: \(String(format: "%.0f", motion.p95IntervalMilliseconds)) ms
+        - Longest gap in the last window: \(String(format: "%.0f", motion.maxGapMilliseconds)) ms
+        - Sensor locations seen: \(locations)
+        - Stem presses received: \(presses)
+
+        ### Results (fill in)
