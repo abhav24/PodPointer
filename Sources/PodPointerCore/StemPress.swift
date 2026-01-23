@@ -32,3 +32,12 @@ public struct StemPressDebouncer: Sendable {
         self.windowSeconds = windowSeconds
     }
 
+    public mutating func shouldAccept(_ press: StemPress, at time: Double) -> Bool {
+        if press == lastPress, time - lastTime < windowSeconds {
+            return false
+        }
+        lastPress = press
+        lastTime = time
+        return true
+    }
+}
