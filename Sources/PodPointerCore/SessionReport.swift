@@ -10,3 +10,15 @@ public struct SessionReport: Sendable {
     public var pressCounts: [StemPress: Int]
     public var events: [String]
 
+    public init(
+        appVersion: String,
+        macOSVersion: String,
+        motion: SampleRateSnapshot,
+        sensorLocations: [String],
+        pressCounts: [StemPress: Int],
+        events: [String]
+    ) {
+        self.appVersion = appVersion
+        self.macOSVersion = macOSVersion
+        self.motion = motion
+        self.sensorLocations = sensorLocations
