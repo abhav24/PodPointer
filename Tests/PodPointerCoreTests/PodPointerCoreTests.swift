@@ -48,3 +48,13 @@ import Testing
         return point
     }
 
+    @Test func firstSampleIsTheCenter() {
+        var mapper = PointerMapper()
+        #expect(mapper.map(yawRadians: 1.2, pitchRadians: -0.4, at: 0) == PointerPoint(x: 0.5, y: 0.5))
+    }
+
+    @Test func turningLeftMovesLeftAndLookingUpMovesUp() {
+        var mapper = PointerMapper()
+        _ = mapper.map(yawRadians: 0, pitchRadians: 0, at: 0)
+        let point = settle(&mapper, yaw: 7.5 * degree, pitch: 5 * degree)
+        #expect(abs(point.x - 0.25) < 0.01)
