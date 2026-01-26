@@ -28,3 +28,13 @@ import Testing
         }
         #expect(abs(output - 10) < 0.05)
     }
+
+    @Test func repeatedTimestampKeepsThePreviousValue() {
+        var filter = OneEuroFilter()
+        _ = filter.filter(1, at: 1)
+        #expect(filter.filter(100, at: 1) == 1)
+    }
+}
+
+@Suite struct PointerMapperTests {
+    private let degree = Double.pi / 180
