@@ -18,3 +18,13 @@ import Testing
         let spread = (settled.max() ?? 0) - (settled.min() ?? 0)
         #expect(spread < 0.5)
     }
+
+    @Test func convergesOnAStep() {
+        var filter = OneEuroFilter()
+        _ = filter.filter(0, at: 0)
+        var output = 0.0
+        for index in 1...100 {
+            output = filter.filter(10, at: Double(index) / 25)
+        }
+        #expect(abs(output - 10) < 0.05)
+    }
