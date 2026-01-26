@@ -38,3 +38,13 @@ import Testing
 
 @Suite struct PointerMapperTests {
     private let degree = Double.pi / 180
+
+    /// Feeds one orientation repeatedly so the filter settles on it.
+    private func settle(_ mapper: inout PointerMapper, yaw: Double, pitch: Double, from start: Double = 1) -> PointerPoint {
+        var point = PointerPoint(x: 0, y: 0)
+        for index in 0..<200 {
+            point = mapper.map(yawRadians: yaw, pitchRadians: pitch, at: start + Double(index) / 25)
+        }
+        return point
+    }
+
