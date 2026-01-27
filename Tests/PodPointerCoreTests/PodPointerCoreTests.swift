@@ -58,3 +58,13 @@ import Testing
         _ = mapper.map(yawRadians: 0, pitchRadians: 0, at: 0)
         let point = settle(&mapper, yaw: 7.5 * degree, pitch: 5 * degree)
         #expect(abs(point.x - 0.25) < 0.01)
+        #expect(abs(point.y - 0.25) < 0.01)
+    }
+
+    @Test func invertFlipsDirection() {
+        var configuration = PointerConfiguration()
+        configuration.invertX = true
+        configuration.invertY = true
+        var mapper = PointerMapper(configuration: configuration)
+        _ = mapper.map(yawRadians: 0, pitchRadians: 0, at: 0)
+        let point = settle(&mapper, yaw: 7.5 * degree, pitch: 5 * degree)
