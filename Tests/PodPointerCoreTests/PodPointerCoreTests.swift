@@ -78,3 +78,13 @@ import Testing
         let point = settle(&mapper, yaw: 90 * degree, pitch: -80 * degree)
         #expect(point.x == 0)
         #expect(point.y == 1)
+    }
+
+    @Test func crossingTheYawSeamIsASmallMove() {
+        var mapper = PointerMapper()
+        _ = mapper.map(yawRadians: 179 * degree, pitchRadians: 0, at: 0)
+        // 179 to -179 degrees is a 2 degree left turn, not a 358 degree turn.
+        let point = settle(&mapper, yaw: -179 * degree, pitch: 0)
+        #expect(abs(point.x - (0.5 - 2.0 / 30)) < 0.01)
+    }
+
