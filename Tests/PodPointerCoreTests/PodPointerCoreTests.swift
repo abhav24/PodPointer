@@ -68,3 +68,13 @@ import Testing
         var mapper = PointerMapper(configuration: configuration)
         _ = mapper.map(yawRadians: 0, pitchRadians: 0, at: 0)
         let point = settle(&mapper, yaw: 7.5 * degree, pitch: 5 * degree)
+        #expect(abs(point.x - 0.75) < 0.01)
+        #expect(abs(point.y - 0.75) < 0.01)
+    }
+
+    @Test func outputIsClampedToTheDisplay() {
+        var mapper = PointerMapper()
+        _ = mapper.map(yawRadians: 0, pitchRadians: 0, at: 0)
+        let point = settle(&mapper, yaw: 90 * degree, pitch: -80 * degree)
+        #expect(point.x == 0)
+        #expect(point.y == 1)
