@@ -98,3 +98,14 @@ import Testing
     }
 }
 
+@Suite struct SampleRateTrackerTests {
+    @Test func emptyUntilThereAreTwoSamples() {
+        var tracker = SampleRateTracker()
+        #expect(tracker.snapshot == .empty)
+        tracker.record(1)
+        #expect(tracker.snapshot == .empty)
+    }
+
+    @Test func measuresASteadyRate() {
+        var tracker = SampleRateTracker()
+        for index in 0..<50 {
