@@ -88,3 +88,13 @@ import Testing
         #expect(abs(point.x - (0.5 - 2.0 / 30)) < 0.01)
     }
 
+    @Test func recenterMakesTheNextSampleTheCenter() {
+        var mapper = PointerMapper()
+        _ = mapper.map(yawRadians: 0, pitchRadians: 0, at: 0)
+        _ = settle(&mapper, yaw: 40 * degree, pitch: 10 * degree)
+        mapper.recenter()
+        let point = mapper.map(yawRadians: 40 * degree, pitchRadians: 10 * degree, at: 20)
+        #expect(point == PointerPoint(x: 0.5, y: 0.5))
+    }
+}
+
