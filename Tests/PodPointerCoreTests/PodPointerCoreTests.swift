@@ -109,3 +109,14 @@ import Testing
     @Test func measuresASteadyRate() {
         var tracker = SampleRateTracker()
         for index in 0..<50 {
+            tracker.record(Double(index) * 0.04)
+        }
+        let snapshot = tracker.snapshot
+        #expect(abs(snapshot.hertz - 25) < 0.01)
+        #expect(abs(snapshot.p95IntervalMilliseconds - 40) < 0.01)
+        #expect(abs(snapshot.maxGapMilliseconds - 40) < 0.01)
+    }
+
+    @Test func reportsTheLongestGap() {
+        var tracker = SampleRateTracker()
+        for time in [0, 0.04, 0.08, 0.58, 0.62] {
