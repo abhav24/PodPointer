@@ -120,3 +120,15 @@ import Testing
     @Test func reportsTheLongestGap() {
         var tracker = SampleRateTracker()
         for time in [0, 0.04, 0.08, 0.58, 0.62] {
+            tracker.record(time)
+        }
+        #expect(abs(tracker.snapshot.maxGapMilliseconds - 500) < 0.01)
+    }
+
+    @Test func dropsSamplesOutsideTheWindow() {
+        var tracker = SampleRateTracker(windowSeconds: 1)
+        tracker.record(0)
+        tracker.record(0.5)
+        tracker.record(10)
+        tracker.record(10.1)
+        #expect(tracker.snapshot.maxGapMilliseconds < 101)
