@@ -155,3 +155,6 @@ import Testing
     }
 }
 
+@Suite struct SessionReportTests {
+    @Test func includesMeasurementsAndEvents() {
+        let report = SessionReport(
