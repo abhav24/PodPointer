@@ -132,3 +132,14 @@ import Testing
         tracker.record(10)
         tracker.record(10.1)
         #expect(tracker.snapshot.maxGapMilliseconds < 101)
+    }
+}
+
+@Suite struct StemPressTests {
+    @Test func pressesMapToSlideActions() {
+        #expect(StemAction(press: .single) == .nextSlide)
+        #expect(StemAction(press: .double) == .recenter)
+        #expect(StemAction(press: .triple) == .previousSlide)
+    }
+
+    @Test func debouncerCollapsesRepeatsOnly() {
