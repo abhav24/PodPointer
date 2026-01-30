@@ -143,3 +143,15 @@ import Testing
     }
 
     @Test func debouncerCollapsesRepeatsOnly() {
+        var debouncer = StemPressDebouncer(windowSeconds: 0.15)
+        let accepted = [
+            debouncer.shouldAccept(.single, at: 1),
+            debouncer.shouldAccept(.single, at: 1.1),
+            debouncer.shouldAccept(.double, at: 1.12),
+            debouncer.shouldAccept(.single, at: 1.14),
+            debouncer.shouldAccept(.single, at: 1.5)
+        ]
+        #expect(accepted == [true, false, true, true, true])
+    }
+}
+
