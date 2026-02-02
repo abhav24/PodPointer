@@ -167,3 +167,7 @@ import Testing
         ).markdown
         #expect(report.contains("Motion rate: 25.0 Hz"))
         #expect(report.contains("Sensor locations seen: left"))
+        #expect(report.contains("single: 3, double: 0, triple: 0"))
+        #expect(report.contains("12:00:00 Connected"))
+    }
+}
