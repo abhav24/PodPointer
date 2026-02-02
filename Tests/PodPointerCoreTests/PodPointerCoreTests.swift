@@ -164,3 +164,6 @@ import Testing
             sensorLocations: ["left"],
             pressCounts: [.single: 3],
             events: ["12:00:00 Connected"]
+        ).markdown
+        #expect(report.contains("Motion rate: 25.0 Hz"))
+        #expect(report.contains("Sensor locations seen: left"))
