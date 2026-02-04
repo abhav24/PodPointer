@@ -35,3 +35,13 @@ final class MotionController: NSObject, CMHeadphoneMotionManagerDelegate {
                 self?.onError?(error.localizedDescription)
             }
             guard let motion else { return }
+            self?.onSample?(MotionSample(
+                yaw: motion.attitude.yaw,
+                pitch: motion.attitude.pitch,
+                roll: motion.attitude.roll,
+                timestamp: motion.timestamp,
+                sensorLocation: Self.describe(motion.sensorLocation)
+            ))
+        }
+    }
+
