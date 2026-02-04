@@ -55,3 +55,6 @@ final class MotionController: NSObject, CMHeadphoneMotionManagerDelegate {
 
     private static func describe(_ location: CMDeviceMotion.SensorLocation) -> String {
         switch location {
+        case .default: "default"
+        case .headphoneLeft: "left"
+        case .headphoneRight: "right"
