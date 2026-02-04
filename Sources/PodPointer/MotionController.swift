@@ -16,3 +16,13 @@ final class MotionController: NSObject, CMHeadphoneMotionManagerDelegate {
     var onError: ((String) -> Void)?
 
     private let manager = CMHeadphoneMotionManager()
+
+    var isAvailable: Bool { manager.isDeviceMotionAvailable }
+    var authorizationDescription: String {
+        switch CMHeadphoneMotionManager.authorizationStatus() {
+        case .authorized: "Allowed"
+        case .denied: "Denied"
+        case .restricted: "Restricted"
+        case .notDetermined: "Not asked yet"
+        @unknown default: "Unknown"
+        }
