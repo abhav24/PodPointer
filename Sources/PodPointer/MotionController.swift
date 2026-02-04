@@ -26,3 +26,12 @@ final class MotionController: NSObject, CMHeadphoneMotionManagerDelegate {
         case .notDetermined: "Not asked yet"
         @unknown default: "Unknown"
         }
+    }
+
+    func start() {
+        manager.delegate = self
+        manager.startDeviceMotionUpdates(to: .main) { [weak self] motion, error in
+            if let error {
+                self?.onError?(error.localizedDescription)
+            }
+            guard let motion else { return }
