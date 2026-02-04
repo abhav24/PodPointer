@@ -48,3 +48,6 @@ final class MotionController: NSObject, CMHeadphoneMotionManagerDelegate {
     func headphoneMotionManagerDidConnect(_ manager: CMHeadphoneMotionManager) {
         DispatchQueue.main.async { self.onConnectionChange?(true) }
     }
+
+    func headphoneMotionManagerDidDisconnect(_ manager: CMHeadphoneMotionManager) {
+        DispatchQueue.main.async { self.onConnectionChange?(false) }
