@@ -9,3 +9,15 @@ final class StemController {
 
     private let center = MPRemoteCommandCenter.shared()
     private let engine = AVAudioEngine()
+    private var sourceNode: AVAudioSourceNode?
+    private var targets: [(MPRemoteCommand, Any)] = []
+
+    func start() throws {
+        try startSilentAudio()
+
+        add(center.togglePlayPauseCommand, press: .single)
+        add(center.playCommand, press: .single)
+        add(center.pauseCommand, press: .single)
+        add(center.nextTrackCommand, press: .double)
+        add(center.previousTrackCommand, press: .triple)
+
