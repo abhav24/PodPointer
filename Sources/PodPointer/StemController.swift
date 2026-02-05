@@ -21,3 +21,14 @@ final class StemController {
         add(center.nextTrackCommand, press: .double)
         add(center.previousTrackCommand, press: .triple)
 
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = [
+            MPMediaItemPropertyTitle: "PodPointer",
+            MPNowPlayingInfoPropertyPlaybackRate: 1.0
+        ]
+        MPNowPlayingInfoCenter.default().playbackState = .playing
+    }
+
+    func stop() {
+        for (command, target) in targets {
+            command.removeTarget(target)
+            command.isEnabled = false
