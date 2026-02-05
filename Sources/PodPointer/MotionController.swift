@@ -58,3 +58,7 @@ final class MotionController: NSObject, CMHeadphoneMotionManagerDelegate {
         case .default: "default"
         case .headphoneLeft: "left"
         case .headphoneRight: "right"
+        @unknown default: "unknown"
+        }
+    }
+}
