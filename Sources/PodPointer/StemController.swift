@@ -56,3 +56,6 @@ final class StemController {
         targets.append((command, target))
     }
 
+    private func startSilentAudio() throws {
+        let node = AVAudioSourceNode { _, _, _, bufferList in
+            for buffer in UnsafeMutableAudioBufferListPointer(bufferList) {
