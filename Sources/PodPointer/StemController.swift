@@ -32,3 +32,15 @@ final class StemController {
         for (command, target) in targets {
             command.removeTarget(target)
             command.isEnabled = false
+        }
+        targets.removeAll()
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
+        MPNowPlayingInfoCenter.default().playbackState = .stopped
+        engine.stop()
+        if let sourceNode {
+            engine.detach(sourceNode)
+        }
+        sourceNode = nil
+    }
+
+    private func add(_ command: MPRemoteCommand, press: StemPress) {
