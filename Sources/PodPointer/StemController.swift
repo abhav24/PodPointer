@@ -44,3 +44,15 @@ final class StemController {
     }
 
     private func add(_ command: MPRemoteCommand, press: StemPress) {
+        command.isEnabled = true
+        let target = command.addTarget { [weak self] _ in
+            DispatchQueue.main.async {
+                // Stay "playing" so the next press is delivered here as well.
+                MPNowPlayingInfoCenter.default().playbackState = .playing
+                self?.onPress?(press)
+            }
+            return .success
+        }
+        targets.append((command, target))
+    }
+
