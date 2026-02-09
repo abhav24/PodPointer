@@ -65,3 +65,6 @@ final class StemController {
             }
             return noErr
         }
+        sourceNode = node
+        engine.attach(node)
+        engine.connect(node, to: engine.mainMixerNode, format: nil)
