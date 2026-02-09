@@ -62,3 +62,6 @@ final class StemController {
                 if let data = buffer.mData {
                     memset(data, 0, Int(buffer.mDataByteSize))
                 }
+            }
+            return noErr
+        }
