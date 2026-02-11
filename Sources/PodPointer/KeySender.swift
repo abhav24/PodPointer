@@ -11,3 +11,8 @@ enum KeySender {
     static func requestTrust() {
         let options = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true] as CFDictionary
         _ = AXIsProcessTrustedWithOptions(options)
+    }
+
+    static func nextSlide() { press(rightArrow) }
+    static func previousSlide() { press(leftArrow) }
+
