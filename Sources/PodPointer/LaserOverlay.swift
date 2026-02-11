@@ -9,3 +9,15 @@ final class LaserOverlay {
     private let panel: NSPanel
     private let dot = CALayer()
 
+    init() {
+        panel = NSPanel(
+            contentRect: .zero,
+            styleMask: [.borderless, .nonactivatingPanel],
+            backing: .buffered,
+            defer: false
+        )
+        panel.isOpaque = false
+        panel.backgroundColor = .clear
+        panel.hasShadow = false
+        panel.ignoresMouseEvents = true
+        panel.level = .screenSaver
