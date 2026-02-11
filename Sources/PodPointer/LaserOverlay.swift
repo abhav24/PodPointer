@@ -21,3 +21,14 @@ final class LaserOverlay {
         panel.hasShadow = false
         panel.ignoresMouseEvents = true
         panel.level = .screenSaver
+        panel.isReleasedWhenClosed = false
+        panel.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary, .stationary, .ignoresCycle]
+
+        let view = NSView()
+        view.wantsLayer = true
+        panel.contentView = view
+
+        dot.frame = CGRect(x: 0, y: 0, width: Self.dotSize, height: Self.dotSize)
+        dot.cornerRadius = Self.dotSize / 2
+        dot.backgroundColor = NSColor.systemRed.cgColor
+        dot.shadowColor = NSColor.systemRed.cgColor
