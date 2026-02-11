@@ -16,3 +16,8 @@ enum KeySender {
     static func nextSlide() { press(rightArrow) }
     static func previousSlide() { press(leftArrow) }
 
+    private static func press(_ key: CGKeyCode) {
+        CGEvent(keyboardEventSource: nil, virtualKey: key, keyDown: true)?.post(tap: .cghidEventTap)
+        CGEvent(keyboardEventSource: nil, virtualKey: key, keyDown: false)?.post(tap: .cghidEventTap)
+    }
+}
