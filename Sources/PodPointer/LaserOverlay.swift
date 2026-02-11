@@ -32,3 +32,15 @@ final class LaserOverlay {
         dot.cornerRadius = Self.dotSize / 2
         dot.backgroundColor = NSColor.systemRed.cgColor
         dot.shadowColor = NSColor.systemRed.cgColor
+        dot.shadowOpacity = 0.9
+        dot.shadowRadius = 12
+        dot.shadowOffset = .zero
+        view.layer?.addSublayer(dot)
+    }
+
+    func show(on screen: NSScreen) {
+        panel.setFrame(screen.frame, display: true)
+        panel.orderFrontRegardless()
+    }
+
+    func hide() {
