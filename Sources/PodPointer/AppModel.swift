@@ -7,3 +7,13 @@ enum PointerMode: String, CaseIterable, Identifiable {
     case laser = "Laser dot"
     case cursor = "Mouse cursor"
 
+    var id: String { rawValue }
+}
+
+struct DisplayOption: Identifiable, Hashable {
+    let id: CGDirectDisplayID
+    let name: String
+}
+
+@MainActor
+final class AppModel: ObservableObject {
