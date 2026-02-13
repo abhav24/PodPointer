@@ -36,3 +36,13 @@ final class AppModel: ObservableObject {
     @Published var selectedDisplayID: CGDirectDisplayID = CGMainDisplayID() {
         didSet { showOverlayIfNeeded() }
     }
+    @Published var configuration = PointerConfiguration() {
+        didSet { mapper.configuration = configuration }
+    }
+
+    // Stem presses
+    @Published private(set) var isListeningForStem = false
+    @Published var sendsSlideKeys = false
+    @Published private(set) var hasAccessibility = KeySender.isTrusted
+    @Published private(set) var pressCounts: [StemPress: Int] = [:]
+
