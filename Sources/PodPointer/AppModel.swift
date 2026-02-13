@@ -26,3 +26,13 @@ final class AppModel: ObservableObject {
     @Published private(set) var permission = "Not asked yet"
     @Published private(set) var isConnected = false
     @Published private(set) var rate = SampleRateSnapshot.empty
+    @Published private(set) var sensorLocation = "-"
+    @Published private(set) var attitude = "-"
+    @Published private(set) var isStale = true
+
+    // Pointer
+    @Published private(set) var pointerMode = PointerMode.off
+    @Published private(set) var displays: [DisplayOption] = []
+    @Published var selectedDisplayID: CGDirectDisplayID = CGMainDisplayID() {
+        didSet { showOverlayIfNeeded() }
+    }
