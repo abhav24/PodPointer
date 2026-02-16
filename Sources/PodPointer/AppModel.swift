@@ -82,3 +82,13 @@ final class AppModel: ObservableObject {
 
         if motion.isAvailable {
             motion.start()
+            addLog("Waiting for AirPods motion")
+        } else {
+            addLog("Headphone motion isn't available on this Mac")
+        }
+
+        healthTimer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: true) { [weak self] _ in
+            MainActor.assumeIsolated { self?.checkHealth() }
+        }
+    }
+
