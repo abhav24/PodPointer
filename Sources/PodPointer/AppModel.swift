@@ -55,3 +55,12 @@ final class AppModel: ObservableObject {
     private var tracker = SampleRateTracker()
     private var debouncer = StemPressDebouncer()
     private var sensorLocations: [String] = []
+    private var lastSampleDate: Date?
+    private var lastPublishDate = Date.distantPast
+    private var pointerModeChangeDate = Date.distantPast
+    private var healthTimer: Timer?
+    private var started = false
+
+    private static let timeFormat: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm:ss.SSS"
