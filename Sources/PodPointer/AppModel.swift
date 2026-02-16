@@ -73,3 +73,12 @@ final class AppModel: ObservableObject {
         refreshDisplays()
 
         motion.onSample = { [weak self] in self?.handle($0) }
+        motion.onConnectionChange = { [weak self] connected in
+            self?.isConnected = connected
+            self?.addLog(connected ? "AirPods motion connected" : "AirPods motion disconnected")
+        }
+        motion.onError = { [weak self] in self?.addLog("Motion error: \($0)") }
+        stem.onPress = { [weak self] in self?.handle($0) }
+
+        if motion.isAvailable {
+            motion.start()
