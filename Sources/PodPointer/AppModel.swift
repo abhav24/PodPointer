@@ -64,3 +64,12 @@ final class AppModel: ObservableObject {
     private static let timeFormat: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "HH:mm:ss.SSS"
+        return formatter
+    }()
+
+    func start() {
+        guard !started else { return }
+        started = true
+        refreshDisplays()
+
+        motion.onSample = { [weak self] in self?.handle($0) }
