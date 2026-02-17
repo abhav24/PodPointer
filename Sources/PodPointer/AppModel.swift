@@ -103,3 +103,15 @@ final class AppModel: ObservableObject {
     func recenter() {
         mapper.recenter()
         addLog("Recentered")
+    }
+
+    func setListeningForStem(_ enabled: Bool) {
+        guard enabled != isListeningForStem else { return }
+        if enabled {
+            do {
+                try stem.start()
+                isListeningForStem = true
+                addLog("Listening for stem presses")
+            } catch {
+                stem.stop()
+                addLog("Couldn't start stem listening: \(error.localizedDescription)")
