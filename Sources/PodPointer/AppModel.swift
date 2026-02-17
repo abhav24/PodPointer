@@ -127,3 +127,15 @@ final class AppModel: ObservableObject {
         KeySender.requestTrust()
     }
 
+    func refreshDisplays() {
+        displays = NSScreen.screens.compactMap { screen in
+            Self.displayID(of: screen).map { DisplayOption(id: $0, name: screen.localizedName) }
+        }
+        if !displays.contains(where: { $0.id == selectedDisplayID }), let first = displays.first {
+            selectedDisplayID = first.id
+        }
+    }
+
+    func copyReport() {
+        let system = ProcessInfo.processInfo.operatingSystemVersion
+        let report = SessionReport(
