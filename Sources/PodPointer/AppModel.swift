@@ -115,3 +115,15 @@ final class AppModel: ObservableObject {
             } catch {
                 stem.stop()
                 addLog("Couldn't start stem listening: \(error.localizedDescription)")
+            }
+        } else {
+            stem.stop()
+            isListeningForStem = false
+            addLog("Stopped listening for stem presses")
+        }
+    }
+
+    func requestAccessibility() {
+        KeySender.requestTrust()
+    }
+
