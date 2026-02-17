@@ -151,3 +151,16 @@ final class AppModel: ObservableObject {
         addLog("Copied test report")
     }
 
+    private func handle(_ sample: MotionSample) {
+        tracker.record(sample.timestamp)
+        lastSampleDate = Date()
+        if sample.sensorLocation != sensorLocation {
+            sensorLocation = sample.sensorLocation
+            if !sensorLocations.contains(sample.sensorLocation) {
+                sensorLocations.append(sample.sensorLocation)
+            }
+            addLog("Motion sensor: \(sample.sensorLocation)")
+        }
+
+        let point = mapper.map(yawRadians: sample.yaw, pitchRadians: sample.pitch, at: sample.timestamp)
+        switch pointerMode {
