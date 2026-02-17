@@ -139,3 +139,15 @@ final class AppModel: ObservableObject {
     func copyReport() {
         let system = ProcessInfo.processInfo.operatingSystemVersion
         let report = SessionReport(
+            appVersion: Self.version,
+            macOSVersion: "\(system.majorVersion).\(system.minorVersion).\(system.patchVersion)",
+            motion: rate,
+            sensorLocations: sensorLocations,
+            pressCounts: pressCounts,
+            events: log
+        )
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(report.markdown, forType: .string)
+        addLog("Copied test report")
+    }
+
