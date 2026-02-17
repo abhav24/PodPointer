@@ -92,3 +92,14 @@ final class AppModel: ObservableObject {
         }
     }
 
+    func setPointerMode(_ mode: PointerMode) {
+        pointerMode = mode
+        pointerModeChangeDate = Date()
+        addLog("Pointer mode: \(mode.rawValue)")
+        mapper.recenter()
+        showOverlayIfNeeded()
+    }
+
+    func recenter() {
+        mapper.recenter()
+        addLog("Recentered")
