@@ -164,3 +164,16 @@ final class AppModel: ObservableObject {
 
         let point = mapper.map(yawRadians: sample.yaw, pitchRadians: sample.pitch, at: sample.timestamp)
         switch pointerMode {
+        case .off:
+            break
+        case .laser:
+            overlay.move(to: point)
+        case .cursor:
+            moveCursor(to: point)
+        }
+        if isStale {
+            isStale = false
+            addLog("Motion samples started")
+            showOverlayIfNeeded()
+        }
+
