@@ -191,3 +191,16 @@ final class AppModel: ObservableObject {
     }
 
     private func handle(_ press: StemPress) {
+        guard debouncer.shouldAccept(press, at: ProcessInfo.processInfo.systemUptime) else { return }
+        pressCounts[press, default: 0] += 1
+        let action = StemAction(press: press)
+        hasAccessibility = KeySender.isTrusted
+
+        switch action {
+        case .recenter:
+            mapper.recenter()
+            addLog("Stem press: double, recentered")
+        case .nextSlide, .previousSlide:
+            guard sendsSlideKeys else {
+                addLog("Stem press: \(press.rawValue), would send \(action.rawValue) (sending is off)")
+                return
