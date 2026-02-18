@@ -177,3 +177,17 @@ final class AppModel: ObservableObject {
             showOverlayIfNeeded()
         }
 
+        // The pointer updates on every sample, but the window only needs a few updates a second.
+        let now = Date()
+        guard now.timeIntervalSince(lastPublishDate) >= 0.2 else { return }
+        lastPublishDate = now
+        rate = tracker.snapshot
+        attitude = String(
+            format: "yaw %.0f°, pitch %.0f°, roll %.0f°",
+            sample.yaw * 180 / .pi,
+            sample.pitch * 180 / .pi,
+            sample.roll * 180 / .pi
+        )
+    }
+
+    private func handle(_ press: StemPress) {
