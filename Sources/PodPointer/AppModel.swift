@@ -238,3 +238,13 @@ final class AppModel: ObservableObject {
             setPointerMode(.off)
             addLog("Real mouse moved, so head control turned off")
         }
+
+        guard let lastSampleDate, !isStale else { return }
+        if Date().timeIntervalSince(lastSampleDate) > Self.staleSampleSeconds {
+            isStale = true
+            tracker.reset()
+            rate = .empty
+            addLog("Motion samples stopped")
+            overlay.hide()
+        }
+    }
