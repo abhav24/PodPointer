@@ -228,3 +228,13 @@ final class AppModel: ObservableObject {
 
     private func checkHealth() {
         hasAccessibility = KeySender.isTrusted
+        permission = motion.authorizationDescription
+
+        // Warping creates no mouse events, so a recent one means someone moved a real mouse.
+        // The grace period allows for the mouse movement that selected this mode.
+        if pointerMode == .cursor,
+           Date().timeIntervalSince(pointerModeChangeDate) > Self.cursorGraceSeconds,
+           CGEventSource.secondsSinceLastEventType(.hidSystemState, eventType: .mouseMoved) < 0.25 {
+            setPointerMode(.off)
+            addLog("Real mouse moved, so head control turned off")
+        }
