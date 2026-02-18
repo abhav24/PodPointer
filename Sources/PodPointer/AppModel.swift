@@ -218,3 +218,13 @@ final class AppModel: ObservableObject {
         }
     }
 
+    private func moveCursor(to point: PointerPoint) {
+        let bounds = CGDisplayBounds(selectedDisplayID)
+        CGWarpMouseCursorPosition(CGPoint(
+            x: bounds.minX + point.x * (bounds.width - 1),
+            y: bounds.minY + point.y * (bounds.height - 1)
+        ))
+    }
+
+    private func checkHealth() {
+        hasAccessibility = KeySender.isTrusted
