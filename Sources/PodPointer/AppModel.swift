@@ -204,3 +204,17 @@ final class AppModel: ObservableObject {
             guard sendsSlideKeys else {
                 addLog("Stem press: \(press.rawValue), would send \(action.rawValue) (sending is off)")
                 return
+            }
+            guard hasAccessibility else {
+                addLog("Stem press: \(press.rawValue), not sent because Accessibility is off")
+                return
+            }
+            if action == .nextSlide {
+                KeySender.nextSlide()
+            } else {
+                KeySender.previousSlide()
+            }
+            addLog("Stem press: \(press.rawValue), sent \(action.rawValue)")
+        }
+    }
+
