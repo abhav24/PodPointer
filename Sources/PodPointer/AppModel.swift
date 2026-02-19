@@ -248,3 +248,13 @@ final class AppModel: ObservableObject {
             overlay.hide()
         }
     }
+
+    private func showOverlayIfNeeded() {
+        guard pointerMode == .laser, !isStale,
+              let screen = NSScreen.screens.first(where: { Self.displayID(of: $0) == selectedDisplayID }) else {
+            overlay.hide()
+            return
+        }
+        overlay.show(on: screen)
+    }
+
