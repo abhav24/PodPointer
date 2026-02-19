@@ -258,3 +258,14 @@ final class AppModel: ObservableObject {
         overlay.show(on: screen)
     }
 
+    private func addLog(_ message: String) {
+        log.append("\(Self.timeFormat.string(from: Date())) \(message)")
+        if log.count > Self.maxLogLines {
+            log.removeFirst(log.count - Self.maxLogLines)
+        }
+    }
+
+    private static func displayID(of screen: NSScreen) -> CGDirectDisplayID? {
+        screen.deviceDescription[NSDeviceDescriptionKey("NSScreenNumber")] as? CGDirectDisplayID
+    }
+}
