@@ -29,3 +29,13 @@ struct ContentView: View {
             stemSection
             pointerSection
             logSection
+        }
+        .formStyle(.grouped)
+        .frame(minWidth: 460, idealWidth: 500, minHeight: 620, idealHeight: 820)
+        .onReceive(NotificationCenter.default.publisher(for: NSApplication.didChangeScreenParametersNotification)) { _ in
+            model.refreshDisplays()
+        }
+    }
+
+    private var motionSection: some View {
+        Section("1. Motion") {
