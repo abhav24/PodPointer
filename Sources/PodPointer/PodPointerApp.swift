@@ -50,3 +50,13 @@ struct ContentView: View {
         }
     }
 
+    private var stemSection: some View {
+        Section {
+            Toggle("Listen for stem presses", isOn: Binding(
+                get: { model.isListeningForStem },
+                set: { model.setListeningForStem($0) }
+            ))
+            Toggle("Send arrow keys to the front app", isOn: $model.sendsSlideKeys)
+            if !model.hasAccessibility {
+                LabeledContent("Sending keys needs Accessibility access") {
+                    Button("Open Prompt") { model.requestAccessibility() }
