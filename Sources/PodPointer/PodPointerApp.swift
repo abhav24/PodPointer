@@ -60,3 +60,14 @@ struct ContentView: View {
             if !model.hasAccessibility {
                 LabeledContent("Sending keys needs Accessibility access") {
                     Button("Open Prompt") { model.requestAccessibility() }
+                }
+            }
+            LabeledContent(
+                "Presses received",
+                value: StemPress.allCases.map { "\($0.rawValue) \(model.pressCounts[$0, default: 0])" }.joined(separator: " · ")
+            )
+        } header: {
+            Text("2. Stem presses")
+        } footer: {
+            Text("Single: next slide. Double: recenter. Triple: previous slide.")
+        }
