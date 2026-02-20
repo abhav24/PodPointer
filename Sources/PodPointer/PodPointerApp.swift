@@ -8,3 +8,13 @@ struct PodPointerApp: App {
     @StateObject private var model = AppModel()
 
     var body: some Scene {
+        Window("PodPointer", id: "main") {
+            ContentView(model: model)
+                .onAppear { model.start() }
+        }
+        .windowResizability(.contentMinSize)
+    }
+}
+
+final class AppDelegate: NSObject, NSApplicationDelegate {
+    func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool { true }
