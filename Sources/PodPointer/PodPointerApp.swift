@@ -71,3 +71,14 @@ struct ContentView: View {
         } footer: {
             Text("Single: next slide. Double: recenter. Triple: previous slide.")
         }
+    }
+
+    private var pointerSection: some View {
+        Section {
+            Picker("Pointer", selection: Binding(
+                get: { model.pointerMode },
+                set: { model.setPointerMode($0) }
+            )) {
+                ForEach(PointerMode.allCases) { Text($0.rawValue).tag($0) }
+            }
+            .pickerStyle(.segmented)
