@@ -104,3 +104,8 @@ struct ContentView: View {
         }
     }
 
+    private var logSection: some View {
+        Section {
+            ScrollViewReader { proxy in
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 2) {
