@@ -82,3 +82,14 @@ struct ContentView: View {
                 ForEach(PointerMode.allCases) { Text($0.rawValue).tag($0) }
             }
             .pickerStyle(.segmented)
+            Picker("Display", selection: $model.selectedDisplayID) {
+                ForEach(model.displays) { Text($0.name).tag($0.id) }
+            }
+            Button("Recenter") { model.recenter() }
+            Slider(value: $model.configuration.horizontalRangeDegrees, in: 10...80) {
+                Text("Turn range: \(Int(model.configuration.horizontalRangeDegrees))°")
+            }
+            Slider(value: $model.configuration.verticalRangeDegrees, in: 10...60) {
+                Text("Tilt range: \(Int(model.configuration.verticalRangeDegrees))°")
+            }
+            Slider(value: $model.configuration.minCutoff, in: 0.3...5) {
