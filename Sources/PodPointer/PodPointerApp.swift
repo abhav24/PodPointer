@@ -119,3 +119,8 @@ struct ContentView: View {
                     }
                 }
                 .frame(height: 140)
+                .onChange(of: model.log.count) { _, count in
+                    proxy.scrollTo(count - 1, anchor: .bottom)
+                }
+            }
+            Button("Copy Test Report") { model.copyReport() }
