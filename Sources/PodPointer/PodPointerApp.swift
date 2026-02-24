@@ -114,3 +114,8 @@ struct ContentView: View {
                                 .font(.caption.monospaced())
                                 .textSelection(.enabled)
                                 .frame(maxWidth: .infinity, alignment: .leading)
+                                .id(index)
+                        }
+                    }
+                }
+                .frame(height: 140)
