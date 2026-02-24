@@ -124,3 +124,8 @@ struct ContentView: View {
                 }
             }
             Button("Copy Test Report") { model.copyReport() }
+        } header: {
+            Text("Log")
+        }
+    }
+}
