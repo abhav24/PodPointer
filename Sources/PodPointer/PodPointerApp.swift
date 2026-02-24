@@ -109,3 +109,8 @@ struct ContentView: View {
             ScrollViewReader { proxy in
                 ScrollView {
                     VStack(alignment: .leading, spacing: 2) {
+                        ForEach(Array(model.log.enumerated()), id: \.offset) { index, line in
+                            Text(line)
+                                .font(.caption.monospaced())
+                                .textSelection(.enabled)
+                                .frame(maxWidth: .infinity, alignment: .leading)
