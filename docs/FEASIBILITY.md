@@ -9,3 +9,8 @@ Research from November 2026. Items marked "not verified" still need testing with
 | Case as a mouse | Not possible as far as I can find | I found no developer access to motion data from the case. |
 | Case lid as a trigger | Not pursued | Bluetooth broadcasts reportedly include a [lid-open counter](https://dev.to/lifeart/inside-apple-airpods-auto-switching-bluetooth-continuity-aap-python-packet-sniffing-jf6). It's undocumented and could change with a firmware update. |
 | Nod or shake gestures | Possible later | I found no public gesture API, but these could be detected from the motion data. |
+| AirPod held in the hand | Not verified | Motion data may stop once an AirPod leaves your ear. |
+
+## Known risks
+
+- **Drift and jumps:** developers have reported [yaw jumps when Spatial Audio turns on](https://developer.apple.com/forums/thread/844940). Recentering is part of the design for this reason.
