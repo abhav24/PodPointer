@@ -14,3 +14,9 @@ Research from November 2026. Items marked "not verified" still need testing with
 ## Known risks
 
 - **Drift and jumps:** developers have reported [yaw jumps when Spatial Audio turns on](https://developer.apple.com/forums/thread/844940). Recentering is part of the design for this reason.
+- **Bluetooth load:** the constant motion stream [can make a Bluetooth mouse lag](https://github.com/Cogria-AI/HeadOrbit/wiki).
+- **Compatible models:** [Apple's session](https://wwdcnotes.com/notes/wwdc23/10179) names AirPods Pro, and third-party packages also list [AirPods 3, AirPods Max, and Beats Fit Pro](https://pub.dev/documentation/flutter_airpods/1.0.4).
+- **Now Playing:** another media app may take the stem presses.
+- **Full-screen slideshows:** a slide app could cover the overlay window.
+
+## Related projects
