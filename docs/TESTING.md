@@ -31,3 +31,14 @@ Try again with Spotify or Apple Music open, because another media app may take t
 **Passes if** you can hold the dot on a line of slide text, and drift is fixed by an occasional recenter.
 
 If the dot moves the wrong way, turn on an invert option and tell us in your report.
+
+## 3. Does the laser dot appear over a slideshow?
+
+Start a full-screen slideshow in PowerPoint and in Keynote, with the laser dot on. If you can, also try an external display, using **Display** to select it.
+
+**Passes if** the dot stays visible over the slides.
+
+## 4. When does motion keep working?
+
+Watch **Samples**, **Sensor**, and the log during each of these:
+
