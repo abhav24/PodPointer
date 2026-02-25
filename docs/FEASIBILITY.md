@@ -20,3 +20,9 @@ Research from November 2026. Items marked "not verified" still need testing with
 - **Full-screen slideshows:** a slide app could cover the overlay window.
 
 ## Related projects
+
+- [PodsControlMac](https://dev.to/sumionochi/podscontrolmac-1fff): cursor control, scrolling, and dictation using AirPods
+- [HeadOrbit](https://github.com/Cogria-AI/HeadOrbit/wiki): head movements mapped to Mac actions
+- [gazectl](https://github.com/AndreasInk/gazectl): head tracking to switch displays
+
+PodPointer focuses on presenting.
