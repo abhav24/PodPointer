@@ -42,3 +42,14 @@ Start a full-screen slideshow in PowerPoint and in Keynote, with the laser dot o
 
 Watch **Samples**, **Sensor**, and the log during each of these:
 
+- Both AirPods in
+- One AirPod in, then the other
+- One AirPod held in your hand, like a remote
+- Both AirPods back in the case
+- Spatial Audio turned on, then off (watch for sudden jumps in yaw)
+
+**Passes if** you can tell which setups keep producing samples. This decides whether a handheld clicker is possible.
+
+## Share your results
+
+Select **Copy Test Report** and paste it into a [test report issue](https://github.com/abhav24/PodPointer/issues/new?template=test-report.md).
