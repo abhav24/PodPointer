@@ -7,3 +7,12 @@ Turn your head to move a laser dot over your slides. Press an AirPods stem to ch
 > **Status: early test app.** This release exists to find out whether the idea holds up on real hardware. Motion and stem-press behavior have not been confirmed on AirPods yet, and [you can help test it](docs/TESTING.md).
 
 ## What it does
+
+| Your AirPods | Your Mac |
+|---|---|
+| Turn or tilt your head | Moves a laser dot or the mouse cursor |
+| Press the stem once | Next slide (Right Arrow) |
+| Press the stem twice | Recenter the pointer |
+| Press the stem three times | Previous slide (Left Arrow) |
+
+The app also shows live motion measurements and can copy a test report to paste into an issue.
