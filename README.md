@@ -16,3 +16,12 @@ Turn your head to move a laser dot over your slides. Press an AirPods stem to ch
 | Press the stem three times | Previous slide (Left Arrow) |
 
 The app also shows live motion measurements and can copy a test report to paste into an issue.
+
+**The AirPods case isn't part of this.** I found no developer access to motion data from the case, so it can't work as a mouse. See [feasibility notes](docs/FEASIBILITY.md).
+
+## Requirements
+
+- macOS 14 or later
+- AirPods with head tracking, such as AirPods Pro
+- Swift 5.10 or later, from Xcode or the Command Line Tools
+
