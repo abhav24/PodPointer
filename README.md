@@ -25,3 +25,12 @@ The app also shows live motion measurements and can copy a test report to paste 
 - AirPods with head tracking, such as AirPods Pro
 - Swift 5.10 or later, from Xcode or the Command Line Tools
 
+## Build and run
+
+```bash
+git clone https://github.com/abhav24/PodPointer.git
+cd PodPointer
+scripts/build-app.sh
+open build/PodPointer.app
+```
+
