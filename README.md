@@ -50,3 +50,9 @@ If you use **Mouse cursor** mode, moving a real mouse or trackpad turns head con
 
 | Permission | Why it's needed | When |
 |---|---|---|
+| Motion & Fitness | Reads head motion from your AirPods | At launch |
+| Accessibility | Sends arrow keys to your slide app | Only if you turn on sending keys |
+
+PodPointer has no network code and doesn't save your data. A test report is only copied to your clipboard when you ask for one, and it leaves out your AirPods' name.
+
+While it's listening for stem presses, PodPointer plays silent audio so it can act as the Mac's Now Playing app. That means stem presses won't control your music while listening is on.
