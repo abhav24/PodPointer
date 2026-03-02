@@ -44,3 +44,9 @@ Use the script rather than `swift run`, because macOS only shows the motion perm
 4. Turn on **Listen for stem presses** and press a stem. The presses appear in the log.
 5. To control slides, turn on **Send arrow keys to the front app** and allow Accessibility access. Then bring your slides to the front.
 
+If you use **Mouse cursor** mode, moving a real mouse or trackpad turns head control off.
+
+## Permissions and privacy
+
+| Permission | Why it's needed | When |
+|---|---|---|
