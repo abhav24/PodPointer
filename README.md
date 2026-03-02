@@ -34,3 +34,13 @@ scripts/build-app.sh
 open build/PodPointer.app
 ```
 
+Use the script rather than `swift run`, because macOS only shows the motion permission to a real app bundle. The script signs with your Apple Development certificate if you have one. Otherwise it signs ad hoc, and macOS may ask for permissions again after each rebuild.
+
+## Try it
+
+1. Connect your AirPods to your Mac, put them in, and allow motion access.
+2. Look at the middle of your display and select **Recenter**.
+3. Set **Pointer** to **Laser dot** and turn your head.
+4. Turn on **Listen for stem presses** and press a stem. The presses appear in the log.
+5. To control slides, turn on **Send arrow keys to the front app** and allow Accessibility access. Then bring your slides to the front.
+
