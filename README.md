@@ -62,3 +62,9 @@ While it's listening for stem presses, PodPointer plays silent audio so it can a
 | Path | Contents |
 |---|---|
 | `Sources/PodPointerCore` | Tested logic: filtering, pointer mapping, timing, and press handling |
+| `Sources/PodPointer` | The Mac app: motion, media commands, key sending, overlay, and window |
+| `Tests/PodPointerCoreTests` | Unit tests |
+| `docs` | Feasibility notes and the hardware test plan |
+
+## Contributing
+
