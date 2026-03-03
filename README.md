@@ -68,3 +68,10 @@ While it's listening for stem presses, PodPointer plays silent audio so it can a
 
 ## Contributing
 
+Hardware test results are the most useful contribution right now. See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## License
+
+[MIT](LICENSE)
+
+PodPointer is an independent project and isn't affiliated with or endorsed by Apple Inc. AirPods, Mac, and macOS are trademarks of Apple Inc.
