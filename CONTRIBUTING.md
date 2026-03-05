@@ -15,3 +15,8 @@ scripts/test.sh
 scripts/build-app.sh
 open build/PodPointer.app
 ```
+
+- Put logic that doesn't need hardware in `PodPointerCore`, with tests.
+- Keep Apple framework code in the `PodPointer` app target.
+- Test anything that touches motion, stem presses, or the overlay on real AirPods, and say so in your pull request.
+- Don't rely on undocumented AirPods Bluetooth data without discussing it in an issue first.
