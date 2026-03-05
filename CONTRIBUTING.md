@@ -11,3 +11,7 @@ Real hardware results are the most useful contribution right now.
 ## Change the code
 
 ```bash
+scripts/test.sh
+scripts/build-app.sh
+open build/PodPointer.app
+```
