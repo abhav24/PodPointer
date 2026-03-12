@@ -20,3 +20,14 @@ public struct Vector3: Codable, Equatable, Sendable {
     public static func - (left: Vector3, right: Vector3) -> Vector3 {
         Vector3(x: left.x - right.x, y: left.y - right.y, z: left.z - right.z)
     }
+
+    public static func * (vector: Vector3, scale: Double) -> Vector3 {
+        Vector3(x: vector.x * scale, y: vector.y * scale, z: vector.z * scale)
+    }
+
+    public func dot(_ other: Vector3) -> Double {
+        x * other.x + y * other.y + z * other.z
+    }
+
+    public var magnitude: Double {
+        dot(self).squareRoot()
