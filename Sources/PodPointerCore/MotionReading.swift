@@ -9,3 +9,14 @@ public struct Vector3: Codable, Equatable, Sendable {
 
     public init(x: Double, y: Double, z: Double) {
         self.x = x
+        self.y = y
+        self.z = z
+    }
+
+    public static func + (left: Vector3, right: Vector3) -> Vector3 {
+        Vector3(x: left.x + right.x, y: left.y + right.y, z: left.z + right.z)
+    }
+
+    public static func - (left: Vector3, right: Vector3) -> Vector3 {
+        Vector3(x: left.x - right.x, y: left.y - right.y, z: left.z - right.z)
+    }
