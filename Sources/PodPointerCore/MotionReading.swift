@@ -31,3 +31,14 @@ public struct Vector3: Codable, Equatable, Sendable {
 
     public var magnitude: Double {
         dot(self).squareRoot()
+    }
+
+    public var normalized: Vector3 {
+        let length = magnitude
+        return length > 0 ? self * (1 / length) : self
+    }
+}
+
+/// One motion sample from the AirPods inside the case.
+public struct MotionReading: Equatable, Sendable {
+    /// Radians per second, in the sensor's own frame.
