@@ -42,3 +42,15 @@ public struct Vector3: Codable, Equatable, Sendable {
 /// One motion sample from the AirPods inside the case.
 public struct MotionReading: Equatable, Sendable {
     /// Radians per second, in the sensor's own frame.
+    public var rotationRate: Vector3
+    /// In g, with gravity removed.
+    public var userAcceleration: Vector3
+    /// Seconds.
+    public var timestamp: Double
+
+    public init(rotationRate: Vector3, userAcceleration: Vector3, timestamp: Double) {
+        self.rotationRate = rotationRate
+        self.userAcceleration = userAcceleration
+        self.timestamp = timestamp
+    }
+}
