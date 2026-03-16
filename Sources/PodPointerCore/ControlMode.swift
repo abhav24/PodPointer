@@ -15,3 +15,9 @@ public enum CaseAction: String, Equatable, Sendable {
     case doubleClick = "double-click"
     case togglePointer = "pointer on or off"
 
+    /// Returns nil when control is off.
+    public init?(gesture: CaseGesture, mode: ControlMode) {
+        switch (mode, gesture) {
+        case (.off, _): return nil
+        case (.presenter, .single): self = .nextSlide
+        case (.presenter, .double): self = .previousSlide
