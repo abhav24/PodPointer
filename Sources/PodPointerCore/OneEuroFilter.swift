@@ -1,7 +1,7 @@
 import Foundation
 
-/// One Euro filter (Casiez et al., CHI 2012): smooths heavily when the input is
-/// slow, which removes jitter, and lightly when it is fast, which reduces lag.
+/// One Euro filter (Casiez et al., CHI 2012). It smooths heavily at low speed to
+/// remove hand tremor, and lightly at high speed to keep lag low.
 public struct OneEuroFilter: Sendable {
     public var minCutoff: Double
     public var beta: Double
@@ -23,7 +23,7 @@ public struct OneEuroFilter: Sendable {
             lastTime = time
             return value
         }
-        let elapsed = time - previousTime
+        let elapsed = time - lastTime
         guard elapsed > 0 else { return previous }
 
         let derivative = (value - previous) / elapsed
