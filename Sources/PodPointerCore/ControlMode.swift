@@ -21,3 +21,9 @@ public enum CaseAction: String, Equatable, Sendable {
         case (.off, _): return nil
         case (.presenter, .single): self = .nextSlide
         case (.presenter, .double): self = .previousSlide
+        case (.mouse, .single): self = .click
+        case (.mouse, .double): self = .doubleClick
+        case (_, .triple): self = .togglePointer
+        }
+    }
+}
