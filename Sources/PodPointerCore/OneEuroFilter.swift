@@ -7,7 +7,7 @@ public struct OneEuroFilter: Sendable {
     public var beta: Double
     public var derivativeCutoff: Double
 
-    private var lastFiltered: Double?
+    private var lastValue: Double?
     private var lastDerivative = 0.0
     private var lastTime: Double?
 
@@ -27,8 +27,9 @@ public struct OneEuroFilter: Sendable {
         guard elapsed > 0 else { return previous }
 
         let derivative = (value - previous) / elapsed
-        let derivativeAlpha = Self.alpha(cutoff: derivativeCutoff, elapsed: elapsed)
-        let smoothedDerivative = derivativeAlpha * derivative + (1 - derivativeAlpha) * lastDerivative
+        let smoothedDerivative = Self.blend(derivative, lastDerivative, cutoff: derivativeCutoff, elapsed: elapsed)
+        let cutoff = minCutoff + beta * abs(smoothedDerivative)
+        let filtered = Self.blend(value, previous, cutoff: cutoff, elapsed: elapsed)
 
         let cutoff = minCutoff + beta * abs(smoothedDerivative)
         let valueAlpha = Self.alpha(cutoff: cutoff, elapsed: elapsed)
