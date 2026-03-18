@@ -38,7 +38,7 @@ public struct OneEuroFilter: Sendable {
     }
 
     public mutating func reset() {
-        lastFiltered = nil
+        lastValue = nil
         lastDerivative = 0
         lastTime = nil
     }
