@@ -18,8 +18,8 @@ public struct OneEuroFilter: Sendable {
     }
 
     public mutating func filter(_ value: Double, at time: Double) -> Double {
-        guard let previous = lastFiltered, let previousTime = lastTime else {
-            lastFiltered = value
+        guard let previous = lastValue else {
+            lastValue = value
             lastTime = time
             return value
         }
