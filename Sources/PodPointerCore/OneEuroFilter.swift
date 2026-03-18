@@ -11,7 +11,7 @@ public struct OneEuroFilter: Sendable {
     private var lastDerivative = 0.0
     private var lastTime = 0.0
 
-    public init(minCutoff: Double = 1.0, beta: Double = 0.05, derivativeCutoff: Double = 1.0) {
+    public init(minCutoff: Double, beta: Double, derivativeCutoff: Double = 1) {
         self.minCutoff = minCutoff
         self.beta = beta
         self.derivativeCutoff = derivativeCutoff
