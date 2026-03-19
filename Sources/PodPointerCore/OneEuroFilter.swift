@@ -44,6 +44,7 @@ public struct OneEuroFilter: Sendable {
 
     private static func blend(_ value: Double, _ previous: Double, cutoff: Double, elapsed: Double) -> Double {
         let timeConstant = 1 / (2 * Double.pi * cutoff)
-        return 1 / (1 + timeConstant / elapsed)
+        let alpha = 1 / (1 + timeConstant / elapsed)
+        return alpha * value + (1 - alpha) * previous
     }
 }
