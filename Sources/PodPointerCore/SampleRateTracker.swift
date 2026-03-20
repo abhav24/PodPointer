@@ -4,7 +4,7 @@ public struct SampleRateSnapshot: Equatable, Sendable {
     public var hertz: Double
     public var longestGapMilliseconds: Double
 
-    public static let empty = SampleRateSnapshot(hertz: 0, p95IntervalMilliseconds: 0, maxGapMilliseconds: 0)
+    public static let empty = SampleRateSnapshot(hertz: 0, longestGapMilliseconds: 0)
 }
 
 /// Measures motion sample timing over a sliding window.
