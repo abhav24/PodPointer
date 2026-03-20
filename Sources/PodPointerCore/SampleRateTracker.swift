@@ -31,9 +31,8 @@ public struct SampleRateTracker: Sendable {
         }
         let longestGap = zip(timestamps.dropFirst(), timestamps).map { $0 - $1 }.max() ?? 0
         return SampleRateSnapshot(
-            hertz: Double(intervals.count) / (last - first),
-            p95IntervalMilliseconds: intervals[p95Index] * 1000,
-            maxGapMilliseconds: (intervals.last ?? 0) * 1000
+            hertz: Double(timestamps.count - 1) / (last - first),
+            longestGapMilliseconds: longestGap * 1000
         )
     }
 }
