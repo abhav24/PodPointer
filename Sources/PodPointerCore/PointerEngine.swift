@@ -26,3 +26,13 @@ public struct PointerConfiguration: Equatable, Sendable {
     /// Slower rotation than this is treated as hand tremor.
     public var deadZoneDegreesPerSecond = 2.0
     /// How much fast movements are sped up. 1 means no speed-up.
+    public var maximumAcceleration = 1.6
+    /// Lower values are steadier but lag more.
+    public var minCutoff = 1.5
+    public var beta = 0.02
+
+    public init() {}
+}
+
+/// Turns rotation speed into a pointer position, the way a mouse turns movement
+/// into cursor travel. Reaching a display edge also resets where you're aiming.
