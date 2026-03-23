@@ -46,3 +46,13 @@ public struct PointerEngine: Sendable {
     private static let historySeconds = 0.4
     private static let rollbackSeconds = 0.08
 
+    private var rawPosition = PointerPoint.center
+    private var xFilter = OneEuroFilter(minCutoff: 1, beta: 0)
+    private var yFilter = OneEuroFilter(minCutoff: 1, beta: 0)
+    private var lastTime: Double?
+    private var history: [(time: Double, point: PointerPoint)] = []
+
+    public init(configuration: PointerConfiguration = PointerConfiguration()) {
+        self.configuration = configuration
+        applyFilterSettings()
+    }
