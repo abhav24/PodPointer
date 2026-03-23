@@ -36,3 +36,13 @@ public struct PointerConfiguration: Equatable, Sendable {
 
 /// Turns rotation speed into a pointer position, the way a mouse turns movement
 /// into cursor travel. Reaching a display edge also resets where you're aiming.
+public struct PointerEngine: Sendable {
+    public var configuration: PointerConfiguration {
+        didSet { applyFilterSettings() }
+    }
+    public private(set) var position = PointerPoint.center
+
+    private static let maximumStepSeconds = 0.1
+    private static let historySeconds = 0.4
+    private static let rollbackSeconds = 0.08
+
