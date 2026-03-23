@@ -17,3 +17,12 @@ public struct PointerPoint: Equatable, Sendable {
         let alpha = 1 - exp(-max(elapsed, 0) / timeConstant)
         return PointerPoint(x: x + (target.x - x) * alpha, y: y + (target.y - y) * alpha)
     }
+}
+
+public struct PointerConfiguration: Equatable, Sendable {
+    /// Degrees of rotation that move the pointer across the full display width.
+    public var rangeDegrees = 40.0
+    public var aspectRatio = 16.0 / 10.0
+    /// Slower rotation than this is treated as hand tremor.
+    public var deadZoneDegreesPerSecond = 2.0
+    /// How much fast movements are sped up. 1 means no speed-up.
