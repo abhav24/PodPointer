@@ -66,3 +66,13 @@ public struct PointerEngine: Sendable {
 
         let horizontal = applyDeadZone(horizontalRate)
         let vertical = applyDeadZone(verticalRate)
+        let speed = (horizontal * horizontal + vertical * vertical).squareRoot()
+        let boost = 1 + (configuration.maximumAcceleration - 1) * min(speed / 90, 1)
+
+        let widthDegrees = configuration.rangeDegrees
+        let heightDegrees = widthDegrees / configuration.aspectRatio
+        rawPosition.x = Self.clamped(rawPosition.x + horizontal * boost * elapsed / widthDegrees)
+        rawPosition.y = Self.clamped(rawPosition.y - vertical * boost * elapsed / heightDegrees)
+
+        history.append((time, rawPosition))
+        history.removeAll { time - $0.time > Self.historySeconds }
