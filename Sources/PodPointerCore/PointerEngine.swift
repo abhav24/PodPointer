@@ -56,3 +56,13 @@ public struct PointerEngine: Sendable {
         self.configuration = configuration
         applyFilterSettings()
     }
+
+    /// Rates are in degrees per second. Positive is right and up.
+    public mutating func advance(horizontalRate: Double, verticalRate: Double, at time: Double) -> PointerPoint {
+        defer { lastTime = time }
+        guard let last = lastTime else { return position }
+        let elapsed = time - last
+        guard elapsed > 0, elapsed <= Self.maximumStepSeconds else { return position }
+
+        let horizontal = applyDeadZone(horizontalRate)
+        let vertical = applyDeadZone(verticalRate)
