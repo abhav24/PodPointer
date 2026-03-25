@@ -86,3 +86,14 @@ public struct PointerEngine: Sendable {
     }
 
     /// Keeps the pointer in place, for use while a tap is shaking the case.
+    public mutating func hold(at time: Double) -> PointerPoint {
+        lastTime = time
+        return position
+    }
+
+    /// Undoes the movement just before a tap, because the jolt starts before it's detected.
+    public mutating func rollBack(from time: Double) {
+        guard let earlier = history.last(where: { time - $0.time >= Self.rollbackSeconds }) else { return }
+        set(position: earlier.point)
+    }
+
