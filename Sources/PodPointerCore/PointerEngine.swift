@@ -76,3 +76,13 @@ public struct PointerEngine: Sendable {
 
         history.append((time, rawPosition))
         history.removeAll { time - $0.time > Self.historySeconds }
+
+        // Filtering in degrees makes the filter's speed setting independent of the range.
+        position = PointerPoint(
+            x: Self.clamped(xFilter.filter(rawPosition.x * widthDegrees, at: time) / widthDegrees),
+            y: Self.clamped(yFilter.filter(rawPosition.y * heightDegrees, at: time) / heightDegrees)
+        )
+        return position
+    }
+
+    /// Keeps the pointer in place, for use while a tap is shaking the case.
