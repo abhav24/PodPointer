@@ -117,3 +117,8 @@ public struct PointerEngine: Sendable {
         yFilter.minCutoff = configuration.minCutoff
         yFilter.beta = configuration.beta
     }
+
+    private static func clamped(_ value: Double) -> Double {
+        min(max(value, 0), 1)
+    }
+}
