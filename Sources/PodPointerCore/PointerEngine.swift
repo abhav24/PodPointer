@@ -107,3 +107,8 @@ public struct PointerEngine: Sendable {
 
     private func applyDeadZone(_ rate: Double) -> Double {
         let zone = configuration.deadZoneDegreesPerSecond
+        guard abs(rate) > zone else { return 0 }
+        return rate > 0 ? rate - zone : rate + zone
+    }
+
+    private mutating func applyFilterSettings() {
