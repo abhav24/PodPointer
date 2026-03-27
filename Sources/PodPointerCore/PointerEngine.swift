@@ -112,3 +112,8 @@ public struct PointerEngine: Sendable {
     }
 
     private mutating func applyFilterSettings() {
+        xFilter.minCutoff = configuration.minCutoff
+        xFilter.beta = configuration.beta
+        yFilter.minCutoff = configuration.minCutoff
+        yFilter.beta = configuration.beta
+    }
