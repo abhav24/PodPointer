@@ -102,3 +102,8 @@ public struct PointerEngine: Sendable {
         position = rawPosition
         xFilter.reset()
         yFilter.reset()
+        history.removeAll()
+    }
+
+    private func applyDeadZone(_ rate: Double) -> Double {
+        let zone = configuration.deadZoneDegreesPerSecond
