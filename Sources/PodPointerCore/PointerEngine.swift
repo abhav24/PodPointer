@@ -97,3 +97,8 @@ public struct PointerEngine: Sendable {
         set(position: earlier.point)
     }
 
+    public mutating func set(position point: PointerPoint) {
+        rawPosition = PointerPoint(x: Self.clamped(point.x), y: Self.clamped(point.y))
+        position = rawPosition
+        xFilter.reset()
+        yFilter.reset()
