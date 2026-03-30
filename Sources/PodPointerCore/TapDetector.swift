@@ -9,3 +9,14 @@ public struct TapDetector: Sendable {
         case tap
         case rejected
     }
+
+    public var threshold: Double
+
+    private static let stillRotationLimit = 0.9
+    private static let stillWindowSeconds = 0.25
+    private static let maximumImpulseSeconds = 0.16
+    private static let afterTapSeconds = 0.12
+    private static let afterRejectSeconds = 0.2
+    private static let resetGapSeconds = 0.5
+
+    private var previousAcceleration: Vector3?
