@@ -43,3 +43,15 @@ public struct TapDetector: Sendable {
 
         if let start = impulseStart {
             if impulse < threshold * 0.5 {
+                impulseStart = nil
+                ignoreUntil = time + Self.afterTapSeconds
+                return .tap
+            }
+            if time - start > Self.maximumImpulseSeconds {
+                impulseStart = nil
+                ignoreUntil = time + Self.afterRejectSeconds
+                return .rejected
+            }
+            return .none
+        }
+
