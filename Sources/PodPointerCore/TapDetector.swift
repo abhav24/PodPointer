@@ -55,3 +55,12 @@ public struct TapDetector: Sendable {
             return .none
         }
 
+        guard time >= ignoreUntil else { return .none }
+        if impulse >= threshold, isHandStill(at: time) {
+            impulseStart = time
+            return .impulseStarted
+        }
+        // A tap jolts the gyroscope too, so samples during and after a tap
+        // aren't recorded. Otherwise the second tap of a double tap would fail.
+        recentRotation.append((time, rotationSpeed))
+        return .none
