@@ -32,3 +32,14 @@ public struct TapDetector: Sendable {
     public mutating func process(acceleration: Vector3, rotationSpeed: Double, at time: Double) -> Event {
         defer {
             previousAcceleration = acceleration
+            previousTime = time
+        }
+        guard let previous = previousAcceleration, time - previousTime < Self.resetGapSeconds else {
+            impulseStart = nil
+            recentRotation.removeAll()
+            return .none
+        }
+        let impulse = (acceleration - previous).magnitude
+
+        if let start = impulseStart {
+            if impulse < threshold * 0.5 {
