@@ -74,3 +74,13 @@ public struct TapDetector: Sendable {
 
 public enum CaseGesture: String, CaseIterable, Sendable {
     case single
+    case double
+    case triple
+}
+
+/// Groups taps into single, double, and triple taps.
+public struct TapSequence: Sendable {
+    public let windowSeconds: Double
+    private var count = 0
+    private var lastTap = -Double.infinity
+
