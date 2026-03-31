@@ -64,3 +64,13 @@ public struct TapDetector: Sendable {
         // aren't recorded. Otherwise the second tap of a double tap would fail.
         recentRotation.append((time, rotationSpeed))
         return .none
+    }
+
+    private mutating func isHandStill(at time: Double) -> Bool {
+        recentRotation.removeAll { time - $0.time > Self.stillWindowSeconds }
+        return recentRotation.allSatisfy { $0.speed < Self.stillRotationLimit }
+    }
+}
+
+public enum CaseGesture: String, CaseIterable, Sendable {
+    case single
