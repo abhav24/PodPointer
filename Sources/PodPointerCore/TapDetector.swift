@@ -94,3 +94,13 @@ public struct TapSequence: Sendable {
         lastTap = time
         guard count >= 3 else { return nil }
         count = 0
+        return .triple
+    }
+
+    /// Returns a gesture once enough time has passed with no further tap.
+    public mutating func poll(at time: Double) -> CaseGesture? {
+        guard count > 0, time - lastTap >= windowSeconds else { return nil }
+        defer { count = 0 }
+        return count == 1 ? .single : .double
+    }
+}
