@@ -28,3 +28,13 @@ public struct CaseCalibration: Codable, Equatable, Sendable {
         self.verticalAxis = verticalAxis
         self.gyroBias = gyroBias
         self.tapThreshold = tapThreshold
+        self.sensorLocation = sensorLocation
+    }
+}
+
+public enum CalibrationStep: Equatable, Sendable {
+    case holdStill
+    case sweepSideways
+    case sweepVertically
+    case tap
+}
