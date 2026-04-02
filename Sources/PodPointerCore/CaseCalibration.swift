@@ -18,3 +18,13 @@ public struct CaseCalibration: Codable, Equatable, Sendable {
     public var sensorLocation: String
 
     public init(
+        horizontalAxis: Vector3,
+        verticalAxis: Vector3,
+        gyroBias: Vector3,
+        tapThreshold: Double,
+        sensorLocation: String
+    ) {
+        self.horizontalAxis = horizontalAxis
+        self.verticalAxis = verticalAxis
+        self.gyroBias = gyroBias
+        self.tapThreshold = tapThreshold
