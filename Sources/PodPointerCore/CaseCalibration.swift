@@ -76,3 +76,13 @@ public struct CalibrationSession: Sendable {
     public private(set) var tapsFound = 0
 
     private let sensorLocation: String
+    private var stepStart: Double?
+    private var previousAcceleration: Vector3?
+
+    private var restingSum = Vector3.zero
+    private var restingCount = 0
+    private var noiseFloor = 0.0
+    private var gyroBias = Vector3.zero
+
+    private var sweepSamples: [Vector3] = []
+    private var horizontalAxis = Vector3.zero
