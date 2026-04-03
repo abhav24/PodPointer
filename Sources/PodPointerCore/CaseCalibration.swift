@@ -48,3 +48,12 @@ public enum CalibrationFailure: String, Error, Equatable, Sendable {
     case tapsTooWeak = "The taps were hard to tell apart from noise. Tap more firmly and try again."
 }
 
+public enum CalibrationStatus: Equatable, Sendable {
+    case inProgress
+    case finished(CaseCalibration)
+    case failed(CalibrationFailure)
+}
+
+/// Runs calibration from motion samples alone, so it can be tested without hardware.
+public struct CalibrationSession: Sendable {
+    public static let requiredTaps = 5
