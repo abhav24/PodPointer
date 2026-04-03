@@ -67,3 +67,12 @@ public struct CalibrationSession: Sendable {
     private static let holdMotionLimit = 0.5
     private static let sweepMotionFloor = 0.35
     private static let minimumAxisEnergy = 0.6
+    private static let minimumAxisSeparation = 0.5
+    private static let tapPeakSeconds = 0.15
+    private static let tapSpacingSeconds = 0.25
+
+    public private(set) var step = CalibrationStep.holdStill
+    public private(set) var progress = 0.0
+    public private(set) var tapsFound = 0
+
+    private let sensorLocation: String
