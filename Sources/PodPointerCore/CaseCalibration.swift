@@ -38,3 +38,13 @@ public enum CalibrationStep: Equatable, Sendable {
     case sweepVertically
     case tap
 }
+
+public enum CalibrationFailure: String, Error, Equatable, Sendable {
+    case tooFewSamples = "Motion samples arrived too slowly. Check the connection and try again."
+    case tooLittleMovement = "There wasn't enough movement. Sweep the case further and try again."
+    case unclearMovement = "The movement was hard to read. Keep each sweep in one direction and try again."
+    case axesTooSimilar = "The two sweeps looked the same. Sweep sideways, then up and down, and try again."
+    case tooFewTaps = "Too few taps were detected. Tap the case more firmly and try again."
+    case tapsTooWeak = "The taps were hard to tell apart from noise. Tap more firmly and try again."
+}
+
