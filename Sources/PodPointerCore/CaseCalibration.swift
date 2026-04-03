@@ -57,3 +57,13 @@ public enum CalibrationStatus: Equatable, Sendable {
 /// Runs calibration from motion samples alone, so it can be tested without hardware.
 public struct CalibrationSession: Sendable {
     public static let requiredTaps = 5
+
+    private static let holdSeconds = 2.0
+    private static let sweepSeconds = 4.0
+    private static let tapTimeoutSeconds = 10.0
+    private static let minimumHoldSamples = 20
+    private static let minimumSweepSamples = 12
+    private static let minimumTaps = 3
+    private static let holdMotionLimit = 0.5
+    private static let sweepMotionFloor = 0.35
+    private static let minimumAxisEnergy = 0.6
