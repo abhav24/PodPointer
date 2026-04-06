@@ -86,3 +86,13 @@ public struct CalibrationSession: Sendable {
 
     private var sweepSamples: [Vector3] = []
     private var horizontalAxis = Vector3.zero
+    private var verticalAxis = Vector3.zero
+
+    private var tapPeaks: [Double] = []
+    private var currentPeak: Double?
+    private var currentPeakStart = -Double.infinity
+
+    public init(sensorLocation: String) {
+        self.sensorLocation = sensorLocation
+    }
+
