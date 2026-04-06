@@ -96,3 +96,12 @@ public struct CalibrationSession: Sendable {
         self.sensorLocation = sensorLocation
     }
 
+    public mutating func process(_ reading: MotionReading) -> CalibrationStatus {
+        let start = stepStart ?? reading.timestamp
+        stepStart = start
+        let elapsed = reading.timestamp - start
+        let impulse = previousAcceleration.map { (reading.userAcceleration - $0).magnitude } ?? 0
+        previousAcceleration = reading.userAcceleration
+
+        switch step {
+        case .holdStill:
