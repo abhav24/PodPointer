@@ -105,3 +105,12 @@ public struct CalibrationSession: Sendable {
 
         switch step {
         case .holdStill:
+            return processHold(reading, impulse: impulse, elapsed: elapsed)
+        case .sweepSideways, .sweepVertically:
+            return processSweep(reading, elapsed: elapsed)
+        case .tap:
+            return processTap(impulse: impulse, time: reading.timestamp, elapsed: elapsed)
+        }
+    }
+
+    private mutating func processHold(_ reading: MotionReading, impulse: Double, elapsed: Double) -> CalibrationStatus {
