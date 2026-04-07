@@ -133,3 +133,13 @@ public struct CalibrationSession: Sendable {
         gyroBias = restingSum * (1 / Double(restingCount))
         advance(to: .sweepSideways)
         return .inProgress
+    }
+
+    private mutating func processSweep(_ reading: MotionReading, elapsed: Double) -> CalibrationStatus {
+        let rate = reading.rotationRate - gyroBias
+        if rate.magnitude > Self.sweepMotionFloor {
+            sweepSamples.append(rate)
+        }
+        progress = min(elapsed / Self.sweepSeconds, 1)
+        guard elapsed >= Self.sweepSeconds else { return .inProgress }
+
