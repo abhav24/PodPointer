@@ -124,3 +124,12 @@ public struct CalibrationSession: Sendable {
             return .inProgress
         }
         restingSum = restingSum + reading.rotationRate
+        restingCount += 1
+        noiseFloor = max(noiseFloor, impulse)
+        progress = min(elapsed / Self.holdSeconds, 1)
+
+        guard elapsed >= Self.holdSeconds else { return .inProgress }
+        guard restingCount >= Self.minimumHoldSamples else { return .failed(.tooFewSamples) }
+        gyroBias = restingSum * (1 / Double(restingCount))
+        advance(to: .sweepSideways)
+        return .inProgress
