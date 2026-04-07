@@ -114,3 +114,13 @@ public struct CalibrationSession: Sendable {
     }
 
     private mutating func processHold(_ reading: MotionReading, impulse: Double, elapsed: Double) -> CalibrationStatus {
+        if reading.rotationRate.magnitude > Self.holdMotionLimit {
+            // The case moved, so measure the resting values again.
+            restingSum = .zero
+            restingCount = 0
+            noiseFloor = 0
+            stepStart = reading.timestamp
+            progress = 0
+            return .inProgress
+        }
+        restingSum = restingSum + reading.rotationRate
