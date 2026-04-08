@@ -143,3 +143,12 @@ public struct CalibrationSession: Sendable {
         progress = min(elapsed / Self.sweepSeconds, 1)
         guard elapsed >= Self.sweepSeconds else { return .inProgress }
 
+        guard sweepSamples.count >= Self.minimumSweepSamples else { return .failed(.tooLittleMovement) }
+        guard let axis = Self.principalAxis(of: sweepSamples) else { return .failed(.unclearMovement) }
+        sweepSamples.removeAll()
+
+        if step == .sweepSideways {
+            horizontalAxis = axis
+            advance(to: .sweepVertically)
+            return .inProgress
+        }
