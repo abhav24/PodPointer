@@ -152,3 +152,13 @@ public struct CalibrationSession: Sendable {
             advance(to: .sweepVertically)
             return .inProgress
         }
+
+        // Remove any part of the vertical axis that also means "sideways".
+        let separated = axis - horizontalAxis * axis.dot(horizontalAxis)
+        guard separated.magnitude >= Self.minimumAxisSeparation else { return .failed(.axesTooSimilar) }
+        verticalAxis = separated.normalized
+        advance(to: .tap)
+        return .inProgress
+    }
+
+    private mutating func processTap(impulse: Double, time: Double, elapsed: Double) -> CalibrationStatus {
