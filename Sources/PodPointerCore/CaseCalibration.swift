@@ -172,3 +172,13 @@ public struct CalibrationSession: Sendable {
             }
         } else if impulse >= max(noiseFloor * 2, 0.02), time - currentPeakStart >= Self.tapSpacingSeconds {
             currentPeak = impulse
+            currentPeakStart = time
+        }
+
+        progress = Double(min(tapPeaks.count, Self.requiredTaps)) / Double(Self.requiredTaps)
+        guard tapPeaks.count >= Self.requiredTaps || elapsed >= Self.tapTimeoutSeconds else {
+            return .inProgress
+        }
+        guard tapPeaks.count >= Self.minimumTaps else { return .failed(.tooFewTaps) }
+
+        let median = tapPeaks.sorted()[tapPeaks.count / 2]
