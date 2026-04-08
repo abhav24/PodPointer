@@ -162,3 +162,13 @@ public struct CalibrationSession: Sendable {
     }
 
     private mutating func processTap(impulse: Double, time: Double, elapsed: Double) -> CalibrationStatus {
+        if let peak = currentPeak {
+            if time - currentPeakStart <= Self.tapPeakSeconds {
+                currentPeak = max(peak, impulse)
+            } else {
+                tapPeaks.append(peak)
+                currentPeak = nil
+                tapsFound = tapPeaks.count
+            }
+        } else if impulse >= max(noiseFloor * 2, 0.02), time - currentPeakStart >= Self.tapSpacingSeconds {
+            currentPeak = impulse
