@@ -182,3 +182,13 @@ public struct CalibrationSession: Sendable {
         guard tapPeaks.count >= Self.minimumTaps else { return .failed(.tooFewTaps) }
 
         let median = tapPeaks.sorted()[tapPeaks.count / 2]
+        guard median > noiseFloor * 1.5 else { return .failed(.tapsTooWeak) }
+        return .finished(CaseCalibration(
+            horizontalAxis: horizontalAxis,
+            verticalAxis: verticalAxis,
+            gyroBias: gyroBias,
+            tapThreshold: max(median * 0.6, noiseFloor * 1.5),
+            sensorLocation: sensorLocation
+        ))
+    }
+
