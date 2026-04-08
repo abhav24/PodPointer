@@ -192,3 +192,8 @@ public struct CalibrationSession: Sendable {
         ))
     }
 
+    private mutating func advance(to next: CalibrationStep) {
+        step = next
+        stepStart = nil
+        progress = 0
+    }
