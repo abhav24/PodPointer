@@ -203,3 +203,8 @@ public struct CalibrationSession: Sendable {
     private static func principalAxis(of samples: [Vector3]) -> Vector3? {
         guard let largest = samples.max(by: { $0.magnitude < $1.magnitude }) else { return nil }
 
+        var axis = largest.normalized
+        for _ in 0..<25 {
+            var next = Vector3.zero
+            for sample in samples {
+                next = next + sample * sample.dot(axis)
