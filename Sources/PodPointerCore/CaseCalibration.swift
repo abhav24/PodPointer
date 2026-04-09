@@ -208,3 +208,9 @@ public struct CalibrationSession: Sendable {
             var next = Vector3.zero
             for sample in samples {
                 next = next + sample * sample.dot(axis)
+            }
+            axis = next.normalized
+        }
+
+        let total = samples.reduce(0) { $0 + $1.dot($1) }
+        let alongAxis = samples.reduce(0) { $0 + pow($1.dot(axis), 2) }
