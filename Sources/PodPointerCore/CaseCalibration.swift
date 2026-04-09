@@ -197,3 +197,9 @@ public struct CalibrationSession: Sendable {
         stepStart = nil
         progress = 0
     }
+
+    /// Finds the axis most of the rotation happened around, using power iteration.
+    /// Its sign follows the first movement, so "start by moving right" defines right.
+    private static func principalAxis(of samples: [Vector3]) -> Vector3? {
+        guard let largest = samples.max(by: { $0.magnitude < $1.magnitude }) else { return nil }
+
