@@ -21,3 +21,15 @@ public struct CaseInputProcessor: Sendable {
 
     private static let settleSeconds = 0.08
     private static let degreesPerRadian = 180 / Double.pi
+
+    private var engine: PointerEngine
+    private var detector: TapDetector
+    private var sequence = TapSequence()
+    private var isHolding = false
+    private var holdUntil = Double.infinity
+
+    public init(calibration: CaseCalibration, pointerConfiguration: PointerConfiguration = PointerConfiguration()) {
+        self.calibration = calibration
+        engine = PointerEngine(configuration: pointerConfiguration)
+        detector = TapDetector(threshold: calibration.tapThreshold)
+    }
