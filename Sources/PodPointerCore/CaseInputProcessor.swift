@@ -33,3 +33,15 @@ public struct CaseInputProcessor: Sendable {
         engine = PointerEngine(configuration: pointerConfiguration)
         detector = TapDetector(threshold: calibration.tapThreshold)
     }
+
+    public mutating func process(_ reading: MotionReading) -> CaseOutput {
+        let time = reading.timestamp
+        let rotation = reading.rotationRate - calibration.gyroBias
+        var gesture: CaseGesture?
+
+        switch detector.process(acceleration: reading.userAcceleration, rotationSpeed: rotation.magnitude, at: time) {
+        case .none:
+            break
+        case .impulseStarted:
+            engine.rollBack(from: time)
+            isHolding = true
