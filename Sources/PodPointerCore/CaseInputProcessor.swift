@@ -9,3 +9,15 @@ public struct CaseOutput: Equatable, Sendable {
 public struct CaseInputProcessor: Sendable {
     public let calibration: CaseCalibration
 
+    public var pointerConfiguration: PointerConfiguration {
+        get { engine.configuration }
+        set { engine.configuration = newValue }
+    }
+
+    /// Above 1 makes lighter taps count. Below 1 needs firmer taps.
+    public var tapSensitivity = 1.0 {
+        didSet { detector.threshold = calibration.tapThreshold / tapSensitivity }
+    }
+
+    private static let settleSeconds = 0.08
+    private static let degreesPerRadian = 180 / Double.pi
