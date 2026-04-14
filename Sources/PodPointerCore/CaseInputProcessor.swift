@@ -57,3 +57,6 @@ public struct CaseInputProcessor: Sendable {
         }
         gesture = gesture ?? sequence.poll(at: time)
 
+        let point: PointerPoint
+        if isHolding {
+            point = engine.hold(at: time)
