@@ -63,3 +63,7 @@ public struct CaseInputProcessor: Sendable {
         } else {
             point = engine.advance(
                 horizontalRate: rotation.dot(calibration.horizontalAxis) * Self.degreesPerRadian,
+                verticalRate: rotation.dot(calibration.verticalAxis) * Self.degreesPerRadian,
+                at: time
+            )
+        }
