@@ -60,3 +60,6 @@ public struct CaseInputProcessor: Sendable {
         let point: PointerPoint
         if isHolding {
             point = engine.hold(at: time)
+        } else {
+            point = engine.advance(
+                horizontalRate: rotation.dot(calibration.horizontalAxis) * Self.degreesPerRadian,
