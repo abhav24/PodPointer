@@ -70,3 +70,7 @@ public struct CaseInputProcessor: Sendable {
         return CaseOutput(point: point, gesture: gesture)
     }
 
+    public mutating func setPosition(_ point: PointerPoint) {
+        engine.set(position: point)
+    }
+}
