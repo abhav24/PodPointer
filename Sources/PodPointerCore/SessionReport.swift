@@ -1,7 +1,7 @@
 import Foundation
 
-/// The results of a test session, formatted for pasting into a GitHub issue.
-/// It holds no device names, because macOS AirPods names often include a person's name.
+/// Test results formatted for a GitHub issue. It leaves out the AirPods' name,
+/// which often includes a person's name.
 public struct SessionReport: Sendable {
     public var appVersion: String
     public var macOSVersion: String
@@ -41,10 +41,10 @@ public struct SessionReport: Sendable {
 
         ### Measured
         - Motion rate: \(String(format: "%.1f", motion.hertz)) Hz
-        - p95 sample interval: \(String(format: "%.0f", motion.p95IntervalMilliseconds)) ms
-        - Longest gap in the last window: \(String(format: "%.0f", motion.maxGapMilliseconds)) ms
-        - Sensor locations seen: \(locations)
-        - Stem presses received: \(presses)
+        - Longest gap: \(String(format: "%.0f", motion.longestGapMilliseconds)) ms
+        - AirPods sending motion: \(locations)
+        - Calibrated: \(isCalibrated ? "yes" : "no")
+        - Taps detected: \(gestures)
 
         ### Results (fill in)
         - Stem presses work while slides are in front: yes / no
