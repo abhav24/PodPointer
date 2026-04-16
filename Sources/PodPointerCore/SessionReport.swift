@@ -16,7 +16,8 @@ public struct SessionReport: Sendable {
         macOSVersion: String,
         motion: SampleRateSnapshot,
         sensorLocations: [String],
-        pressCounts: [StemPress: Int],
+        isCalibrated: Bool,
+        gestureCounts: [CaseGesture: Int],
         events: [String]
     ) {
         self.appVersion = appVersion
