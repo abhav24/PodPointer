@@ -24,7 +24,8 @@ public struct SessionReport: Sendable {
         self.macOSVersion = macOSVersion
         self.motion = motion
         self.sensorLocations = sensorLocations
-        self.pressCounts = pressCounts
+        self.isCalibrated = isCalibrated
+        self.gestureCounts = gestureCounts
         self.events = events
     }
 
