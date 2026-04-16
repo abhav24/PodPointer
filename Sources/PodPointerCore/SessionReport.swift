@@ -7,7 +7,8 @@ public struct SessionReport: Sendable {
     public var macOSVersion: String
     public var motion: SampleRateSnapshot
     public var sensorLocations: [String]
-    public var pressCounts: [StemPress: Int]
+    public var isCalibrated: Bool
+    public var gestureCounts: [CaseGesture: Int]
     public var events: [String]
 
     public init(
