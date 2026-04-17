@@ -50,7 +50,7 @@ public struct SessionReport: Sendable {
         - Taps detected: \(gestures)
 
         ### Results (fill in)
-        - Stem presses work while slides are in front: yes / no
+        - Motion arrives from the open case: yes / no
         - Pointer feels usable while presenting: yes / no
         - Laser overlay appears over the slideshow: yes / no
         - Motion continues with one AirPod in: yes / no
