@@ -31,8 +31,8 @@ public struct SessionReport: Sendable {
 
     public var markdown: String {
         let locations = sensorLocations.isEmpty ? "none" : sensorLocations.joined(separator: ", ")
-        let presses = StemPress.allCases
-            .map { "\($0.rawValue): \(pressCounts[$0, default: 0])" }
+        let gestures = CaseGesture.allCases
+            .map { "\($0.rawValue): \(gestureCounts[$0, default: 0])" }
             .joined(separator: ", ")
         return """
         ## PodPointer test report
