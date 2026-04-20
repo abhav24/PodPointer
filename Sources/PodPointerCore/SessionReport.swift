@@ -54,7 +54,8 @@ public struct SessionReport: Sendable {
         - Calibration finishes: yes / no
         - Taps out of 20 detected: __ / 20
         - False taps while pointing for 1 minute: __
-        - Motion continues with an AirPod held in the hand: yes / no
+        - Pointer feels usable: yes / no
+        - Laser dot appears over a full-screen slideshow: yes / no
 
         ### Event log
         ```
