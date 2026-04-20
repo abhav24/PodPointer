@@ -53,7 +53,7 @@ public struct SessionReport: Sendable {
         - Motion arrives from the open case: yes / no
         - Calibration finishes: yes / no
         - Taps out of 20 detected: __ / 20
-        - Motion continues with one AirPod in: yes / no
+        - False taps while pointing for 1 minute: __
         - Motion continues with an AirPod held in the hand: yes / no
 
         ### Event log
