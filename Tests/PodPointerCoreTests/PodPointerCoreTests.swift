@@ -37,8 +37,17 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
     }
 }
 
-@Suite struct PointerMapperTests {
-    private let degree = Double.pi / 180
+@Suite struct CalibrationTests {
+    /// Feeds a full calibration, with the case held at an arbitrary angle.
+    private func run(
+        horizontal: Vector3,
+        vertical: Vector3,
+        bias: Vector3 = .zero,
+        tapStrength: Double = 0.8
+    ) -> CalibrationStatus {
+        var session = CalibrationSession(sensorLocation: "right")
+        var time = 0.0
+        var status = CalibrationStatus.inProgress
 
     /// Feeds one orientation repeatedly so the filter settles on it.
     private func settle(_ mapper: inout PointerMapper, yaw: Double, pitch: Double, from start: Double = 1) -> PointerPoint {
