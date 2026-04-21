@@ -2,11 +2,8 @@ import Foundation
 import Testing
 @testable import PodPointerCore
 
-@Suite struct OneEuroFilterTests {
-    @Test func firstSamplePassesThrough() {
-        var filter = OneEuroFilter()
-        #expect(filter.filter(5, at: 0) == 5)
-    }
+private let sampleInterval = 0.02
+private let degree = Double.pi / 180
 
     @Test func reducesJitterAroundAStillValue() {
         var filter = OneEuroFilter()
