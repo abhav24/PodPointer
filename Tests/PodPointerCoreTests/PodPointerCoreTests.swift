@@ -244,15 +244,12 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
         #expect(point.y < 0.45)
     }
 
-    @Test func invertFlipsDirection() {
-        var configuration = PointerConfiguration()
-        configuration.invertX = true
-        configuration.invertY = true
-        var mapper = PointerMapper(configuration: configuration)
-        _ = mapper.map(yawRadians: 0, pitchRadians: 0, at: 0)
-        let point = settle(&mapper, yaw: 7.5 * degree, pitch: 5 * degree)
-        #expect(abs(point.x - 0.75) < 0.01)
-        #expect(abs(point.y - 0.75) < 0.01)
+    @Test func fullRangeCrossesTheDisplay() {
+        var pointer = engine()
+        pointer.set(position: PointerPoint(x: 0, y: 0.5))
+        _ = sweep(&pointer, horizontal: 40, seconds: 1)
+        _ = sweep(&pointer, seconds: 1, from: 1.02)
+        #expect(abs(pointer.position.x - 1) < 0.03)
     }
 
     @Test func outputIsClampedToTheDisplay() {
