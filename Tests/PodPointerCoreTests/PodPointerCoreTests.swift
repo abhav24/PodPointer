@@ -257,12 +257,11 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
         #expect(isAtCenter(sweep(&pointer, horizontal: 1.5, vertical: -1.5, seconds: 2)))
     }
 
-    @Test func crossingTheYawSeamIsASmallMove() {
-        var mapper = PointerMapper()
-        _ = mapper.map(yawRadians: 179 * degree, pitchRadians: 0, at: 0)
-        // 179 to -179 degrees is a 2 degree left turn, not a 358 degree turn.
-        let point = settle(&mapper, yaw: -179 * degree, pitch: 0)
-        #expect(abs(point.x - (0.5 - 2.0 / 30)) < 0.01)
+    @Test func staysOnTheDisplay() {
+        var pointer = engine()
+        let point = sweep(&pointer, horizontal: 300, vertical: -300, seconds: 3)
+        #expect(abs(point.x - 1) < 1e-9)
+        #expect(abs(point.y - 1) < 1e-9)
     }
 
     @Test func recenterMakesTheNextSampleTheCenter() {
