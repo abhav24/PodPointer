@@ -230,9 +230,11 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
         return point
     }
 
-    @Test func firstSampleIsTheCenter() {
-        var mapper = PointerMapper()
-        #expect(mapper.map(yawRadians: 1.2, pitchRadians: -0.4, at: 0) == PointerPoint(x: 0.5, y: 0.5))
+    private func engine() -> PointerEngine {
+        var configuration = PointerConfiguration()
+        configuration.maximumAcceleration = 1
+        configuration.deadZoneDegreesPerSecond = 0
+        return PointerEngine(configuration: configuration)
     }
 
     @Test func turningLeftMovesLeftAndLookingUpMovesUp() {
