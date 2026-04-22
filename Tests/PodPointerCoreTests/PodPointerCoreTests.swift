@@ -252,12 +252,9 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
         #expect(abs(pointer.position.x - 1) < 0.03)
     }
 
-    @Test func outputIsClampedToTheDisplay() {
-        var mapper = PointerMapper()
-        _ = mapper.map(yawRadians: 0, pitchRadians: 0, at: 0)
-        let point = settle(&mapper, yaw: 90 * degree, pitch: -80 * degree)
-        #expect(point.x == 0)
-        #expect(point.y == 1)
+    @Test func tremorInsideTheDeadZoneDoesNothing() {
+        var pointer = PointerEngine()
+        #expect(isAtCenter(sweep(&pointer, horizontal: 1.5, vertical: -1.5, seconds: 2)))
     }
 
     @Test func crossingTheYawSeamIsASmallMove() {
