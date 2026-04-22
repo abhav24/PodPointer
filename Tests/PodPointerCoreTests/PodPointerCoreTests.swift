@@ -237,12 +237,11 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
         return PointerEngine(configuration: configuration)
     }
 
-    @Test func turningLeftMovesLeftAndLookingUpMovesUp() {
-        var mapper = PointerMapper()
-        _ = mapper.map(yawRadians: 0, pitchRadians: 0, at: 0)
-        let point = settle(&mapper, yaw: 7.5 * degree, pitch: 5 * degree)
-        #expect(abs(point.x - 0.25) < 0.01)
-        #expect(abs(point.y - 0.25) < 0.01)
+    @Test func rotatingRightAndUpMovesRightAndUp() {
+        var pointer = engine()
+        let point = sweep(&pointer, horizontal: 10, vertical: 5, seconds: 1)
+        #expect(point.x > 0.6)
+        #expect(point.y < 0.45)
     }
 
     @Test func invertFlipsDirection() {
