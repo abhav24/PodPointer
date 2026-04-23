@@ -366,8 +366,11 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
     @Test func measuresRateAndGaps() {
         var tracker = SampleRateTracker()
         #expect(tracker.snapshot == .empty)
-        tracker.record(1)
-        #expect(tracker.snapshot == .empty)
+        for time in [0, 0.02, 0.04, 0.54, 0.56] {
+            tracker.record(time)
+        }
+        #expect(abs(tracker.snapshot.longestGapMilliseconds - 500) < 0.01)
+        #expect(abs(tracker.snapshot.hertz - 4 / 0.56) < 0.01)
     }
 
     @Test func measuresASteadyRate() {
