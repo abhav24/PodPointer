@@ -363,7 +363,7 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
 }
 
 @Suite struct SampleRateTrackerTests {
-    @Test func emptyUntilThereAreTwoSamples() {
+    @Test func measuresRateAndGaps() {
         var tracker = SampleRateTracker()
         #expect(tracker.snapshot == .empty)
         tracker.record(1)
