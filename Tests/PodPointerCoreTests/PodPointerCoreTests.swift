@@ -387,7 +387,7 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
         let report = SessionReport(
             appVersion: "0.1.0",
             macOSVersion: "27.0",
-            motion: SampleRateSnapshot(hertz: 25, p95IntervalMilliseconds: 41, maxGapMilliseconds: 80),
+            motion: SampleRateSnapshot(hertz: 50, longestGapMilliseconds: 80),
             sensorLocations: ["left"],
             pressCounts: [.single: 3],
             events: ["12:00:00 Connected"]
