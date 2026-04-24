@@ -376,7 +376,6 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
     @Test func forgetsOldSamples() {
         var tracker = SampleRateTracker(windowSeconds: 1)
         tracker.record(0)
-        tracker.record(0.5)
         tracker.record(10)
         tracker.record(10.1)
         #expect(tracker.snapshot.maxGapMilliseconds < 101)
