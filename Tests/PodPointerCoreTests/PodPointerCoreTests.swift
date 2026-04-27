@@ -393,8 +393,8 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
             gestureCounts: [.single: 3],
             events: ["12:00:00 Tap"]
         ).markdown
-        #expect(report.contains("Motion rate: 25.0 Hz"))
-        #expect(report.contains("Sensor locations seen: left"))
+        #expect(report.contains("Motion rate: 50.0 Hz"))
+        #expect(report.contains("AirPods sending motion: left"))
         #expect(report.contains("single: 3, double: 0, triple: 0"))
         #expect(report.contains("12:00:00 Connected"))
     }
