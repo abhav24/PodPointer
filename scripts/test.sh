@@ -7,7 +7,7 @@ cd "$(dirname "$0")/.."
 
 developer_dir="$(xcode-select -p)"
 plugins="$developer_dir/usr/lib/swift/host/plugins/testing"
-if [[ -f "$plugins/libTestingMacros.dylib" && "$(xcode-select -p)" == *CommandLineTools* ]]; then
+if [[ "$developer_dir" == *CommandLineTools* && -f "$plugins/libTestingMacros.dylib" ]]; then
     swift test -Xswiftc -plugin-path -Xswiftc "$plugins" "$@"
 else
     swift test "$@"
