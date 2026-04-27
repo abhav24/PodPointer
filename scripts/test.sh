@@ -5,6 +5,7 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
+developer_dir="$(xcode-select -p)"
 plugins="$(xcode-select -p)/usr/lib/swift/host/plugins/testing"
 if [[ -f "$plugins/libTestingMacros.dylib" && "$(xcode-select -p)" == *CommandLineTools* ]]; then
     swift test -Xswiftc -plugin-path -Xswiftc "$plugins" "$@"
