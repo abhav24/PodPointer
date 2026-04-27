@@ -389,8 +389,9 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
             macOSVersion: "27.0",
             motion: SampleRateSnapshot(hertz: 50, longestGapMilliseconds: 80),
             sensorLocations: ["left"],
-            pressCounts: [.single: 3],
-            events: ["12:00:00 Connected"]
+            isCalibrated: true,
+            gestureCounts: [.single: 3],
+            events: ["12:00:00 Tap"]
         ).markdown
         #expect(report.contains("Motion rate: 25.0 Hz"))
         #expect(report.contains("Sensor locations seen: left"))
