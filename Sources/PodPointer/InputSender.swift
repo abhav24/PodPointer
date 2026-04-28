@@ -11,3 +11,10 @@ enum InputSender {
     static func requestTrust() {
         let options = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true] as CFDictionary
         _ = AXIsProcessTrustedWithOptions(options)
+    }
+
+    static func nextSlide() { press(rightArrow) }
+    static func previousSlide() { press(leftArrow) }
+
+    static func click(count: Int) {
+        guard let location = CGEvent(source: nil)?.location else { return }
