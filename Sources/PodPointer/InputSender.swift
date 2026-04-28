@@ -18,3 +18,10 @@ enum InputSender {
 
     static func click(count: Int) {
         guard let location = CGEvent(source: nil)?.location else { return }
+        for clickNumber in 1...count {
+            for type in [CGEventType.leftMouseDown, .leftMouseUp] {
+                let event = CGEvent(mouseEventSource: nil, mouseType: type, mouseCursorPosition: location, mouseButton: .left)
+                event?.setIntegerValueField(.mouseEventClickState, value: Int64(clickNumber))
+                event?.post(tap: .cghidEventTap)
+            }
+        }
