@@ -25,3 +25,10 @@ enum InputSender {
                 event?.post(tap: .cghidEventTap)
             }
         }
+    }
+
+    private static func press(_ key: CGKeyCode) {
+        CGEvent(keyboardEventSource: nil, virtualKey: key, keyDown: true)?.post(tap: .cghidEventTap)
+        CGEvent(keyboardEventSource: nil, virtualKey: key, keyDown: false)?.post(tap: .cghidEventTap)
+    }
+}
