@@ -12,3 +12,10 @@ final class SilentAudio {
                 if let data = buffer.mData {
                     memset(data, 0, Int(buffer.mDataByteSize))
                 }
+            }
+            return noErr
+        }
+        sourceNode = node
+        engine.attach(node)
+        engine.connect(node, to: engine.mainMixerNode, format: nil)
+        do {
