@@ -19,3 +19,10 @@ final class SilentAudio {
         engine.attach(node)
         engine.connect(node, to: engine.mainMixerNode, format: nil)
         do {
+            try engine.start()
+        } catch {
+            stop()
+            throw error
+        }
+    }
+
