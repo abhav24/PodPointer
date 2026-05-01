@@ -26,3 +26,11 @@ final class SilentAudio {
         }
     }
 
+    func stop() {
+        engine.stop()
+        if let sourceNode {
+            engine.detach(sourceNode)
+        }
+        sourceNode = nil
+    }
+}
