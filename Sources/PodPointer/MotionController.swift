@@ -1,5 +1,6 @@
 import CoreMotion
 import Foundation
+import PodPointerCore
 
 struct MotionSample {
     let yaw: Double
