@@ -4,7 +4,7 @@ import PodPointerCore
 
 /// Streams motion from connected AirPods. Callbacks arrive on the main queue.
 final class MotionController: NSObject, CMHeadphoneMotionManagerDelegate {
-    var onSample: ((MotionSample) -> Void)?
+    var onReading: ((MotionReading, _ sensorLocation: String) -> Void)?
     var onConnectionChange: ((Bool) -> Void)?
     var onError: ((String) -> Void)?
 
