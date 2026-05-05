@@ -2,7 +2,7 @@ import AppKit
 import PodPointerCore
 import QuartzCore
 
-/// A red dot in a transparent, click-through window above the slides.
+/// A red dot in a transparent, click-through window above everything else.
 final class LaserOverlay {
     private static let dotSize: CGFloat = 22
 
