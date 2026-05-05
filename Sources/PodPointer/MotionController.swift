@@ -11,7 +11,8 @@ final class MotionController: NSObject, CMHeadphoneMotionManagerDelegate {
     private let manager = CMHeadphoneMotionManager()
 
     var isAvailable: Bool { manager.isDeviceMotionAvailable }
-    var authorizationDescription: String {
+
+    var permissionDescription: String {
         switch CMHeadphoneMotionManager.authorizationStatus() {
         case .authorized: "Allowed"
         case .denied: "Denied"
