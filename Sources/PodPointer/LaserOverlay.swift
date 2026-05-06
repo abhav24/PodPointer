@@ -28,7 +28,7 @@ final class LaserOverlay {
         view.wantsLayer = true
         panel.contentView = view
 
-        dot.frame = CGRect(x: 0, y: 0, width: Self.dotSize, height: Self.dotSize)
+        dot.bounds = CGRect(x: 0, y: 0, width: Self.dotSize, height: Self.dotSize)
         dot.cornerRadius = Self.dotSize / 2
         dot.backgroundColor = NSColor.systemRed.cgColor
         dot.shadowColor = NSColor.systemRed.cgColor
