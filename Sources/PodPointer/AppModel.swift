@@ -10,6 +10,8 @@ struct DisplayOption: Identifiable, Hashable {
 @MainActor
 final class AppModel: ObservableObject {
     static let version = "0.1.0"
+
+    private static let calibrationKey = "caseCalibration"
     private static let staleSampleSeconds = 0.5
     private static let maxLogLines = 200
     private static let cursorGraceSeconds = 2.0
