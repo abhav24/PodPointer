@@ -51,7 +51,7 @@ final class LaserOverlay {
         let size = panel.frame.size
         CATransaction.begin()
         CATransaction.setDisableActions(true)
-        // Layers use a bottom-left origin, and PointerPoint uses top-left.
+        // Layers put the origin at the bottom left, and PointerPoint at the top left.
         dot.position = CGPoint(x: point.x * size.width, y: (1 - point.y) * size.height)
         CATransaction.commit()
     }
