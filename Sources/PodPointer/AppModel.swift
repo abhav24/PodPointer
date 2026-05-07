@@ -13,6 +13,8 @@ final class AppModel: ObservableObject {
 
     private static let calibrationKey = "caseCalibration"
     private static let staleSampleSeconds = 0.5
+    private static let realMousePauseSeconds = 1.0
+    private static let pointerTimeConstant = 0.035
     private static let maxLogLines = 200
     private static let cursorGraceSeconds = 2.0
 
