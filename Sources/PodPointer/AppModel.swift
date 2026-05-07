@@ -16,7 +16,6 @@ final class AppModel: ObservableObject {
     private static let realMousePauseSeconds = 1.0
     private static let pointerTimeConstant = 0.035
     private static let maxLogLines = 200
-    private static let cursorGraceSeconds = 2.0
 
     // Motion
     @Published private(set) var permission = "Not asked yet"
