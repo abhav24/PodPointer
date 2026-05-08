@@ -23,8 +23,10 @@ final class AppModel: ObservableObject {
     @Published private(set) var isReceivingMotion = false
     @Published private(set) var rate = SampleRateSnapshot.empty
     @Published private(set) var sensorLocation = "-"
-    @Published private(set) var attitude = "-"
-    @Published private(set) var isStale = true
+    @Published private(set) var strongestJolt = 0.0
+    @Published var keepsAudioActive = false {
+        didSet { updateSilentAudio() }
+    }
 
     // Pointer
     @Published private(set) var pointerMode = PointerMode.off
