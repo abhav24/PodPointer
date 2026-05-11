@@ -40,7 +40,10 @@ final class AppModel: ObservableObject {
     @Published private(set) var isPointerOn = true
     @Published private(set) var displays: [DisplayOption] = []
     @Published var selectedDisplayID: CGDirectDisplayID = CGMainDisplayID() {
-        didSet { showOverlayIfNeeded() }
+        didSet {
+            applyDisplayShape()
+            updateOverlay()
+        }
     }
     @Published var configuration = PointerConfiguration() {
         didSet { mapper.configuration = configuration }
