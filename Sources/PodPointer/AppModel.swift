@@ -45,8 +45,8 @@ final class AppModel: ObservableObject {
             updateOverlay()
         }
     }
-    @Published var configuration = PointerConfiguration() {
-        didSet { mapper.configuration = configuration }
+    @Published var pointerConfiguration = PointerConfiguration() {
+        didSet { processor?.pointerConfiguration = pointerConfiguration }
     }
 
     // Stem presses
