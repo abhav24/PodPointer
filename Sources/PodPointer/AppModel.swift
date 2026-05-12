@@ -48,12 +48,12 @@ final class AppModel: ObservableObject {
     @Published var pointerConfiguration = PointerConfiguration() {
         didSet { processor?.pointerConfiguration = pointerConfiguration }
     }
-
-    // Stem presses
-    @Published private(set) var isListeningForStem = false
-    @Published var sendsSlideKeys = false
-    @Published private(set) var hasAccessibility = KeySender.isTrusted
-    @Published private(set) var pressCounts: [StemPress: Int] = [:]
+    @Published var tapSensitivity = 1.0 {
+        didSet { processor?.tapSensitivity = tapSensitivity }
+    }
+    @Published var sendsActions = false
+    @Published private(set) var hasAccessibility = InputSender.isTrusted
+    @Published private(set) var gestureCounts: [CaseGesture: Int] = [:]
 
     @Published private(set) var log: [String] = []
 
