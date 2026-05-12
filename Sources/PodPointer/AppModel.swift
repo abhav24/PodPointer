@@ -58,7 +58,6 @@ final class AppModel: ObservableObject {
     @Published private(set) var log: [String] = []
 
     private let motion = MotionController()
-    private let stem = StemController()
     private let overlay = LaserOverlay()
     private var mapper = PointerMapper()
     private var tracker = SampleRateTracker()
