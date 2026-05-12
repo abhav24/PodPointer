@@ -59,7 +59,9 @@ final class AppModel: ObservableObject {
 
     private let motion = MotionController()
     private let overlay = LaserOverlay()
-    private var mapper = PointerMapper()
+    private let silentAudio = SilentAudio()
+    private var processor: CaseInputProcessor?
+    private var calibrationSession: CalibrationSession?
     private var tracker = SampleRateTracker()
     private var debouncer = StemPressDebouncer()
     private var sensorLocations: [String] = []
