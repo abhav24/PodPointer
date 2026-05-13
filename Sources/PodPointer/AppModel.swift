@@ -68,9 +68,13 @@ final class AppModel: ObservableObject {
     private var joltSinceLastPublish = 0.0
     private var lastSampleDate: Date?
     private var lastPublishDate = Date.distantPast
-    private var pointerModeChangeDate = Date.distantPast
-    private var healthTimer: Timer?
-    private var started = false
+    private var targetPoint = PointerPoint.center
+    private var shownPoint = PointerPoint.center
+    private var lastFrameDate = Date()
+    private var isPausedForRealMouse = false
+    private var hasWarnedAboutSensor = false
+    private var timers: [Timer] = []
+    private var hasStarted = false
 
     private static let timeFormat: DateFormatter = {
         let formatter = DateFormatter()
