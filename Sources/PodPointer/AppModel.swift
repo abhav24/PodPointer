@@ -82,6 +82,8 @@ final class AppModel: ObservableObject {
         return formatter
     }()
 
+    var canUsePointer: Bool { isCalibrated && calibrationStep == nil }
+
     func start() {
         guard !started else { return }
         started = true
