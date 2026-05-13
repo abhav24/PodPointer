@@ -63,8 +63,9 @@ final class AppModel: ObservableObject {
     private var processor: CaseInputProcessor?
     private var calibrationSession: CalibrationSession?
     private var tracker = SampleRateTracker()
-    private var debouncer = StemPressDebouncer()
-    private var sensorLocations: [String] = []
+    private var sensorLocationsSeen: [String] = []
+    private var previousAcceleration: Vector3?
+    private var joltSinceLastPublish = 0.0
     private var lastSampleDate: Date?
     private var lastPublishDate = Date.distantPast
     private var pointerModeChangeDate = Date.distantPast
