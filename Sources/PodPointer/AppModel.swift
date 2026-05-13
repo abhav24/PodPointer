@@ -88,6 +88,7 @@ final class AppModel: ObservableObject {
         guard !hasStarted else { return }
         hasStarted = true
         refreshDisplays()
+        loadCalibration()
 
         motion.onSample = { [weak self] in self?.handle($0) }
         motion.onConnectionChange = { [weak self] connected in
@@ -101,7 +102,7 @@ final class AppModel: ObservableObject {
             motion.start()
             addLog("Waiting for AirPods motion")
         } else {
-            addLog("Headphone motion isn't available on this Mac")
+            addLog("Motion from AirPods isn't available right now")
         }
 
         healthTimer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: true) { [weak self] _ in
