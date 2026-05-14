@@ -135,6 +135,9 @@ final class AppModel: ObservableObject {
         }
         setMode(.off)
         calibrationSession = CalibrationSession(sensorLocation: sensorLocation)
+        calibrationStep = .holdStill
+        calibrationProgress = 0
+        calibrationTaps = 0
     }
 
     func requestAccessibility() {
