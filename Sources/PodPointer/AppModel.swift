@@ -101,7 +101,7 @@ final class AppModel: ObservableObject {
 
         if motion.isAvailable {
             motion.start()
-            addLog("Waiting for AirPods motion")
+            addLog("Waiting for motion from the AirPods")
         } else {
             addLog("Motion from AirPods isn't available right now")
         }
