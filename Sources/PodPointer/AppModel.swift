@@ -90,7 +90,9 @@ final class AppModel: ObservableObject {
         refreshDisplays()
         loadCalibration()
 
-        motion.onSample = { [weak self] in self?.handle($0) }
+        motion.onReading = { [weak self] reading, location in
+            self?.handle(reading, sensorLocation: location)
+        }
         motion.onConnectionChange = { [weak self] connected in
             self?.isConnected = connected
             self?.addLog(connected ? "AirPods motion connected" : "AirPods motion disconnected")
@@ -105,9 +107,8 @@ final class AppModel: ObservableObject {
             addLog("Motion from AirPods isn't available right now")
         }
 
-        healthTimer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: true) { [weak self] _ in
-            MainActor.assumeIsolated { self?.checkHealth() }
-        }
+        addTimer(interval: 1.0 / 120) { $0.drawPointer() }
+        addTimer(interval: 0.25) { $0.checkHealth() }
     }
 
     func setPointerMode(_ mode: PointerMode) {
