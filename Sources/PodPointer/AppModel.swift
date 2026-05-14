@@ -95,7 +95,7 @@ final class AppModel: ObservableObject {
         }
         motion.onConnectionChange = { [weak self] connected in
             self?.isConnected = connected
-            self?.addLog(connected ? "AirPods motion connected" : "AirPods motion disconnected")
+            self?.addLog(connected ? "AirPods connected" : "AirPods disconnected")
         }
         motion.onError = { [weak self] in self?.addLog("Motion error: \($0)") }
         stem.onPress = { [weak self] in self?.handle($0) }
@@ -111,12 +111,17 @@ final class AppModel: ObservableObject {
         addTimer(interval: 0.25) { $0.checkHealth() }
     }
 
-    func setPointerMode(_ mode: PointerMode) {
-        pointerMode = mode
-        pointerModeChangeDate = Date()
-        addLog("Pointer mode: \(mode.rawValue)")
-        mapper.recenter()
-        showOverlayIfNeeded()
+    func setMode(_ newMode: ControlMode) {
+        mode = newMode
+        isPointerOn = true
+        isPausedForRealMouse = false
+        addLog("Mode: \(newMode.rawValue)")
+        if newMode == .mouse {
+            syncToCursor()
+        } else {
+            place(at: .center)
+        }
+        updateOverlay()
     }
 
     func recenter() {
