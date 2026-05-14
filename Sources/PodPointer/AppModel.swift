@@ -138,6 +138,9 @@ final class AppModel: ObservableObject {
         calibrationStep = .holdStill
         calibrationProgress = 0
         calibrationTaps = 0
+        calibrationMessage = nil
+        addLog("Calibration started")
+    }
     }
 
     func requestAccessibility() {
