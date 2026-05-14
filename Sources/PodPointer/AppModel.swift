@@ -98,7 +98,6 @@ final class AppModel: ObservableObject {
             self?.addLog(connected ? "AirPods connected" : "AirPods disconnected")
         }
         motion.onError = { [weak self] in self?.addLog("Motion error: \($0)") }
-        stem.onPress = { [weak self] in self?.handle($0) }
 
         if motion.isAvailable {
             motion.start()
