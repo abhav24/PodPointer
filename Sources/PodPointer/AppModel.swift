@@ -124,7 +124,7 @@ final class AppModel: ObservableObject {
     }
 
     func recenter() {
-        mapper.recenter()
+        place(at: .center)
         addLog("Recentered")
     }
 
