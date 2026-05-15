@@ -150,7 +150,7 @@ final class AppModel: ObservableObject {
     }
 
     func requestAccessibility() {
-        KeySender.requestTrust()
+        InputSender.requestTrust()
     }
 
     func refreshDisplays() {
@@ -187,6 +187,8 @@ final class AppModel: ObservableObject {
             }
             addLog("Motion sensor: \(sample.sensorLocation)")
         }
+        noteSensor(location)
+        publishStats(for: reading)
 
         let point = mapper.map(yawRadians: sample.yaw, pitchRadians: sample.pitch, at: sample.timestamp)
         switch pointerMode {
