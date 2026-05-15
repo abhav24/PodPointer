@@ -141,6 +141,9 @@ final class AppModel: ObservableObject {
         calibrationMessage = nil
         addLog("Calibration started")
     }
+
+    func cancelCalibration() {
+        calibrationSession = nil
     }
 
     func requestAccessibility() {
