@@ -160,6 +160,7 @@ final class AppModel: ObservableObject {
         if !displays.contains(where: { $0.id == selectedDisplayID }), let first = displays.first {
             selectedDisplayID = first.id
         }
+        applyDisplayShape()
     }
 
     func copyReport() {
