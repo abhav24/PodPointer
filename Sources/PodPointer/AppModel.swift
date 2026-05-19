@@ -182,12 +182,10 @@ final class AppModel: ObservableObject {
     private func handle(_ reading: MotionReading, sensorLocation location: String) {
         tracker.record(reading.timestamp)
         lastSampleDate = Date()
-        if sample.sensorLocation != sensorLocation {
-            sensorLocation = sample.sensorLocation
-            if !sensorLocations.contains(sample.sensorLocation) {
-                sensorLocations.append(sample.sensorLocation)
-            }
-            addLog("Motion sensor: \(sample.sensorLocation)")
+        if !isReceivingMotion {
+            isReceivingMotion = true
+            addLog("Motion started")
+            updateOverlay()
         }
         noteSensor(location)
         publishStats(for: reading)
