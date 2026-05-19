@@ -179,8 +179,8 @@ final class AppModel: ObservableObject {
         addLog("Copied test report")
     }
 
-    private func handle(_ sample: MotionSample) {
-        tracker.record(sample.timestamp)
+    private func handle(_ reading: MotionReading, sensorLocation location: String) {
+        tracker.record(reading.timestamp)
         lastSampleDate = Date()
         if sample.sensorLocation != sensorLocation {
             sensorLocation = sample.sensorLocation
