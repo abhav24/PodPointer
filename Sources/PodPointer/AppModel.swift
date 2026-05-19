@@ -169,8 +169,9 @@ final class AppModel: ObservableObject {
             appVersion: Self.version,
             macOSVersion: "\(system.majorVersion).\(system.minorVersion).\(system.patchVersion)",
             motion: rate,
-            sensorLocations: sensorLocations,
-            pressCounts: pressCounts,
+            sensorLocations: sensorLocationsSeen,
+            isCalibrated: isCalibrated,
+            gestureCounts: gestureCounts,
             events: log
         )
         NSPasteboard.general.clearContents()
