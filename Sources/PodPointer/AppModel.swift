@@ -201,6 +201,7 @@ final class AppModel: ObservableObject {
         if let gesture = output.gesture {
             perform(gesture)
         }
+    }
 
         // The pointer updates on every sample, but the window only needs a few updates a second.
         let now = Date()
