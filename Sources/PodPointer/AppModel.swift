@@ -194,10 +194,12 @@ final class AppModel: ObservableObject {
             continueCalibration(with: reading)
             return
         }
-        if isStale {
-            isStale = false
-            addLog("Motion samples started")
-            showOverlayIfNeeded()
+        guard var current = processor else { return }
+        let output = current.process(reading)
+        processor = current
+        targetPoint = output.point
+        if let gesture = output.gesture {
+            perform(gesture)
         }
 
         // The pointer updates on every sample, but the window only needs a few updates a second.
