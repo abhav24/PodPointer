@@ -232,11 +232,13 @@ final class AppModel: ObservableObject {
         joltSinceLastPublish = 0
     }
 
-    private func handle(_ press: StemPress) {
-        guard debouncer.shouldAccept(press, at: ProcessInfo.processInfo.systemUptime) else { return }
-        pressCounts[press, default: 0] += 1
-        let action = StemAction(press: press)
-        hasAccessibility = KeySender.isTrusted
+    private func continueCalibration(with reading: MotionReading) {
+        guard var session = calibrationSession else { return }
+        let status = session.process(reading)
+        calibrationSession = session
+        calibrationStep = session.step
+        calibrationProgress = session.progress
+        calibrationTaps = session.tapsFound
 
         switch action {
         case .recenter:
