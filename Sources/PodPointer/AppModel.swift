@@ -240,25 +240,21 @@ final class AppModel: ObservableObject {
         calibrationProgress = session.progress
         calibrationTaps = session.tapsFound
 
-        switch action {
-        case .recenter:
-            mapper.recenter()
-            addLog("Stem press: double, recentered")
-        case .nextSlide, .previousSlide:
-            guard sendsSlideKeys else {
-                addLog("Stem press: \(press.rawValue), would send \(action.rawValue) (sending is off)")
-                return
-            }
-            guard hasAccessibility else {
-                addLog("Stem press: \(press.rawValue), not sent because Accessibility is off")
-                return
-            }
-            if action == .nextSlide {
-                KeySender.nextSlide()
-            } else {
-                KeySender.previousSlide()
-            }
-            addLog("Stem press: \(press.rawValue), sent \(action.rawValue)")
+        switch status {
+        case .inProgress:
+            break
+        case let .finished(result):
+            calibrationSession = nil
+            calibrationStep = nil
+            use(result)
+            save(result)
+            calibrationMessage = "Calibrated. Choose a mode to start."
+            addLog(String(format: "Calibrated on the %@ AirPod, tap threshold %.2f g", result.sensorLocation, result.tapThreshold))
+        case let .failed(failure):
+            calibrationSession = nil
+            calibrationStep = nil
+            calibrationMessage = failure.rawValue
+            addLog("Calibration failed: \(failure.rawValue)")
         }
     }
 
