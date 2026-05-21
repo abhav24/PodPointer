@@ -258,7 +258,18 @@ final class AppModel: ObservableObject {
         }
     }
 
-    private func moveCursor(to point: PointerPoint) {
+    private func perform(_ gesture: CaseGesture) {
+        gestureCounts[gesture, default: 0] += 1
+        guard let action = CaseAction(gesture: gesture, mode: mode) else {
+            addLog("Tap: \(gesture.rawValue)")
+            return
+        }
+        if action == .togglePointer {
+            isPointerOn.toggle()
+            addLog("Tap: \(gesture.rawValue), pointer \(isPointerOn ? "on" : "off")")
+            if isPointerOn {
+                mode == .mouse ? syncToCursor() : place(at: .center)
+            }
         let bounds = CGDisplayBounds(selectedDisplayID)
         CGWarpMouseCursorPosition(CGPoint(
             x: bounds.minX + point.x * (bounds.width - 1),
