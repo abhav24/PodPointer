@@ -270,7 +270,19 @@ final class AppModel: ObservableObject {
             if isPointerOn {
                 mode == .mouse ? syncToCursor() : place(at: .center)
             }
-        let bounds = CGDisplayBounds(selectedDisplayID)
+            updateOverlay()
+            return
+        }
+        guard sendsActions else {
+            addLog("Tap: \(gesture.rawValue), would send \(action.rawValue) (sending is off)")
+            return
+        }
+        hasAccessibility = InputSender.isTrusted
+        guard hasAccessibility else {
+            addLog("Tap: \(gesture.rawValue), not sent because Accessibility is off")
+            return
+        }
+        switch action {
         CGWarpMouseCursorPosition(CGPoint(
             x: bounds.minX + point.x * (bounds.width - 1),
             y: bounds.minY + point.y * (bounds.height - 1)
