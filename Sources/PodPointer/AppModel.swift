@@ -296,7 +296,19 @@ final class AppModel: ObservableObject {
         let now = Date()
         let elapsed = now.timeIntervalSince(lastFrameDate)
         lastFrameDate = now
-            x: bounds.minX + point.x * (bounds.width - 1),
+        guard mode != .off, isPointerOn, canUsePointer, isReceivingMotion else { return }
+
+        // Motion samples arrive far less often than the display refreshes, so
+        // easing toward each sample keeps the pointer from looking jumpy.
+        if mode == .mouse {
+            let idle = CGEventSource.secondsSinceLastEventType(.hidSystemState, eventType: .mouseMoved)
+            if idle < Self.realMousePauseSeconds {
+                isPausedForRealMouse = true
+                return
+            }
+            if isPausedForRealMouse {
+                isPausedForRealMouse = false
+                syncToCursor()
             y: bounds.minY + point.y * (bounds.height - 1)
         ))
     }
