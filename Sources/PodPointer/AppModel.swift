@@ -325,8 +325,8 @@ final class AppModel: ObservableObject {
     }
 
     private func checkHealth() {
-        hasAccessibility = KeySender.isTrusted
-        permission = motion.authorizationDescription
+        hasAccessibility = InputSender.isTrusted
+        permission = motion.permissionDescription
 
         // Warping creates no mouse events, so a recent one means someone moved a real mouse.
         // The grace period allows for the mouse movement that selected this mode.
