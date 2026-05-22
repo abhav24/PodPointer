@@ -340,15 +340,7 @@ final class AppModel: ObservableObject {
             cancelCalibration()
             calibrationMessage = "Motion stopped, so calibration ended."
         }
-
-        guard let lastSampleDate, !isStale else { return }
-        if Date().timeIntervalSince(lastSampleDate) > Self.staleSampleSeconds {
-            isStale = true
-            tracker.reset()
-            rate = .empty
-            addLog("Motion samples stopped")
-            overlay.hide()
-        }
+        updateOverlay()
     }
 
     private func showOverlayIfNeeded() {
