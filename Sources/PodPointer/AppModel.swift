@@ -283,7 +283,19 @@ final class AppModel: ObservableObject {
             return
         }
         switch action {
-        CGWarpMouseCursorPosition(CGPoint(
+        case .nextSlide: InputSender.nextSlide()
+        case .previousSlide: InputSender.previousSlide()
+        case .click: InputSender.click(count: 1)
+        case .doubleClick: InputSender.click(count: 2)
+        case .togglePointer: break
+        }
+        addLog("Tap: \(gesture.rawValue), sent \(action.rawValue)")
+    }
+
+    private func drawPointer() {
+        let now = Date()
+        let elapsed = now.timeIntervalSince(lastFrameDate)
+        lastFrameDate = now
             x: bounds.minX + point.x * (bounds.width - 1),
             y: bounds.minY + point.y * (bounds.height - 1)
         ))
