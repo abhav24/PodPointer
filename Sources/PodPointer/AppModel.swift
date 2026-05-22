@@ -328,13 +328,17 @@ final class AppModel: ObservableObject {
         hasAccessibility = InputSender.isTrusted
         permission = motion.permissionDescription
 
-        // Warping creates no mouse events, so a recent one means someone moved a real mouse.
-        // The grace period allows for the mouse movement that selected this mode.
-        if pointerMode == .cursor,
-           Date().timeIntervalSince(pointerModeChangeDate) > Self.cursorGraceSeconds,
-           CGEventSource.secondsSinceLastEventType(.hidSystemState, eventType: .mouseMoved) < 0.25 {
-            setPointerMode(.off)
-            addLog("Real mouse moved, so head control turned off")
+        guard isReceivingMotion, let lastSampleDate,
+              Date().timeIntervalSince(lastSampleDate) > Self.staleSampleSeconds else { return }
+        isReceivingMotion = false
+        tracker.reset()
+        previousAcceleration = nil
+        rate = .empty
+        strongestJolt = 0
+        addLog("Motion stopped")
+        if calibrationSession != nil {
+            cancelCalibration()
+            calibrationMessage = "Motion stopped, so calibration ended."
         }
 
         guard let lastSampleDate, !isStale else { return }
