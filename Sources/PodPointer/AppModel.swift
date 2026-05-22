@@ -343,8 +343,8 @@ final class AppModel: ObservableObject {
         updateOverlay()
     }
 
-    private func showOverlayIfNeeded() {
-        guard pointerMode == .laser, !isStale,
+    private func updateOverlay() {
+        guard mode == .presenter, isPointerOn, canUsePointer, isReceivingMotion,
               let screen = NSScreen.screens.first(where: { Self.displayID(of: $0) == selectedDisplayID }) else {
             overlay.hide()
             return
