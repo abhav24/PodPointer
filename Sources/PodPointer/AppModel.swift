@@ -309,8 +309,19 @@ final class AppModel: ObservableObject {
             if isPausedForRealMouse {
                 isPausedForRealMouse = false
                 syncToCursor()
-            y: bounds.minY + point.y * (bounds.height - 1)
-        ))
+                return
+            }
+        }
+        shownPoint = shownPoint.eased(toward: targetPoint, elapsed: elapsed, timeConstant: Self.pointerTimeConstant)
+        if mode == .presenter {
+            overlay.move(to: shownPoint)
+        } else {
+            let bounds = CGDisplayBounds(selectedDisplayID)
+            CGWarpMouseCursorPosition(CGPoint(
+                x: bounds.minX + shownPoint.x * (bounds.width - 1),
+                y: bounds.minY + shownPoint.y * (bounds.height - 1)
+            ))
+        }
     }
 
     private func checkHealth() {
