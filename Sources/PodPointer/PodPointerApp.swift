@@ -95,7 +95,7 @@ struct ContentView: View {
                 .disabled(!model.canUsePointer)
             Toggle("Send keys and clicks", isOn: $model.sendsActions)
             if !model.hasAccessibility {
-                LabeledContent("Sending keys needs Accessibility access") {
+                LabeledContent("Sending needs Accessibility access") {
                     Button("Open Prompt") { model.requestAccessibility() }
                 }
             }
@@ -118,9 +118,8 @@ struct ContentView: View {
             )) {
                 ForEach(PointerMode.allCases) { Text($0.rawValue).tag($0) }
             }
-            .pickerStyle(.segmented)
-            Picker("Display", selection: $model.selectedDisplayID) {
-                ForEach(model.displays) { Text($0.name).tag($0.id) }
+            Slider(value: $model.pointerConfiguration.minCutoff, in: 0.3...5) {
+                Text(String(format: "Steadiness: %.1f Hz", model.pointerConfiguration.minCutoff))
             }
             Button("Recenter") { model.recenter() }
             Slider(value: $model.configuration.horizontalRangeDegrees, in: 10...80) {
