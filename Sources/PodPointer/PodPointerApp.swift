@@ -100,8 +100,8 @@ struct ContentView: View {
                 }
             }
             LabeledContent(
-                "Presses received",
-                value: StemPress.allCases.map { "\($0.rawValue) \(model.pressCounts[$0, default: 0])" }.joined(separator: " · ")
+                "Taps detected",
+                value: CaseGesture.allCases.map { "\($0.rawValue) \(model.gestureCounts[$0, default: 0])" }.joined(separator: " · ")
             )
         } header: {
             Text("2. Stem presses")
