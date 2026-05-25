@@ -38,8 +38,8 @@ struct ContentView: View {
         }
     }
 
-    private var motionSection: some View {
-        Section("1. Motion") {
+    private var setupSection: some View {
+        Section {
             LabeledContent("Motion permission", value: model.permission)
             LabeledContent("AirPods", value: model.isConnected ? "Connected" : "Not connected")
             LabeledContent("Samples", value: model.isStale ? "Not arriving" : "Arriving")
