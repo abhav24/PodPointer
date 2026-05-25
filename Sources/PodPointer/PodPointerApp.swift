@@ -25,9 +25,10 @@ struct ContentView: View {
 
     var body: some View {
         Form {
-            motionSection
-            stemSection
-            pointerSection
+            setupSection
+            calibrationSection
+            controlSection
+            tuningSection
             logSection
         }
         .formStyle(.grouped)
