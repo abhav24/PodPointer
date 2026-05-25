@@ -104,7 +104,7 @@ struct ContentView: View {
                 value: CaseGesture.allCases.map { "\($0.rawValue) \(model.gestureCounts[$0, default: 0])" }.joined(separator: " · ")
             )
         } header: {
-            Text("2. Stem presses")
+            Text("3. Control")
         } footer: {
             Text("Single: next slide. Double: recenter. Triple: previous slide.")
         }
