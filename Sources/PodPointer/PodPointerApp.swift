@@ -55,7 +55,7 @@ struct ContentView: View {
         }
     }
 
-    private var stemSection: some View {
+    private var calibrationSection: some View {
         Section {
             Toggle("Listen for stem presses", isOn: Binding(
                 get: { model.isListeningForStem },
