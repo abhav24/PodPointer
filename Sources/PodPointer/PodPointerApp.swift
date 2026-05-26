@@ -121,18 +121,6 @@ struct ContentView: View {
             Slider(value: $model.tapSensitivity, in: 0.5...2) {
                 Text(String(format: "Tap sensitivity: %.1f×", model.tapSensitivity))
             }
-            Slider(value: $model.configuration.verticalRangeDegrees, in: 10...60) {
-                Text("Tilt range: \(Int(model.configuration.verticalRangeDegrees))°")
-            }
-            Slider(value: $model.configuration.minCutoff, in: 0.3...5) {
-                Text(String(format: "Filter cutoff: %.1f Hz", model.configuration.minCutoff))
-            }
-            Toggle("Invert left and right", isOn: $model.configuration.invertX)
-            Toggle("Invert up and down", isOn: $model.configuration.invertY)
-        } header: {
-            Text("3. Pointer")
-        } footer: {
-            Text("Look at the middle of the display, then recenter. Moving a real mouse turns off cursor control. A lower filter cutoff is steadier but lags more.")
         }
     }
 
