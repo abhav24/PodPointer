@@ -110,13 +110,10 @@ struct ContentView: View {
         }
     }
 
-    private var pointerSection: some View {
-        Section {
-            Picker("Pointer", selection: Binding(
-                get: { model.pointerMode },
-                set: { model.setPointerMode($0) }
-            )) {
-                ForEach(PointerMode.allCases) { Text($0.rawValue).tag($0) }
+    private var tuningSection: some View {
+        Section("Adjust") {
+            Slider(value: $model.pointerConfiguration.rangeDegrees, in: 15...90) {
+                Text("Range: \(Int(model.pointerConfiguration.rangeDegrees))°")
             }
             Slider(value: $model.pointerConfiguration.minCutoff, in: 0.3...5) {
                 Text(String(format: "Steadiness: %.1f Hz", model.pointerConfiguration.minCutoff))
