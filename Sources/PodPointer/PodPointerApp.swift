@@ -106,7 +106,7 @@ struct ContentView: View {
         } header: {
             Text("3. Control")
         } footer: {
-            Text("Single: next slide. Double: recenter. Triple: previous slide.")
+            Text("Presenter: laser dot. Tap for the next slide, double-tap for the previous one.\nMouse: moves the cursor. Tap to click, double-tap to double-click.\nTriple-tap turns the pointer on or off. Moving a real mouse pauses Mouse mode.")
         }
     }
 
