@@ -118,9 +118,8 @@ struct ContentView: View {
             Slider(value: $model.pointerConfiguration.minCutoff, in: 0.3...5) {
                 Text(String(format: "Steadiness: %.1f Hz", model.pointerConfiguration.minCutoff))
             }
-            Button("Recenter") { model.recenter() }
-            Slider(value: $model.configuration.horizontalRangeDegrees, in: 10...80) {
-                Text("Turn range: \(Int(model.configuration.horizontalRangeDegrees))°")
+            Slider(value: $model.tapSensitivity, in: 0.5...2) {
+                Text(String(format: "Tap sensitivity: %.1f×", model.tapSensitivity))
             }
             Slider(value: $model.configuration.verticalRangeDegrees, in: 10...60) {
                 Text("Tilt range: \(Int(model.configuration.verticalRangeDegrees))°")
