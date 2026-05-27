@@ -1,6 +1,6 @@
 ---
 name: Test report
-about: Share how PodPointer worked with your AirPods
+about: Share how PodPointer worked with your AirPods case
 title: "Test report: [AirPods model]"
 labels: test-report
 ---
