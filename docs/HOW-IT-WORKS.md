@@ -7,3 +7,12 @@ The case has no motion data that apps can read, but the AirPods inside it do. Po
 According to [PodMouse's README](https://github.com/0xCodez/PodMouse), this works with the lid open and Automatic Ear Detection off. With ear detection on, AirPods stop sending motion when they leave your ears, and closing the lid disconnects them. PodPointer hasn't confirmed this on hardware yet, which is why it's the first item in the [test plan](TESTING.md).
 
 ## Calibration
+
+The AirPods sit at an unknown angle in your hand, so the sensor's axes don't match the screen. Calibration has four steps:
+
+1. **Hold still:** measures the gyroscope's resting error and the normal sensor noise.
+2. **Sweep sideways:** finds the axis most of the rotation happened around. Your first movement is to the right, which sets the direction.
+3. **Sweep up and down:** does the same for vertical movement, then removes any overlap with the sideways axis.
+4. **Tap five times:** sets the tap threshold at 60% of your typical tap strength, and above the noise.
+
+## Pointing
