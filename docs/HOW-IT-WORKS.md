@@ -16,3 +16,13 @@ The AirPods sit at an unknown angle in your hand, so the sensor's axes don't mat
 4. **Tap five times:** sets the tap threshold at 60% of your typical tap strength, and above the noise.
 
 ## Pointing
+
+Rotation speed around the two calibrated axes moves the pointer, like a mouse. PodPointer then:
+
+- ignores very slow rotation, which is usually hand tremor
+- speeds up fast movements, up to 1.6 times
+- smooths the position with a [One Euro filter](https://gery.casiez.net/1euro/)
+- eases the pointer between samples so it draws smoothly at a high frame rate
+
+This doesn't depend on an absolute direction, so drift doesn't build up the way it can with absolute orientation. If your aim and the pointer get out of line, push the pointer against a display edge.
+
