@@ -26,3 +26,12 @@ Rotation speed around the two calibrated axes moves the pointer, like a mouse. P
 
 This doesn't depend on an absolute direction, so drift doesn't build up the way it can with absolute orientation. If your aim and the pointer get out of line, push the pointer against a display edge.
 
+## Tapping
+
+A tap is a sudden change in acceleration between two samples that:
+
+- is above your calibrated threshold
+- starts while the hand has been steady for the last quarter of a second
+- ends within 0.16 seconds, because longer jolts are usually hand movements
+
+Tapping also shakes the case, so the pointer jumps back to where it was just before the tap and stays there briefly.
