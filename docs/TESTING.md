@@ -1,6 +1,6 @@
 # Hardware test plan
 
-This test answers four questions that unit tests can't. Allow about 15 minutes.
+These tests answer what unit tests can't. Allow about 15 minutes. Follow the order, because each test depends on the one before it.
 
 **Setup**
 - Build and open the app by following the [README](../README.md).
