@@ -35,3 +35,13 @@ A tap is a sudden change in acceleration between two samples that:
 - ends within 0.16 seconds, because longer jolts are usually hand movements
 
 Tapping also shakes the case, so the pointer jumps back to where it was just before the tap and stays there briefly.
+
+A single tap waits 0.35 seconds in case a second tap follows. That's the delay you'll notice before the next slide appears.
+
+## Open questions
+
+- Does motion arrive reliably from the open case, on which AirPods models?
+- Can taps be told apart from hand movement at the motion rate the AirPods provide?
+- Does motion stay on one AirPod? The two AirPods sit at different angles, so a switch needs a new calibration.
+- Does the laser dot stay above full-screen slideshows?
+- How quickly does this use battery with the lid open?
