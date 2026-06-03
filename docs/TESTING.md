@@ -2,10 +2,7 @@
 
 These tests answer what unit tests can't. Allow about 15 minutes. Follow the order, because each test depends on the one before it.
 
-**Setup**
-- Build and open the app by following the [README](../README.md).
-- Connect your AirPods to the Mac, not your phone, and put them in.
-- Pause any music.
+**Setup:** build and open the app, then follow the setup steps in the [README](../README.md).
 
 ## 1. Do stem presses reach the app?
 
