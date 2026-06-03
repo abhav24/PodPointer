@@ -4,7 +4,7 @@ These tests answer what unit tests can't. Allow about 15 minutes. Follow the ord
 
 **Setup:** build and open the app, then follow the setup steps in the [README](../README.md).
 
-## 1. Do stem presses reach the app?
+## 1. Does motion arrive from the open case?
 
 1. Turn on **Listen for stem presses**, and leave **Send arrow keys** off.
 2. With PodPointer in front, press a stem once, twice, and three times. Check **Presses received**.
