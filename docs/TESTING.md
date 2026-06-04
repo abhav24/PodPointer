@@ -13,7 +13,7 @@ If motion doesn't arrive, try these one at a time:
 - Turn on **Keep audio connection active**.
 - Close the lid, open it again, and wait a few seconds.
 
-Try again with Spotify or Apple Music open, because another media app may take the presses.
+**Passes if** motion keeps arriving for 2 minutes. Note the **Rate** and **Longest gap**, and whether **Sending AirPod** changes.
 
 ## 2. Is the pointer good enough to present with?
 
@@ -28,7 +28,7 @@ Try again with Spotify or Apple Music open, because another media app may take t
 
 If the dot moves the wrong way, turn on an invert option and tell us in your report.
 
-## 3. Does the laser dot appear over a slideshow?
+Leave **Mode** on **Off** and **Send keys and clicks** off.
 
 Start a full-screen slideshow in PowerPoint and in Keynote, with the laser dot on. If you can, also try an external display, using **Display** to select it.
 
