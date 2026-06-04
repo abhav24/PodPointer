@@ -17,12 +17,7 @@ If motion doesn't arrive, try these one at a time:
 
 ## 2. Does calibration finish?
 
-1. Set **Pointer** to **Laser dot**.
-2. Look at the middle of your display and select **Recenter**.
-3. Point at titles, bullets, and chart labels on a real slide.
-4. Adjust **Turn range**, **Tilt range**, and **Filter cutoff**.
-5. Keep using it for 5 minutes, and notice how far the center drifts.
-6. Record the **Rate**, **p95 interval**, and **Longest gap**.
+Select **Calibrate** and follow the steps.
 
 **Passes if** you can hold the dot on a line of slide text, and drift is fixed by an occasional recenter.
 
