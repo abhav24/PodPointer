@@ -8,7 +8,10 @@ These tests answer what unit tests can't. Allow about 15 minutes. Follow the ord
 
 Check that **Motion** says **Arriving**, then move the case and watch **Jolt** change.
 
-**Passes if** all 10 presses arrive and the slides change.
+If motion doesn't arrive, try these one at a time:
+- Select the AirPods as the sound output again.
+- Turn on **Keep audio connection active**.
+- Close the lid, open it again, and wait a few seconds.
 
 Try again with Spotify or Apple Music open, because another media app may take the presses.
 
