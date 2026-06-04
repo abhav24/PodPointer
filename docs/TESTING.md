@@ -19,7 +19,7 @@ If motion doesn't arrive, try these one at a time:
 
 Select **Calibrate** and follow the steps.
 
-**Passes if** you can hold the dot on a line of slide text, and drift is fixed by an occasional recenter.
+**Passes if** it finishes within two tries.
 
 If the dot moves the wrong way, turn on an invert option and tell us in your report.
 
