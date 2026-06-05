@@ -21,7 +21,7 @@ Select **Calibrate** and follow the steps.
 
 **Passes if** it finishes within two tries.
 
-If the dot moves the wrong way, turn on an invert option and tell us in your report.
+## 3. Are taps reliable?
 
 Leave **Mode** on **Off** and **Send keys and clicks** off.
 
