@@ -29,7 +29,7 @@ Leave **Mode** on **Off** and **Send keys and clicks** off.
 2. Try double-taps and triple-taps.
 3. Move the case around for 1 minute without tapping, and count any false taps in the log.
 
-**Passes if** the dot stays visible over the slides.
+Adjust **Tap sensitivity** if needed.
 
 ## 4. When does motion keep working?
 
