@@ -40,7 +40,22 @@ Adjust **Tap sensitivity** if needed.
 3. Try holding the dot on one line of text.
 4. Tap, and check that the dot stays where you aimed.
 
-**Passes if** you can tell which setups keep producing samples. This decides whether a handheld clicker is possible.
+**Passes if** you can hold the dot on a line of text and tapping doesn't move it noticeably.
+
+## 5. Does it work with slides?
+
+1. Turn on **Send keys and clicks** and allow Accessibility access.
+2. Start a full-screen slideshow in Keynote or PowerPoint.
+3. Move through the slides with taps and double-taps, using the laser dot as you go.
+4. If you can, repeat on an external display, using **Display** to select it.
+
+**Passes if** the slides change and the dot stays visible.
+
+## 6. Does Mouse mode work?
+
+Choose **Mouse**, then move the cursor and tap a button. Move a real mouse too, and check that the case pauses until you stop.
+
+**Passes if** clicks land where you aim.
 
 ## Share your results
 
