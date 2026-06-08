@@ -1,6 +1,6 @@
 # PodPointer
 
-Use your AirPods as a hands-free slide clicker and laser pointer for your Mac.
+Point your AirPods case at the screen and tap it. PodPointer turns the case into a presentation remote and air mouse for your Mac.
 
 Turn your head to move a laser dot over your slides. Press an AirPods stem to change slides.
 
@@ -15,7 +15,7 @@ Turn your head to move a laser dot over your slides. Press an AirPods stem to ch
 | Press the stem twice | Recenter the pointer |
 | Press the stem three times | Previous slide (Left Arrow) |
 
-The app also shows live motion measurements and can copy a test report to paste into an issue.
+Read more in [how it works](docs/HOW-IT-WORKS.md).
 
 **The AirPods case isn't part of this.** I found no developer access to motion data from the case, so it can't work as a mouse. See [feasibility notes](docs/FEASIBILITY.md).
 
