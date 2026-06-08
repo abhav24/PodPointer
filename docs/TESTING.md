@@ -31,7 +31,7 @@ Leave **Mode** on **Off** and **Send keys and clicks** off.
 
 Adjust **Tap sensitivity** if needed.
 
-## 4. When does motion keep working?
+**Passes if** at least 18 of 20 taps count, with no more than one false tap in the minute.
 
 Watch **Samples**, **Sensor**, and the log during each of these:
 
