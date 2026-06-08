@@ -33,7 +33,7 @@ Adjust **Tap sensitivity** if needed.
 
 **Passes if** at least 18 of 20 taps count, with no more than one false tap in the minute.
 
-Watch **Samples**, **Sensor**, and the log during each of these:
+## 4. Is the pointer usable?
 
 - Both AirPods in
 - One AirPod in, then the other
