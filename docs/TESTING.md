@@ -35,11 +35,10 @@ Adjust **Tap sensitivity** if needed.
 
 ## 4. Is the pointer usable?
 
-- Both AirPods in
-- One AirPod in, then the other
-- One AirPod held in your hand, like a remote
-- Both AirPods back in the case
-- Spatial Audio turned on, then off (watch for sudden jumps in yaw)
+1. Choose **Presenter** and point at things on the screen.
+2. Adjust **Range** and **Steadiness**.
+3. Try holding the dot on one line of text.
+4. Tap, and check that the dot stays where you aimed.
 
 **Passes if** you can tell which setups keep producing samples. This decides whether a handheld clicker is possible.
 
