@@ -26,7 +26,7 @@ Read more in [how it works](docs/HOW-IT-WORKS.md).
 ## Requirements
 
 - macOS 14 or later
-- AirPods with head tracking, such as AirPods Pro
+- AirPods that support head tracking, such as AirPods Pro
 - Swift 5.10 or later, from Xcode or the Command Line Tools
 
 ## Build and run
@@ -54,8 +54,8 @@ If you use **Mouse cursor** mode, moving a real mouse or trackpad turns head con
 
 | Permission | Why it's needed | When |
 |---|---|---|
-| Motion & Fitness | Reads head motion from your AirPods | At launch |
-| Accessibility | Sends arrow keys to your slide app | Only if you turn on sending keys |
+| Motion & Fitness | Reads motion from your AirPods | At launch |
+| Accessibility | Sends arrow keys and clicks | Only if you turn on sending |
 
 PodPointer has no network code and doesn't save your data. A test report is only copied to your clipboard when you ask for one, and it leaves out your AirPods' name.
 
