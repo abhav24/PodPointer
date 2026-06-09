@@ -4,7 +4,7 @@ Point your AirPods case at the screen and tap it. PodPointer turns the case into
 
 > **Status: early and not yet proven on real hardware.** The logic has unit tests, but the full experience hasn't been confirmed with AirPods. [Help test it](docs/TESTING.md).
 
-> **Status: early test app.** This release exists to find out whether the idea holds up on real hardware. Motion and stem-press behavior have not been confirmed on AirPods yet, and [you can help test it](docs/TESTING.md).
+## How it works
 
 ## What it does
 
