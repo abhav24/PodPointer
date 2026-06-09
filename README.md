@@ -8,12 +8,9 @@ Point your AirPods case at the screen and tap it. PodPointer turns the case into
 
 The AirPods inside the case have motion sensors. When you move the case, they move with it, so PodPointer reads their motion through Apple's public `CMHeadphoneMotionManager` API.
 
-| Your AirPods | Your Mac |
-|---|---|
-| Turn or tilt your head | Moves a laser dot or the mouse cursor |
-| Press the stem once | Next slide (Right Arrow) |
-| Press the stem twice | Recenter the pointer |
-| Press the stem three times | Previous slide (Left Arrow) |
+- **Pointing:** rotating the case moves a pointer, the way moving a mouse moves the cursor.
+- **Tapping:** a short jolt while your hand is steady counts as a tap.
+- **Calibration:** the AirPods can sit at any angle in your hand, so a short setup learns which movement means right and up, and how hard you tap.
 
 Read more in [how it works](docs/HOW-IT-WORKS.md).
 
