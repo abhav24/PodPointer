@@ -6,7 +6,7 @@ Point your AirPods case at the screen and tap it. PodPointer turns the case into
 
 ## How it works
 
-## What it does
+The AirPods inside the case have motion sensors. When you move the case, they move with it, so PodPointer reads their motion through Apple's public `CMHeadphoneMotionManager` API.
 
 | Your AirPods | Your Mac |
 |---|---|
