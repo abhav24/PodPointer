@@ -42,11 +42,12 @@ Use the script rather than `swift run`, because macOS only shows the motion perm
 
 ## Set up
 
-1. Connect your AirPods to your Mac, put them in, and allow motion access.
-2. Look at the middle of your display and select **Recenter**.
-3. Set **Pointer** to **Laser dot** and turn your head.
-4. Turn on **Listen for stem presses** and press a stem. The presses appear in the log.
-5. To control slides, turn on **Send arrow keys to the front app** and allow Accessibility access. Then bring your slides to the front.
+1. Connect your AirPods to your Mac and select them as the sound output.
+2. Open the AirPods section of System Settings and turn off **Automatic Ear Detection**. You can turn it back on when you're done.
+3. Put the AirPods in the case and **keep the lid open**. Closing the lid disconnects them.
+4. Open PodPointer and allow motion access.
+5. Select **Calibrate** and follow the steps while holding the case the way you'll use it.
+6. Choose **Presenter** or **Mouse**. Taps only appear in the log until you turn on **Send keys and clicks** and allow Accessibility access.
 
 If you use **Mouse cursor** mode, moving a real mouse or trackpad turns head control off.
 
