@@ -38,7 +38,7 @@ scripts/build-app.sh
 open build/PodPointer.app
 ```
 
-Use the script rather than `swift run`, because macOS only shows the motion permission to a real app bundle. The script signs with your Apple Development certificate if you have one. Otherwise it signs ad hoc, and macOS may ask for permissions again after each rebuild.
+Use the script rather than `swift run`, because macOS only shows the motion permission to a real app bundle.
 
 ## Try it
 
@@ -57,7 +57,7 @@ If you use **Mouse cursor** mode, moving a real mouse or trackpad turns head con
 | Motion & Fitness | Reads motion from your AirPods | At launch |
 | Accessibility | Sends arrow keys and clicks | Only if you turn on sending |
 
-PodPointer has no network code and doesn't save your data. A test report is only copied to your clipboard when you ask for one, and it leaves out your AirPods' name.
+PodPointer has no network code. It saves your calibration and settings on your Mac only. Test reports are copied to your clipboard only when you ask, and they leave out your AirPods' name.
 
 While it's listening for stem presses, PodPointer plays silent audio so it can act as the Mac's Now Playing app. That means stem presses won't control your music while listening is on.
 
