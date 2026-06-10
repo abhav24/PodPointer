@@ -40,7 +40,7 @@ open build/PodPointer.app
 
 Use the script rather than `swift run`, because macOS only shows the motion permission to a real app bundle.
 
-## Try it
+## Set up
 
 1. Connect your AirPods to your Mac, put them in, and allow motion access.
 2. Look at the middle of your display and select **Recenter**.
@@ -59,7 +59,7 @@ If you use **Mouse cursor** mode, moving a real mouse or trackpad turns head con
 
 PodPointer has no network code. It saves your calibration and settings on your Mac only. Test reports are copied to your clipboard only when you ask, and they leave out your AirPods' name.
 
-While it's listening for stem presses, PodPointer plays silent audio so it can act as the Mac's Now Playing app. That means stem presses won't control your music while listening is on.
+## Known limits
 
 ## Project layout
 
