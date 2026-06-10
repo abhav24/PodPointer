@@ -49,7 +49,7 @@ Use the script rather than `swift run`, because macOS only shows the motion perm
 5. Select **Calibrate** and follow the steps while holding the case the way you'll use it.
 6. Choose **Presenter** or **Mouse**. Taps only appear in the log until you turn on **Send keys and clicks** and allow Accessibility access.
 
-If you use **Mouse cursor** mode, moving a real mouse or trackpad turns head control off.
+If you use Mouse mode, moving a real mouse or trackpad pauses the case until you stop.
 
 ## Permissions and privacy
 
