@@ -62,7 +62,10 @@ PodPointer has no network code. It saves your calibration and settings on your M
 
 ## Known limits
 
-## Project layout
+- The lid has to stay open, and open-lid battery use hasn't been measured.
+- Automatic Ear Detection has to be off.
+- Calibration applies to one AirPod and one grip. If motion moves to the other AirPod, or you change your grip, calibrate again.
+- A closed-lid mode would need a private Bluetooth channel, so it isn't included.
 
 | Path | Contents |
 |---|---|
