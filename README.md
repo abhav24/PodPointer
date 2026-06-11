@@ -67,12 +67,9 @@ PodPointer has no network code. It saves your calibration and settings on your M
 - Calibration applies to one AirPod and one grip. If motion moves to the other AirPod, or you change your grip, calibrate again.
 - A closed-lid mode would need a private Bluetooth channel, so it isn't included.
 
-| Path | Contents |
-|---|---|
-| `Sources/PodPointerCore` | Tested logic: filtering, pointer mapping, timing, and press handling |
-| `Sources/PodPointer` | The Mac app: motion, media commands, key sending, overlay, and window |
-| `Tests/PodPointerCoreTests` | Unit tests |
-| `docs` | Feasibility notes and the hardware test plan |
+## Related projects
+
+[PodMouse](https://github.com/0xCodez/PodMouse) and [AirPointer](https://github.com/oscarcreatess/airpointer) also turn an AirPods case into a pointer. PodPointer focuses on presenting.
 
 ## Contributing
 
