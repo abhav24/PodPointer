@@ -73,7 +73,7 @@ PodPointer has no network code. It saves your calibration and settings on your M
 
 ## Contributing
 
-Hardware test results are the most useful contribution right now. See [CONTRIBUTING.md](CONTRIBUTING.md).
+Results from real AirPods are the most useful contribution right now. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
