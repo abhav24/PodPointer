@@ -13,6 +13,7 @@ let package = Package(
         .testTarget(
             name: "PodPointerCoreTests",
             dependencies: ["PodPointerCore"],
+            resources: [.copy("Fixtures")]
         .testTarget(name: "PodPointerCoreTests", dependencies: ["PodPointerCore"])
     ]
 )
