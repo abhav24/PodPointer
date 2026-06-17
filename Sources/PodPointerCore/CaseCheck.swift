@@ -37,3 +37,16 @@ public struct CaseCheckResults: Equatable, Sendable {
     public var passed: Bool { tapsPassed && gesturesPassed && movingPassed && pointingPassed }
 }
 
+/// Walks through testing the case and scores the results, so nobody has to
+/// count taps or judge by feel. It runs from motion and taps alone, so it can
+/// be tested without hardware.
+public struct CaseCheck: Equatable, Sendable {
+    public static let tapPrompts = 10
+    public static let tapIntervalSeconds = 2.5
+    public static let getReadySeconds = 3.0
+    public static let gesturePrompts: [CaseGesture] = [
+        .single, .double, .triple,
+        .double, .single, .triple,
+        .double, .triple, .single
+    ]
+    public static let gesturePauseSeconds = 1.2
