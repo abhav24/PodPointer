@@ -115,3 +115,12 @@ public struct CaseCheck: Equatable, Sendable {
         advanceGesture(at: time)
     }
 
+    public func moveSecondsLeft(at time: Double) -> Double {
+        max(stepStart + Self.moveSeconds - time, 0)
+    }
+
+    public mutating func processMotion(rotationSpeed: Double, at time: Double) {
+        let elapsed = min(max(time - lastSampleTime, 0), Self.maximumMovingStep)
+        lastSampleTime = time
+
+        switch step {
