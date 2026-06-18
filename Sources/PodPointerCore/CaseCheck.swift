@@ -94,3 +94,13 @@ public struct CaseCheck: Equatable, Sendable {
         return min(Int((time - stepStart) / Self.tapIntervalSeconds), Self.tapPrompts - 1) + 1
     }
 
+    public func secondsUntilTapsStart(at time: Double) -> Double {
+        max(stepStart - time, 0)
+    }
+
+    /// The gesture to do now. Nil between prompts or outside the gesture test.
+    public func gesturePrompt(at time: Double) -> CaseGesture? {
+        guard step == .gestureTest, time >= gesturePromptStart else { return nil }
+        return Self.gesturePrompts[gestureIndex]
+    }
+
