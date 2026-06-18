@@ -63,3 +63,13 @@ public struct CaseCheck: Equatable, Sendable {
     /// As a fraction of the display height.
     public static let targetRadius = 0.1
 
+    private static let motionLostSeconds = 3.0
+    private static let movingRotationSpeed = 1.0
+    private static let requiredMovingSeconds = 0.5
+    private static let maximumMovingStep = 0.1
+
+    public private(set) var step = CaseCheckStep.connect
+    public private(set) var results = CaseCheckResults()
+    public private(set) var targetIndex = 0
+    public private(set) var gestureIndex = 0
+    /// What the last prompt recognized. Nil before the first answer.
