@@ -124,3 +124,12 @@ public struct CaseCheck: Equatable, Sendable {
         lastSampleTime = time
 
         switch step {
+        case .connect:
+            step = .earDetection
+        case .motionLost:
+            enterWatching(at: time)
+        case .watchingCase:
+            if rotationSpeed > Self.movingRotationSpeed {
+                movingSeconds += elapsed
+            }
+            if movingSeconds >= Self.requiredMovingSeconds {
