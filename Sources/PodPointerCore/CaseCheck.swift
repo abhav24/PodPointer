@@ -83,3 +83,14 @@ public struct CaseCheck: Equatable, Sendable {
     private var targetStart = 0.0
 
     public init() {}
+
+    public var currentTarget: PointerPoint? {
+        step == .pointTest ? Self.targets[targetIndex] : nil
+    }
+
+    /// The prompt on screen, from 1. Nil while getting ready or outside the tap test.
+    public func tapPromptNumber(at time: Double) -> Int? {
+        guard step == .tapTest, time >= stepStart else { return nil }
+        return min(Int((time - stepStart) / Self.tapIntervalSeconds), Self.tapPrompts - 1) + 1
+    }
+
