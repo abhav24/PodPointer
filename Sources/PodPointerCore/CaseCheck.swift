@@ -104,3 +104,14 @@ public struct CaseCheck: Equatable, Sendable {
         return Self.gesturePrompts[gestureIndex]
     }
 
+    public mutating func registerGesture(_ gesture: CaseGesture, at time: Double) {
+        guard let expected = gesturePrompt(at: time) else { return }
+        if gesture == expected {
+            results.gesturesHit += 1
+            lastGestureAnswer = .correct
+        } else {
+            lastGestureAnswer = .recognized(gesture)
+        }
+        advanceGesture(at: time)
+    }
+
