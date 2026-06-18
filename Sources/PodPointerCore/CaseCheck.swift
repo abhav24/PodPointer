@@ -73,3 +73,13 @@ public struct CaseCheck: Equatable, Sendable {
     public private(set) var targetIndex = 0
     public private(set) var gestureIndex = 0
     /// What the last prompt recognized. Nil before the first answer.
+    public private(set) var lastGestureAnswer: GestureAnswer?
+
+    private var gesturePromptStart = 0.0
+    private var lastSampleTime = -Double.infinity
+    private var stepStart = 0.0
+    private var movingSeconds = 0.0
+    private var promptsHit: Set<Int> = []
+    private var targetStart = 0.0
+
+    public init() {}
