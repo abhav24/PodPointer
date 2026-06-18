@@ -50,3 +50,16 @@ public struct CaseCheck: Equatable, Sendable {
         .double, .triple, .single
     ]
     public static let gesturePauseSeconds = 1.2
+    public static let gestureTimeoutSeconds = 6.0
+    public static let moveSeconds = 15.0
+    public static let targetTimeoutSeconds = 15.0
+    public static let targets = [
+        PointerPoint(x: 0.2, y: 0.25),
+        PointerPoint(x: 0.8, y: 0.25),
+        PointerPoint(x: 0.5, y: 0.5),
+        PointerPoint(x: 0.2, y: 0.75),
+        PointerPoint(x: 0.8, y: 0.75)
+    ]
+    /// As a fraction of the display height.
+    public static let targetRadius = 0.1
+
