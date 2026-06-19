@@ -143,3 +143,12 @@ public struct CaseCheck: Equatable, Sendable {
     public mutating func confirmEarDetectionOff() {
         guard step == .earDetection else { return }
         step = .placeInCase
+    }
+
+    public mutating func confirmInCase(at time: Double) {
+        guard step == .placeInCase else { return }
+        enterWatching(at: time)
+    }
+
+    public mutating func returnToEarDetection() {
+        step = .earDetection
