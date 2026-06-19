@@ -133,3 +133,13 @@ public struct CaseCheck: Equatable, Sendable {
                 movingSeconds += elapsed
             }
             if movingSeconds >= Self.requiredMovingSeconds {
+                step = .calibrate
+            }
+        default:
+            break
+        }
+    }
+
+    public mutating func confirmEarDetectionOff() {
+        guard step == .earDetection else { return }
+        step = .placeInCase
