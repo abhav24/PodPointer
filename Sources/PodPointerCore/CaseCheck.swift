@@ -152,3 +152,13 @@ public struct CaseCheck: Equatable, Sendable {
 
     public mutating func returnToEarDetection() {
         step = .earDetection
+    }
+
+    public mutating func calibrationFinished(at time: Double) {
+        guard step == .calibrate else { return }
+        step = .tapTest
+        stepStart = time + Self.getReadySeconds
+        promptsHit.removeAll()
+        results = CaseCheckResults()
+    }
+
