@@ -162,3 +162,15 @@ public struct CaseCheck: Equatable, Sendable {
         results = CaseCheckResults()
     }
 
+    /// Repeats the scored tests with the current calibration, after adjusting settings.
+    public mutating func restartTests(at time: Double) {
+        guard step == .results else { return }
+        lastSampleTime = max(lastSampleTime, time)
+        step = .calibrate
+        calibrationFinished(at: time)
+    }
+
+    public mutating func registerTap(at time: Double, point: PointerPoint, aspectRatio: Double) {
+        switch step {
+        case .tapTest:
+            guard let prompt = tapPromptNumber(at: time) else { return }
