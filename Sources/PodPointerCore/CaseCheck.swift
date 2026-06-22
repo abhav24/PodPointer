@@ -199,3 +199,15 @@ public struct CaseCheck: Equatable, Sendable {
             if time - max(lastSampleTime, step == .watchingCase ? stepStart : -Double.infinity) >= Self.motionLostSeconds {
                 step = .motionLost
                 return
+            }
+        default:
+            return
+        }
+
+        switch step {
+        case .tapTest where time >= stepStart + Double(Self.tapPrompts) * Self.tapIntervalSeconds:
+            step = .gestureTest
+            gestureIndex = 0
+            gesturePromptStart = time + Self.getReadySeconds
+            lastGestureAnswer = nil
+        case .gestureTest where time >= gesturePromptStart + Self.gestureTimeoutSeconds:
