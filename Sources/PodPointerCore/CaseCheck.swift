@@ -174,3 +174,15 @@ public struct CaseCheck: Equatable, Sendable {
         switch step {
         case .tapTest:
             guard let prompt = tapPromptNumber(at: time) else { return }
+            if promptsHit.insert(prompt).inserted {
+                results.tapsHit += 1
+            } else {
+                results.extraTaps += 1
+            }
+        case .moveTest:
+            results.falseTapsWhileMoving += 1
+        case .pointTest:
+            let target = Self.targets[targetIndex]
+            let horizontal = (point.x - target.x) * aspectRatio
+            let vertical = point.y - target.y
+            guard (horizontal * horizontal + vertical * vertical).squareRoot() <= Self.targetRadius else { return }
