@@ -224,3 +224,8 @@ public struct CaseCheck: Equatable, Sendable {
         }
     }
 
+    private mutating func enterWatching(at time: Double) {
+        step = .watchingCase
+        stepStart = time
+        movingSeconds = 0
+    }
