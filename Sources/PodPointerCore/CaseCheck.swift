@@ -229,3 +229,8 @@ public struct CaseCheck: Equatable, Sendable {
         stepStart = time
         movingSeconds = 0
     }
+
+    private mutating func advanceGesture(at time: Double) {
+        if gestureIndex + 1 < Self.gesturePrompts.count {
+            gestureIndex += 1
+            gesturePromptStart = time + Self.gesturePauseSeconds
