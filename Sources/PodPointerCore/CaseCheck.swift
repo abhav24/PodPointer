@@ -211,3 +211,16 @@ public struct CaseCheck: Equatable, Sendable {
             gesturePromptStart = time + Self.getReadySeconds
             lastGestureAnswer = nil
         case .gestureTest where time >= gesturePromptStart + Self.gestureTimeoutSeconds:
+            lastGestureAnswer = .nothing
+            advanceGesture(at: time)
+        case .moveTest where time >= stepStart + Self.moveSeconds:
+            step = .pointTest
+            targetIndex = 0
+            targetStart = time
+        case .pointTest where time >= targetStart + Self.targetTimeoutSeconds:
+            advanceTarget(at: time)
+        default:
+            break
+        }
+    }
+
