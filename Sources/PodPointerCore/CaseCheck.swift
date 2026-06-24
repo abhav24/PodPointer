@@ -244,3 +244,8 @@ public struct CaseCheck: Equatable, Sendable {
         if targetIndex + 1 < Self.targets.count {
             targetIndex += 1
             targetStart = time
+        } else {
+            step = .results
+        }
+    }
+}
