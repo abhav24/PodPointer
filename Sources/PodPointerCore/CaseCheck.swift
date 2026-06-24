@@ -234,3 +234,8 @@ public struct CaseCheck: Equatable, Sendable {
         if gestureIndex + 1 < Self.gesturePrompts.count {
             gestureIndex += 1
             gesturePromptStart = time + Self.gesturePauseSeconds
+        } else {
+            step = .moveTest
+            stepStart = time
+        }
+    }
