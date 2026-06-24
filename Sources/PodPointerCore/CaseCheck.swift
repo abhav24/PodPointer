@@ -239,3 +239,8 @@ public struct CaseCheck: Equatable, Sendable {
             stepStart = time
         }
     }
+
+    private mutating func advanceTarget(at time: Double) {
+        if targetIndex + 1 < Self.targets.count {
+            targetIndex += 1
+            targetStart = time
