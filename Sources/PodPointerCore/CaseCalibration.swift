@@ -35,6 +35,7 @@ public struct CaseCalibration: Codable, Equatable, Sendable {
 public enum CalibrationStep: Equatable, Sendable {
     case holdStill
     case sweepSideways
+    case turnRight
     case sweepVertically
     case tap
 }
@@ -68,6 +69,8 @@ public struct CalibrationSession: Sendable {
     private static let sweepMotionFloor = 0.35
     private static let minimumAxisEnergy = 0.6
     private static let minimumAxisSeparation = 0.5
+    private static let requiredTurnRadians = 15 * Double.pi / 180
+    private static let maximumTurnStep = 0.1
     private static let tapPeakSeconds = 0.15
     private static let tapSpacingSeconds = 0.25
 
