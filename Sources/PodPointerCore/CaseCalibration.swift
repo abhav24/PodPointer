@@ -37,6 +37,7 @@ public enum CalibrationStep: Equatable, Sendable {
     case sweepSideways
     case turnRight
     case sweepVertically
+    case turnUp
     case tap
 }
 
@@ -77,6 +78,9 @@ public struct CalibrationSession: Sendable {
     public private(set) var step = CalibrationStep.holdStill
     public private(set) var progress = 0.0
     public private(set) var tapsFound = 0
+    /// True while waiting for the hand to stop before a step begins. Motion left
+    /// over from the previous step is ignored, so it can't affect this one.
+    public private(set) var isSettling = false
 
     private let sensorLocation: String
     private var stepStart: Double?
