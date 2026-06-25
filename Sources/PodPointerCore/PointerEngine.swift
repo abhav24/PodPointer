@@ -27,6 +27,8 @@ public struct PointerConfiguration: Equatable, Sendable {
     public var deadZoneDegreesPerSecond = 2.0
     /// How much fast movements are sped up. 1 means no speed-up.
     public var maximumAcceleration = 1.6
+    public var invertHorizontal = false
+    public var invertVertical = false
     /// Lower values are steadier but lag more.
     public var minCutoff = 1.5
     public var beta = 0.02
