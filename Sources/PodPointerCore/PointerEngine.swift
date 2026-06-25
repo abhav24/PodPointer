@@ -66,8 +66,8 @@ public struct PointerEngine: Sendable {
         let elapsed = time - last
         guard elapsed > 0, elapsed <= Self.maximumStepSeconds else { return position }
 
-        let horizontal = applyDeadZone(horizontalRate)
-        let vertical = applyDeadZone(verticalRate)
+        let horizontal = applyDeadZone(horizontalRate) * (configuration.invertHorizontal ? -1 : 1)
+        let vertical = applyDeadZone(verticalRate) * (configuration.invertVertical ? -1 : 1)
         let speed = (horizontal * horizontal + vertical * vertical).squareRoot()
         let boost = 1 + (configuration.maximumAcceleration - 1) * min(speed / 90, 1)
 
