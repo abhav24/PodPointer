@@ -46,6 +46,7 @@ public enum CalibrationFailure: String, Error, Equatable, Sendable {
     case tooLittleMovement = "There wasn't enough movement. Sweep the case further and try again."
     case unclearMovement = "The movement was hard to read. Keep each sweep in one direction and try again."
     case axesTooSimilar = "The two sweeps looked the same. Sweep sideways, then up and down, and try again."
+    case noDirection = "The case didn't turn far enough. Turn it further, then stop, and try again."
     case tooFewTaps = "Too few taps were detected. Tap the case more firmly and try again."
     case tapsTooWeak = "The taps were hard to tell apart from noise. Tap more firmly and try again."
 }
@@ -84,6 +85,7 @@ public struct CalibrationSession: Sendable {
 
     private let sensorLocation: String
     private var stepStart: Double?
+    private var stillSince: Double?
     private var previousAcceleration: Vector3?
 
     private var restingSum = Vector3.zero
