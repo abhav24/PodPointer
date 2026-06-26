@@ -62,7 +62,8 @@ public struct CalibrationSession: Sendable {
     public static let requiredTaps = 5
 
     private static let holdSeconds = 2.0
-    private static let sweepSeconds = 4.0
+    private static let sweepSeconds = 3.0
+    private static let turnTimeoutSeconds = 8.0
     private static let tapTimeoutSeconds = 10.0
     private static let minimumHoldSamples = 20
     private static let minimumSweepSamples = 12
@@ -87,6 +88,7 @@ public struct CalibrationSession: Sendable {
     private var stepStart: Double?
     private var stillSince: Double?
     private var previousAcceleration: Vector3?
+    private var previousTime: Double?
 
     private var restingSum = Vector3.zero
     private var restingCount = 0
