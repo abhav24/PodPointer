@@ -129,6 +129,8 @@ public struct CalibrationSession: Sendable {
             return processHold(reading, impulse: impulse, elapsed: elapsed)
         case .sweepSideways, .sweepVertically:
             return processSweep(reading, elapsed: elapsed)
+        case .turnRight, .turnUp:
+            return processTurn(reading, sampleStep: sampleStep, elapsed: elapsed)
         case .tap:
             return processTap(impulse: impulse, time: reading.timestamp, elapsed: elapsed)
         }
