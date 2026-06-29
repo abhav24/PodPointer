@@ -65,6 +65,7 @@ public struct CalibrationSession: Sendable {
     private static let sweepSeconds = 3.0
     private static let turnTimeoutSeconds = 8.0
     private static let tapTimeoutSeconds = 10.0
+    private static let settleSeconds = 0.4
     private static let minimumHoldSamples = 20
     private static let minimumSweepSamples = 12
     private static let minimumTaps = 3
@@ -96,6 +97,8 @@ public struct CalibrationSession: Sendable {
     private var gyroBias = Vector3.zero
 
     private var sweepSamples: [Vector3] = []
+    private var pendingAxis = Vector3.zero
+    private var turnedRadians = 0.0
     private var horizontalAxis = Vector3.zero
     private var verticalAxis = Vector3.zero
 
