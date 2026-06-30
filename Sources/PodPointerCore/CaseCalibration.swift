@@ -191,8 +191,8 @@ public struct CalibrationSession: Sendable {
         // Remove any part of the vertical axis that also means "sideways".
         let separated = axis - horizontalAxis * axis.dot(horizontalAxis)
         guard separated.magnitude >= Self.minimumAxisSeparation else { return .failed(.axesTooSimilar) }
-        verticalAxis = separated.normalized
-        advance(to: .tap)
+        pendingAxis = separated.normalized
+        advance(to: .turnUp)
         return .inProgress
     }
 
