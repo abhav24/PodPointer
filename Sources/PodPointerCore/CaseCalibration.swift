@@ -136,6 +136,18 @@ public struct CalibrationSession: Sendable {
         }
     }
 
+    private mutating func finishSettling(_ reading: MotionReading, at time: Double) -> Bool {
+        guard (reading.rotationRate - gyroBias).magnitude < Self.holdMotionLimit else {
+            stillSince = nil
+            return false
+        }
+        let since = stillSince ?? time
+        stillSince = since
+        guard time - since >= Self.settleSeconds else { return false }
+        isSettling = false
+        return true
+    }
+
     private mutating func processHold(_ reading: MotionReading, impulse: Double, elapsed: Double) -> CalibrationStatus {
         if reading.rotationRate.magnitude > Self.holdMotionLimit {
             // The case moved, so measure the resting values again.
