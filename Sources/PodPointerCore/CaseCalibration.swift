@@ -183,8 +183,8 @@ public struct CalibrationSession: Sendable {
         sweepSamples.removeAll()
 
         if step == .sweepSideways {
-            horizontalAxis = axis
-            advance(to: .sweepVertically)
+            pendingAxis = axis
+            advance(to: .turnRight)
             return .inProgress
         }
 
