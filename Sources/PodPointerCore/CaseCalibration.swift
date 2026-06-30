@@ -132,7 +132,7 @@ public struct CalibrationSession: Sendable {
         case .turnRight, .turnUp:
             return processTurn(reading, sampleStep: sampleStep, elapsed: elapsed)
         case .tap:
-            return processTap(impulse: impulse, time: reading.timestamp, elapsed: elapsed)
+            return processTap(impulse: impulse, time: time, elapsed: elapsed)
         }
     }
 
