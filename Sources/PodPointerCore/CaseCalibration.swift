@@ -251,6 +251,9 @@ public struct CalibrationSession: Sendable {
     private mutating func advance(to next: CalibrationStep) {
         step = next
         stepStart = nil
+        stillSince = nil
+        isSettling = true
+        turnedRadians = 0
         progress = 0
     }
 
