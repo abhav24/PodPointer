@@ -196,6 +196,27 @@ public struct CalibrationSession: Sendable {
         return .inProgress
     }
 
+    /// Sets an axis's direction from one deliberate turn. Using the total angle
+    /// means a small wind-up in the opposite direction doesn't matter.
+    private mutating func processTurn(_ reading: MotionReading, sampleStep: Double, elapsed: Double) -> CalibrationStatus {
+        let rate = reading.rotationRate - gyroBias
+        turnedRadians += rate.dot(pendingAxis) * sampleStep
+        progress = min(abs(turnedRadians) / Self.requiredTurnRadians, 1)
+
+        if abs(turnedRadians) >= Self.requiredTurnRadians, rate.magnitude < Self.holdMotionLimit {
+            let axis = turnedRadians > 0 ? pendingAxis : pendingAxis * -1
+            if step == .turnRight {
+                horizontalAxis = axis
+                advance(to: .sweepVertically)
+            } else {
+                verticalAxis = axis
+                advance(to: .tap)
+            }
+            return .inProgress
+        }
+        return elapsed >= Self.turnTimeoutSeconds ? .failed(.noDirection) : .inProgress
+    }
+
     private mutating func processTap(impulse: Double, time: Double, elapsed: Double) -> CalibrationStatus {
         if let peak = currentPeak {
             if time - currentPeakStart <= Self.tapPeakSeconds {
