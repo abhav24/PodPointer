@@ -6,14 +6,6 @@ import Foundation
 /// shake as it fades. A later jolt only counts if it clearly stands out from
 /// what's left of the shake, which lets quick double and triple taps through.
 public struct TapDetector: Sendable {
-    public enum Event: Equatable, Sendable {
-        case none
-        /// A jolt began. It may still turn out to be a hand movement.
-        case impulseStarted
-        case tap
-        case rejected
-    }
-
     public var threshold: Double
 
     private static let stillRotationLimit = 0.9
