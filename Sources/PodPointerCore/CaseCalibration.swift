@@ -272,9 +272,6 @@ public struct CalibrationSession: Sendable {
 
         let total = samples.reduce(0) { $0 + $1.dot($1) }
         let alongAxis = samples.reduce(0) { $0 + pow($1.dot(axis), 2) }
-        guard total > 0, alongAxis / total >= minimumAxisEnergy else { return nil }
-
-        let firstMovement = samples.prefix(5).reduce(0) { $0 + $1.dot(axis) }
-        return firstMovement >= 0 ? axis : axis * -1
+        return total > 0 && alongAxis / total >= minimumAxisEnergy ? axis : nil
     }
 }
