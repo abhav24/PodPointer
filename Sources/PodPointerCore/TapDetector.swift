@@ -1,6 +1,10 @@
 import Foundation
 
-/// Finds taps on the case: a short jolt of acceleration while the hand is steady.
+/// Finds taps on the case from sudden changes in acceleration.
+///
+/// A tap leaves the case shaking for a moment, so the detector follows that
+/// shake as it fades. A later jolt only counts if it clearly stands out from
+/// what's left of the shake, which lets quick double and triple taps through.
 public struct TapDetector: Sendable {
     public enum Event: Equatable, Sendable {
         case none
