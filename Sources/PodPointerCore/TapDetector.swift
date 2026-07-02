@@ -30,8 +30,10 @@ public struct TapDetector: Sendable {
 
     private var previousAcceleration: Vector3?
     private var previousTime = -Double.infinity
-    private var impulseStart: Double?
-    private var ignoreUntil = -Double.infinity
+    private var shake = 0.0
+    private var lastTapTime = -Double.infinity
+    private var tapsInGroup = 0
+    private var recentJolts: [(time: Double, jolt: Double)] = []
     private var recentRotation: [(time: Double, speed: Double)] = []
 
     public init(threshold: Double) {
