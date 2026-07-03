@@ -40,7 +40,8 @@ public struct TapDetector: Sendable {
         self.threshold = threshold
     }
 
-    public mutating func process(acceleration: Vector3, rotationSpeed: Double, at time: Double) -> Event {
+    /// Returns true on the sample where a tap begins.
+    public mutating func process(acceleration: Vector3, rotationSpeed: Double, at time: Double) -> Bool {
         defer {
             previousAcceleration = acceleration
             previousTime = time
