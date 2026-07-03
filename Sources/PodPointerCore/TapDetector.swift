@@ -47,7 +47,8 @@ public struct TapDetector: Sendable {
             previousTime = time
         }
         guard let previous = previousAcceleration, time - previousTime < Self.resetGapSeconds else {
-            impulseStart = nil
+            shake = 0
+            recentJolts.removeAll()
             recentRotation.removeAll()
             return .none
         }
