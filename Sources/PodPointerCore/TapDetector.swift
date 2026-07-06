@@ -53,6 +53,9 @@ public struct TapDetector: Sendable {
             return false
         }
 
+        let jolt = (acceleration - previous).magnitude
+        shake *= exp(-(time - previousTime) / Self.shakeFadeSeconds)
+        recentJolts.removeAll { time - $0.time > Self.movementWindowSeconds }
         guard time >= ignoreUntil else { return .none }
         if impulse >= threshold, isHandStill(at: time) {
             impulseStart = time
