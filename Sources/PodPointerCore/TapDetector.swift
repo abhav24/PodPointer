@@ -59,7 +59,9 @@ public struct TapDetector: Sendable {
         recentRotation.removeAll { time - $0.time > Self.rotationWindowSeconds }
 
         // Triple is the longest gesture, so a fourth tap gets the normal checks.
-        if impulse >= threshold, isHandStill(at: time) {
+        // Otherwise, one false tap while moving could set off a chain of them.
+        let isInTapGroup = time - lastTapTime < Self.tapGroupSeconds && tapsInGroup < Self.longestTapGroup
+        let isTap = jolt >= threshold
             impulseStart = time
             return .impulseStarted
         }
