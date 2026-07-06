@@ -50,22 +50,7 @@ public struct TapDetector: Sendable {
             shake = 0
             recentJolts.removeAll()
             recentRotation.removeAll()
-            return .none
-        }
-        let impulse = (acceleration - previous).magnitude
-
-        if let start = impulseStart {
-            if impulse < threshold * 0.5 {
-                impulseStart = nil
-                ignoreUntil = time + Self.afterTapSeconds
-                return .tap
-            }
-            if time - start > Self.maximumImpulseSeconds {
-                impulseStart = nil
-                ignoreUntil = time + Self.afterRejectSeconds
-                return .rejected
-            }
-            return .none
+            return false
         }
 
         guard time >= ignoreUntil else { return .none }
