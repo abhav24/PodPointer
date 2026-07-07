@@ -62,7 +62,9 @@ public struct TapDetector: Sendable {
         // Otherwise, one false tap while moving could set off a chain of them.
         let isInTapGroup = time - lastTapTime < Self.tapGroupSeconds && tapsInGroup < Self.longestTapGroup
         let isTap = jolt >= threshold
-            impulseStart = time
+            && time - lastTapTime >= Self.minimumTapSpacing
+            && jolt >= shake * Self.aboveShakeRatio
+            && (isInTapGroup || (jolt >= recentMovement * Self.aboveMovementRatio && isSteady))
             return .impulseStarted
         }
         // A tap jolts the gyroscope too, so samples during and after a tap
