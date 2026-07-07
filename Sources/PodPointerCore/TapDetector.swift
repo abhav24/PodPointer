@@ -65,7 +65,10 @@ public struct TapDetector: Sendable {
             && time - lastTapTime >= Self.minimumTapSpacing
             && jolt >= shake * Self.aboveShakeRatio
             && (isInTapGroup || (jolt >= recentMovement * Self.aboveMovementRatio && isSteady))
-            return .impulseStarted
+
+        if isTap {
+            tapsInGroup = time - lastTapTime < Self.tapGroupSeconds ? tapsInGroup + 1 : 1
+            lastTapTime = time
         }
         // A tap jolts the gyroscope too, so samples during and after a tap
         // aren't recorded. Otherwise the second tap of a double tap would fail.
