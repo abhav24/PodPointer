@@ -70,10 +70,16 @@ public struct TapDetector: Sendable {
             tapsInGroup = time - lastTapTime < Self.tapGroupSeconds ? tapsInGroup + 1 : 1
             lastTapTime = time
         }
-        // A tap jolts the gyroscope too, so samples during and after a tap
-        // aren't recorded. Otherwise the second tap of a double tap would fail.
-        recentRotation.append((time, rotationSpeed))
-        return .none
+        shake = max(shake, jolt)
+
+        let hasSettled = time - lastTapTime >= Self.afterTapSettleSeconds
+        if hasSettled {
+            recentJolts.append((time, jolt))
+        }
+        if hasSettled || tapsInGroup >= Self.longestTapGroup {
+            recentRotation.append((time, rotationSpeed))
+        }
+        return isTap
     }
 
     private mutating func isHandStill(at time: Double) -> Bool {
