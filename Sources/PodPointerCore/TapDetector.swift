@@ -100,7 +100,8 @@ public enum CaseGesture: String, CaseIterable, Sendable {
 
 /// Groups taps into single, double, and triple taps.
 public struct TapSequence: Sendable {
-    public let windowSeconds: Double
+    /// How long to wait for another tap. A single tap acts after this delay.
+    public var windowSeconds: Double
     private var count = 0
     private var lastTap = -Double.infinity
 
