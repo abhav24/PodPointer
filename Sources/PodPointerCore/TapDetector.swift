@@ -82,9 +82,13 @@ public struct TapDetector: Sendable {
         return isTap
     }
 
-    private mutating func isHandStill(at time: Double) -> Bool {
-        recentRotation.removeAll { time - $0.time > Self.stillWindowSeconds }
-        return recentRotation.allSatisfy { $0.speed < Self.stillRotationLimit }
+    private var recentMovement: Double {
+        guard !recentJolts.isEmpty else { return 0 }
+        return recentJolts.reduce(0) { $0 + $1.jolt } / Double(recentJolts.count)
+    }
+
+    private var isSteady: Bool {
+        recentRotation.allSatisfy { $0.speed < Self.movingRotationLimit }
     }
 }
 
