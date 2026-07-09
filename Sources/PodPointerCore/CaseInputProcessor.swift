@@ -3,6 +3,8 @@ import Foundation
 public struct CaseOutput: Equatable, Sendable {
     public var point: PointerPoint
     public var gesture: CaseGesture?
+    /// True on the sample where a tap began.
+    public var tapped: Bool
 }
 
 /// Combines calibration, tap detection, and pointer movement into one input.
