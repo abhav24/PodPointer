@@ -18,7 +18,7 @@ public struct CaseInputProcessor: Sendable {
 
     /// Above 1 makes lighter taps count. Below 1 needs firmer taps.
     public var tapSensitivity = 1.0 {
-        didSet { detector.threshold = calibration.tapThreshold / tapSensitivity }
+        didSet { detector.threshold = Self.detectionThreshold(for: calibration) / tapSensitivity }
     }
 
     private static let settleSeconds = 0.08
