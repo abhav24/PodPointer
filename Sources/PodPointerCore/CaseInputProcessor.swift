@@ -61,10 +61,7 @@ public struct CaseInputProcessor: Sendable {
         if tapped {
             // A tap also shakes the pointer, so undo that and hold it in place.
             engine.rollBack(from: time)
-            isHolding = true
-            holdUntil = .infinity
-        case .tap:
-            holdUntil = time + Self.settleSeconds
+            holdUntil = time + Self.holdAfterTapSeconds
             gesture = sequence.registerTap(at: time)
         case .rejected:
             isHolding = false
