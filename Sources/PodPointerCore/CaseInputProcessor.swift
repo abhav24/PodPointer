@@ -53,10 +53,13 @@ public struct CaseInputProcessor: Sendable {
         let rotation = reading.rotationRate - calibration.gyroBias
         var gesture: CaseGesture?
 
-        switch detector.process(acceleration: reading.userAcceleration, rotationSpeed: rotation.magnitude, at: time) {
-        case .none:
-            break
-        case .impulseStarted:
+        let tapped = detector.process(
+            acceleration: reading.userAcceleration,
+            rotationSpeed: rotation.magnitude,
+            at: time
+        )
+        if tapped {
+            // A tap also shakes the pointer, so undo that and hold it in place.
             engine.rollBack(from: time)
             isHolding = true
             holdUntil = .infinity
