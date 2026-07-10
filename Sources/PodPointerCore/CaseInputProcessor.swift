@@ -41,7 +41,11 @@ public struct CaseInputProcessor: Sendable {
     public init(calibration: CaseCalibration, pointerConfiguration: PointerConfiguration = PointerConfiguration()) {
         self.calibration = calibration
         engine = PointerEngine(configuration: pointerConfiguration)
-        detector = TapDetector(threshold: calibration.tapThreshold)
+        detector = TapDetector(threshold: Self.detectionThreshold(for: calibration))
+    }
+
+    private static func detectionThreshold(for calibration: CaseCalibration) -> Double {
+        calibration.tapThreshold * thresholdMargin
     }
 
     public mutating func process(_ reading: MotionReading) -> CaseOutput {
