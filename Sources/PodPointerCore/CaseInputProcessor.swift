@@ -63,11 +63,6 @@ public struct CaseInputProcessor: Sendable {
             engine.rollBack(from: time)
             holdUntil = time + Self.holdAfterTapSeconds
             gesture = sequence.registerTap(at: time)
-        case .rejected:
-            isHolding = false
-        }
-        if isHolding, time >= holdUntil {
-            isHolding = false
         }
         gesture = gesture ?? sequence.poll(at: time)
 
