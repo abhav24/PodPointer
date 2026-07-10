@@ -21,7 +21,16 @@ public struct CaseInputProcessor: Sendable {
         didSet { detector.threshold = Self.detectionThreshold(for: calibration) / tapSensitivity }
     }
 
-    private static let settleSeconds = 0.08
+    /// How long to wait for another tap before acting on a tap group.
+    public var multiTapWindow: Double {
+        get { sequence.windowSeconds }
+        set { sequence.windowSeconds = newValue }
+    }
+
+    /// Asks for slightly firmer taps than calibration measured, which removes
+    /// weak false taps without losing real ones.
+    private static let thresholdMargin = 1.1
+    private static let holdAfterTapSeconds = 0.15
     private static let degreesPerRadian = 180 / Double.pi
 
     private var engine: PointerEngine
