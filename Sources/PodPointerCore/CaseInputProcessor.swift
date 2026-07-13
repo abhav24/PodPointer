@@ -76,7 +76,7 @@ public struct CaseInputProcessor: Sendable {
                 at: time
             )
         }
-        return CaseOutput(point: point, gesture: gesture)
+        return CaseOutput(point: point, gesture: gesture, tapped: tapped)
     }
 
     public mutating func setPosition(_ point: PointerPoint) {
