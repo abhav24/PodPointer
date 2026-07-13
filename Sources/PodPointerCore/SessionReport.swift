@@ -9,6 +9,7 @@ public struct SessionReport: Sendable {
     public var sensorLocations: [String]
     public var isCalibrated: Bool
     public var gestureCounts: [CaseGesture: Int]
+    public var checkResults: CaseCheckResults?
     public var events: [String]
 
     public init(
