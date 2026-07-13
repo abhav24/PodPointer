@@ -19,6 +19,7 @@ public struct SessionReport: Sendable {
         sensorLocations: [String],
         isCalibrated: Bool,
         gestureCounts: [CaseGesture: Int],
+        checkResults: CaseCheckResults? = nil,
         events: [String]
     ) {
         self.appVersion = appVersion
