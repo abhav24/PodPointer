@@ -61,12 +61,11 @@ public struct SessionReport: Sendable {
         - Calibrated: \(isCalibrated ? "yes" : "no")
         - Taps detected: \(gestures)
 
-        ### Results (fill in)
-        - Motion arrives from the open case: yes / no
-        - Calibration finishes: yes / no
-        - Taps out of 20 detected: __ / 20
-        - False taps while pointing for 1 minute: __
-        - Pointer feels usable: yes / no
+        ### Case check
+        \(check)
+
+        ### With slides (fill in)
+        - Slides change with taps: yes / no
         - Laser dot appears over a full-screen slideshow: yes / no
 
         ### Event log
