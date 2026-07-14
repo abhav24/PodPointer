@@ -37,6 +37,15 @@ public struct SessionReport: Sendable {
         let gestures = CaseGesture.allCases
             .map { "\($0.rawValue): \(gestureCounts[$0, default: 0])" }
             .joined(separator: ", ")
+        let check = checkResults.map { results in
+            """
+            - Taps detected: \(results.tapsHit) of \(results.tapsAsked), with \(results.extraTaps) extra
+            - Single, double, and triple taps recognized: \(results.gesturesHit) of \(results.gesturesAsked)
+            - False taps while moving: \(results.falseTapsWhileMoving)
+            - Targets hit: \(results.targetsHit) of \(results.targetsAsked)
+            - Overall: \(results.passed ? "passed" : "needs work")
+            """
+        } ?? "Not run"
         return """
         ## PodPointer test report
 
