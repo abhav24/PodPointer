@@ -28,6 +28,7 @@ public struct SessionReport: Sendable {
         self.sensorLocations = sensorLocations
         self.isCalibrated = isCalibrated
         self.gestureCounts = gestureCounts
+        self.checkResults = checkResults
         self.events = events
     }
 
