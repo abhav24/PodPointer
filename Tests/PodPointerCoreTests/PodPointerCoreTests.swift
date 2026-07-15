@@ -93,14 +93,11 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
         while session.step == .holdStill, status == .inProgress {
             feed(reading(rotation: bias, at: time))
         }
-        for step in [(CalibrationStep.sweepSideways, horizontal), (.sweepVertically, vertical)] {
-            let start = time
-            while session.step == step.0, status == .inProgress {
-                // Starts in the positive direction, then sweeps back and forth.
-                let wave = sin((time - start) * 2 * .pi * 0.75)
-                feed(reading(rotation: bias + step.1 * (wave * 1.5), at: time))
-            }
-        }
+        sweep(.sweepSideways, around: horizontal)
+        turn(.turnRight, around: horizontal)
+        sweep(.sweepVertically, around: vertical)
+        turn(.turnUp, around: vertical)
+        settle()
         var tapClock = 0
         while status == .inProgress, time < 60 {
             let jolt = tapClock % 25 == 0 ? Vector3(x: tapStrength, y: 0, z: 0) : .zero
