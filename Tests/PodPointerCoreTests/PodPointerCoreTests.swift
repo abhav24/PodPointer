@@ -44,7 +44,8 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
         horizontal: Vector3,
         vertical: Vector3,
         bias: Vector3 = .zero,
-        tapStrength: Double = 0.8
+        tapStrength: Double = 0.8,
+        leftover: Vector3 = .zero
     ) -> CalibrationStatus {
         var session = CalibrationSession(sensorLocation: "right")
         var time = 0.0
