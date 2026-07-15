@@ -39,6 +39,7 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
 
 @Suite struct CalibrationTests {
     /// Feeds a full calibration, with the case held at an arbitrary angle.
+    /// `leftover` is motion that keeps going when each new step begins.
     private func run(
         horizontal: Vector3,
         vertical: Vector3,
