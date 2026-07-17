@@ -226,8 +226,9 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
 @Suite struct TapDetectorTests {
     private func tapCount(_ acceleration: [Double], rotation: Double = 0, threshold: Double = 0.3) -> Int {
         var detector = TapDetector(threshold: threshold)
-        return acceleration.enumerated().map { index, value in
-            detector.process(
+        var taps = 0
+        for (index, value) in acceleration.enumerated() {
+            let tapped = detector.process(
                 acceleration: Vector3(x: value, y: 0, z: 0),
                 rotationSpeed: rotation,
                 at: Double(index) * sampleInterval
