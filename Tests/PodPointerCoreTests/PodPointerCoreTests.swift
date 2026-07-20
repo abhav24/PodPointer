@@ -287,8 +287,7 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
     }
 
     @Test func smallChangesAreIgnored() {
-        let result = events((0..<60).map { $0.isMultiple(of: 2) ? 0.05 : 0 })
-        #expect(result.allSatisfy { $0 == .none })
+        #expect(tapCount((0..<60).map { $0.isMultiple(of: 2) ? 0.05 : 0 }) == 0)
     }
 
     @Test func aTapWhilePointingIsIgnored() {
