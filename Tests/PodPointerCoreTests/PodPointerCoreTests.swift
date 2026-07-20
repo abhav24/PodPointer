@@ -233,6 +233,7 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
                 rotationSpeed: rotation,
                 at: Double(index) * sampleInterval
             )
+            if tapped { taps += 1 }
         }
     }
 
