@@ -235,6 +235,7 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
             )
             if tapped { taps += 1 }
         }
+        return taps
     }
 
     @Test func aShortJoltIsATap() {
