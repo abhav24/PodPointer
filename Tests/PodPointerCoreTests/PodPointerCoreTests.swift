@@ -290,9 +290,8 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
         #expect(tapCount((0..<60).map { $0.isMultiple(of: 2) ? 0.05 : 0 }) == 0)
     }
 
-    @Test func aTapWhilePointingIsIgnored() {
-        let result = events(Array(repeating: 0, count: 20) + [1, 1, 1, 1], rotation: 2)
-        #expect(result.allSatisfy { $0 == .none })
+    @Test func aJoltWhileRotatingFastIsIgnored() {
+        #expect(tapCount(signal(tapsAt: [30]), rotation: 2) == 0)
     }
 
     @Test func aLongShakeIsRejected() {
