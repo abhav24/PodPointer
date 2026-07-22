@@ -331,8 +331,17 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
         var prompts: [(time: Double, gesture: CaseGesture)] = []
         var tapTestEnd = 0.0
         var gestureTestEnd = 0.0
-            let jolt = index == 30 || index == 45
-            // The tap also shakes the gyroscope, which must not block the next tap.
+    }
+
+    private func replay() throws -> Replay {
+        let url = try #require(Bundle.module.url(forResource: "real-taps", withExtension: "csv", subdirectory: "Fixtures"))
+        var processor = CaseInputProcessor(calibration: CaseCalibration(
+            horizontalAxis: Vector3(x: -0.40161, y: 0.49439, z: 0.7709),
+            verticalAxis: Vector3(x: 0.13318, y: -0.80129, z: 0.58327),
+            gyroBias: Vector3(x: -0.03627, y: 0.00502, z: 0.02783),
+            tapThreshold: 0.22364,
+            sensorLocation: "left"
+        ))
             let event = detector.process(
                 acceleration: Vector3(x: jolt ? 1 : 0, y: 0, z: 0),
                 rotationSpeed: (31...34).contains(index) ? 3 : 0,
