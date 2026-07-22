@@ -320,9 +320,17 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
         var withJolt = moving
         withJolt[60] = 1.0
         #expect(tapCount(moving) <= 1)
-        var taps = 0
-        for index in 0..<100 {
-            let time = Double(index) * sampleInterval
+        #expect(tapCount(withJolt) <= 1)
+    }
+}
+
+/// Replays taps recorded from real AirPods Pro in a case, with the prompts they answered.
+@Suite struct RecordedTapTests {
+    private struct Replay {
+        var gestures: [(time: Double, gesture: CaseGesture)] = []
+        var prompts: [(time: Double, gesture: CaseGesture)] = []
+        var tapTestEnd = 0.0
+        var gestureTestEnd = 0.0
             let jolt = index == 30 || index == 45
             // The tap also shakes the gyroscope, which must not block the next tap.
             let event = detector.process(
