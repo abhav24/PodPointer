@@ -309,8 +309,17 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
         #expect(taps == 2)
     }
 
-    @Test func twoQuickTapsBothCount() {
-        var detector = TapDetector(threshold: 0.3)
+    @Test func sustainedShakingCountsAtMostOnce() {
+        let shake = (0..<60).map { $0.isMultiple(of: 2) ? 1.0 : 0.0 }
+        #expect(tapCount(Array(repeating: 0, count: 20) + shake) <= 1)
+    }
+
+    @Test func steadyMovementRaisesTheBar() {
+        // Constant movement over half the jolt size, so the jolt doesn't stand out.
+        let moving = (0..<80).map { $0.isMultiple(of: 2) ? 0.6 : 0.0 }
+        var withJolt = moving
+        withJolt[60] = 1.0
+        #expect(tapCount(moving) <= 1)
         var taps = 0
         for index in 0..<100 {
             let time = Double(index) * sampleInterval
