@@ -342,9 +342,17 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
             tapThreshold: 0.22364,
             sensorLocation: "left"
         ))
-            let event = detector.process(
-                acceleration: Vector3(x: jolt ? 1 : 0, y: 0, z: 0),
-                rotationSpeed: (31...34).contains(index) ? 3 : 0,
+        var result = Replay()
+        for line in try String(contentsOf: url, encoding: .utf8).split(separator: "\n").dropFirst() {
+            let fields = line.split(separator: ",", omittingEmptySubsequences: false).map(String.init)
+            let time = try #require(Double(fields[0]))
+            if fields[1].isEmpty {
+                let event = fields[7]
+                if event == "end:tapTest" { result.tapTestEnd = time }
+                if event == "end:gestureTest" { result.gestureTestEnd = time }
+                if event.hasPrefix("ask:"), let gesture = CaseGesture(rawValue: String(event.dropFirst(4))) {
+                    result.prompts.append((time, gesture))
+                }
                 at: time
             )
             if event == .tap { taps += 1 }
