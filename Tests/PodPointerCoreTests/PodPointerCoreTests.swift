@@ -369,6 +369,10 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
     }
 
     @Test func promptedGesturesAreRecognized() throws {
+        let result = try replay()
+        #expect(result.prompts.count == CaseCheck.gesturePrompts.count)
+        var correct = 0
+        for (index, prompt) in result.prompts.enumerated() {
         #expect(taps == 2)
     }
 }
