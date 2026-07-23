@@ -353,9 +353,17 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
                 if event.hasPrefix("ask:"), let gesture = CaseGesture(rawValue: String(event.dropFirst(4))) {
                     result.prompts.append((time, gesture))
                 }
-                at: time
-            )
-            if event == .tap { taps += 1 }
+                continue
+            }
+            let values = fields[1...6].compactMap(Double.init)
+            let output = processor.process(MotionReading(
+                rotationRate: Vector3(x: values[3], y: values[4], z: values[5]),
+                userAcceleration: Vector3(x: values[0], y: values[1], z: values[2]),
+                timestamp: time
+            ))
+            if let gesture = output.gesture {
+                result.gestures.append((time, gesture))
+            }
         }
         #expect(taps == 2)
     }
