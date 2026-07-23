@@ -365,6 +365,10 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
                 result.gestures.append((time, gesture))
             }
         }
+        return result
+    }
+
+    @Test func promptedGesturesAreRecognized() throws {
         #expect(taps == 2)
     }
 }
