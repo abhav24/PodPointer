@@ -377,6 +377,10 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
             let answer = result.gestures.first { $0.time >= prompt.time && $0.time < end }
             if answer?.gesture == prompt.gesture { correct += 1 }
         }
+        #expect(correct >= 8)
+    }
+
+    @Test func singleTapsStaySingle() throws {
         #expect(taps == 2)
     }
 }
