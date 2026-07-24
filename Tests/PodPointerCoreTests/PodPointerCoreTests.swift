@@ -373,6 +373,10 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
         #expect(result.prompts.count == CaseCheck.gesturePrompts.count)
         var correct = 0
         for (index, prompt) in result.prompts.enumerated() {
+            let end = index + 1 < result.prompts.count ? result.prompts[index + 1].time : result.gestureTestEnd
+            let answer = result.gestures.first { $0.time >= prompt.time && $0.time < end }
+            if answer?.gesture == prompt.gesture { correct += 1 }
+        }
         #expect(taps == 2)
     }
 }
