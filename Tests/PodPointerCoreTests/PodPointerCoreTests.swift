@@ -381,7 +381,11 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
     }
 
     @Test func singleTapsStaySingle() throws {
-        #expect(taps == 2)
+        let result = try replay()
+        // The recording starts a second before the tap test, during calibration.
+        let answers = result.gestures.filter { $0.time >= 1 && $0.time < result.tapTestEnd }
+        #expect(answers.count == CaseCheck.tapPrompts)
+        #expect(answers.filter { $0.gesture == .single }.count >= 8)
     }
 }
 
