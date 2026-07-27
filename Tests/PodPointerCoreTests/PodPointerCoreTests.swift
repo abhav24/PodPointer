@@ -434,6 +434,16 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
         return PointerEngine(configuration: configuration)
     }
 
+    @Test func flipsReverseDirection() {
+        var configuration = PointerConfiguration()
+        configuration.invertHorizontal = true
+        configuration.invertVertical = true
+        var pointer = PointerEngine(configuration: configuration)
+        let point = sweep(&pointer, horizontal: 30, vertical: 30, seconds: 0.5)
+        #expect(point.x < 0.5)
+        #expect(point.y > 0.5)
+    }
+
     @Test func rotatingRightAndUpMovesRightAndUp() {
         var pointer = engine()
         let point = sweep(&pointer, horizontal: 10, vertical: 5, seconds: 1)
