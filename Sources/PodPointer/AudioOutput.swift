@@ -7,3 +7,12 @@ enum AudioOutput {
 
     static var airPodsDevice: AudioDeviceID? {
         allDevices().first { device in
+            let transport: UInt32 = read(kAudioDevicePropertyTransportType, of: device) ?? 0
+            guard transport == kAudioDeviceTransportTypeBluetooth || transport == kAudioDeviceTransportTypeBluetoothLE,
+                  hasOutput(device), let name = name(of: device) else { return false }
+            return namesToMatch.contains { name.localizedCaseInsensitiveContains($0) }
+        }
+    }
+
+    static var isUsingAirPods: Bool {
+        guard let airPods = airPodsDevice else { return false }
