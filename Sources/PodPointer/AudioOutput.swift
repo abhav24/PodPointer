@@ -26,3 +26,12 @@ enum AudioOutput {
         var address = address(kAudioHardwarePropertyDefaultOutputDevice)
         let status = AudioObjectSetPropertyData(
             AudioObjectID(kAudioObjectSystemObject),
+            &address,
+            0,
+            nil,
+            UInt32(MemoryLayout<AudioDeviceID>.size),
+            &device
+        )
+        return status == noErr
+    }
+
