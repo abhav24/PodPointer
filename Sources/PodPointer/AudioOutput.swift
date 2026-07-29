@@ -45,3 +45,8 @@ enum AudioOutput {
         return devices
     }
 
+    private static func hasOutput(_ device: AudioDeviceID) -> Bool {
+        var address = address(kAudioDevicePropertyStreams, scope: kAudioObjectPropertyScopeOutput)
+        var size: UInt32 = 0
+        return AudioObjectGetPropertyDataSize(device, &address, 0, nil, &size) == noErr && size > 0
+    }
