@@ -16,3 +16,13 @@ enum AudioOutput {
 
     static var isUsingAirPods: Bool {
         guard let airPods = airPodsDevice else { return false }
+        let current: AudioDeviceID? = read(kAudioHardwarePropertyDefaultOutputDevice, of: AudioObjectID(kAudioObjectSystemObject))
+        return current == airPods
+    }
+
+    @discardableResult
+    static func useAirPods() -> Bool {
+        guard var device = airPodsDevice else { return false }
+        var address = address(kAudioHardwarePropertyDefaultOutputDevice)
+        let status = AudioObjectSetPropertyData(
+            AudioObjectID(kAudioObjectSystemObject),
