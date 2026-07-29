@@ -35,3 +35,13 @@ enum AudioOutput {
         return status == noErr
     }
 
+    private static func allDevices() -> [AudioDeviceID] {
+        var address = address(kAudioHardwarePropertyDevices)
+        let system = AudioObjectID(kAudioObjectSystemObject)
+        var size: UInt32 = 0
+        guard AudioObjectGetPropertyDataSize(system, &address, 0, nil, &size) == noErr else { return [] }
+        var devices = [AudioDeviceID](repeating: 0, count: Int(size) / MemoryLayout<AudioDeviceID>.size)
+        guard AudioObjectGetPropertyData(system, &address, 0, nil, &size, &devices) == noErr else { return [] }
+        return devices
+    }
+
