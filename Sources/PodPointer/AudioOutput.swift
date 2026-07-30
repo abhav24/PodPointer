@@ -56,3 +56,8 @@ enum AudioOutput {
         var size = UInt32(MemoryLayout<Unmanaged<CFString>?>.size)
         var name: Unmanaged<CFString>?
         guard AudioObjectGetPropertyData(device, &address, 0, nil, &size, &name) == noErr else { return nil }
+        return name?.takeRetainedValue() as String?
+    }
+
+    private static func read<Value: FixedWidthInteger>(_ selector: AudioObjectPropertySelector, of object: AudioObjectID) -> Value? {
+        var address = address(selector)
