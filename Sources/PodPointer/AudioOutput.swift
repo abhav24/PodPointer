@@ -61,3 +61,9 @@ enum AudioOutput {
 
     private static func read<Value: FixedWidthInteger>(_ selector: AudioObjectPropertySelector, of object: AudioObjectID) -> Value? {
         var address = address(selector)
+        var size = UInt32(MemoryLayout<Value>.size)
+        var value: Value = 0
+        return AudioObjectGetPropertyData(object, &address, 0, nil, &size, &value) == noErr ? value : nil
+    }
+
+    private static func address(
