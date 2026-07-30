@@ -50,3 +50,9 @@ enum AudioOutput {
         var size: UInt32 = 0
         return AudioObjectGetPropertyDataSize(device, &address, 0, nil, &size) == noErr && size > 0
     }
+
+    private static func name(of device: AudioDeviceID) -> String? {
+        var address = address(kAudioObjectPropertyName)
+        var size = UInt32(MemoryLayout<Unmanaged<CFString>?>.size)
+        var name: Unmanaged<CFString>?
+        guard AudioObjectGetPropertyData(device, &address, 0, nil, &size, &name) == noErr else { return nil }
