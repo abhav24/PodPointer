@@ -16,3 +16,13 @@ final class MotionRecorder {
             .first?
             .appendingPathComponent("PodPointer/last-setup-motion.csv")
     }
+
+    func start() {
+        stop()
+        guard let url = Self.fileURL else { return }
+        do {
+            try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
+            FileManager.default.createFile(atPath: url.path, contents: nil)
+            handle = try FileHandle(forWritingTo: url)
+            pending = ["time,ax,ay,az,rx,ry,rz,event"]
+        } catch {
