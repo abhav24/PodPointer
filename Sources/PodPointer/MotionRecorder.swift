@@ -26,3 +26,12 @@ final class MotionRecorder {
             handle = try FileHandle(forWritingTo: url)
             pending = ["time,ax,ay,az,rx,ry,rz,event"]
         } catch {
+            handle = nil
+        }
+    }
+
+    func record(_ reading: MotionReading) {
+        guard handle != nil else { return }
+        let acceleration = reading.userAcceleration
+        let rotation = reading.rotationRate
+        pending.append(String(
