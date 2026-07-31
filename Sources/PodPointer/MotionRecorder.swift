@@ -7,3 +7,12 @@ import PodPointerCore
 final class MotionRecorder {
     private static let flushLineCount = 200
 
+    private var handle: FileHandle?
+    private var pending: [String] = []
+
+    static var fileURL: URL? {
+        FileManager.default
+            .urls(for: .applicationSupportDirectory, in: .userDomainMask)
+            .first?
+            .appendingPathComponent("PodPointer/last-setup-motion.csv")
+    }
