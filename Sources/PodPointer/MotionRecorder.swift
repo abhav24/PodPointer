@@ -45,3 +45,7 @@ final class MotionRecorder {
         }
     }
 
+    func mark(_ event: String, at time: Double) {
+        guard handle != nil else { return }
+        pending.append(String(format: "%.4f,,,,,,,", time) + event)
+    }
