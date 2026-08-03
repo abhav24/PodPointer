@@ -35,3 +35,13 @@ final class MotionRecorder {
         let acceleration = reading.userAcceleration
         let rotation = reading.rotationRate
         pending.append(String(
+            format: "%.4f,%.5f,%.5f,%.5f,%.5f,%.5f,%.5f,",
+            reading.timestamp,
+            acceleration.x, acceleration.y, acceleration.z,
+            rotation.x, rotation.y, rotation.z
+        ))
+        if pending.count >= Self.flushLineCount {
+            flush()
+        }
+    }
+
