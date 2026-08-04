@@ -49,3 +49,7 @@ final class MotionRecorder {
         guard handle != nil else { return }
         pending.append(String(format: "%.4f,,,,,,,", time) + event)
     }
+
+    func stop() {
+        flush()
+        try? handle?.close()
