@@ -57,3 +57,7 @@ final class MotionRecorder {
     }
 
     private func flush() {
+        guard let handle, !pending.isEmpty else { return }
+        let text = pending.joined(separator: "\n") + "\n"
+        pending.removeAll()
+        if let data = text.data(using: .utf8) {
