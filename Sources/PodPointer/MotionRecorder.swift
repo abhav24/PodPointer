@@ -53,3 +53,7 @@ final class MotionRecorder {
     func stop() {
         flush()
         try? handle?.close()
+        handle = nil
+    }
+
+    private func flush() {
