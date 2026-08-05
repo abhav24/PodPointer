@@ -8,6 +8,7 @@ final class LaserOverlay {
 
     private let panel: NSPanel
     private let dot = CALayer()
+    private let targetRing = CALayer()
 
     init() {
         panel = NSPanel(
