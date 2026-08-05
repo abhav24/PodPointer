@@ -61,3 +61,7 @@ final class MotionRecorder {
         let text = pending.joined(separator: "\n") + "\n"
         pending.removeAll()
         if let data = text.data(using: .utf8) {
+            try? handle.write(contentsOf: data)
+        }
+    }
+}
