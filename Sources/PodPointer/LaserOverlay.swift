@@ -43,6 +43,23 @@ final class LaserOverlay {
         view.layer?.addSublayer(dot)
     }
 
+    /// Shows a ring to aim at, sized as a fraction of the display height.
+    func showTarget(at point: PointerPoint?, radius: Double) {
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        defer { CATransaction.commit() }
+        guard let point else {
+            targetRing.isHidden = true
+            return
+        }
+        let size = panel.frame.size
+        let ringRadius = radius * size.height
+        targetRing.bounds = CGRect(x: 0, y: 0, width: ringRadius * 2, height: ringRadius * 2)
+        targetRing.cornerRadius = ringRadius
+        targetRing.position = CGPoint(x: point.x * size.width, y: (1 - point.y) * size.height)
+        targetRing.isHidden = false
+    }
+
     func show(on screen: NSScreen) {
         panel.setFrame(screen.frame, display: true)
         panel.orderFrontRegardless()
