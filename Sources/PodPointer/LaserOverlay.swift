@@ -36,6 +36,10 @@ final class LaserOverlay {
         dot.shadowOpacity = 0.9
         dot.shadowRadius = 12
         dot.shadowOffset = .zero
+        targetRing.borderColor = NSColor.systemGreen.cgColor
+        targetRing.borderWidth = 4
+        targetRing.isHidden = true
+        view.layer?.addSublayer(targetRing)
         view.layer?.addSublayer(dot)
     }
 
