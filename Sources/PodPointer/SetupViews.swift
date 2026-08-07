@@ -18,3 +18,13 @@ struct SetupPage<Content: View>: View {
                         .font(.subheadline.weight(.medium))
                         .foregroundStyle(.secondary)
                 }
+                Image(systemName: symbol)
+                    .font(.system(size: 56))
+                    .foregroundStyle(.tint)
+                    .frame(height: 72)
+                Text(title)
+                    .font(.title.bold())
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
+                if let detail {
+                    Text(detail)
