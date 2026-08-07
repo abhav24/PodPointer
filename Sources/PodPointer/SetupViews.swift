@@ -8,3 +8,13 @@ struct SetupPage<Content: View>: View {
     let title: String
     var detail: String?
     var onStartOver: (() -> Void)?
+    @ViewBuilder let content: Content
+
+    var body: some View {
+        ScrollView {
+            VStack(spacing: 20) {
+                if let progress {
+                    Text(progress)
+                        .font(.subheadline.weight(.medium))
+                        .foregroundStyle(.secondary)
+                }
