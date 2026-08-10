@@ -38,3 +38,14 @@ struct SetupPage<Content: View>: View {
             .frame(maxWidth: 460)
             .frame(maxWidth: .infinity)
             .padding(32)
+        }
+        .safeAreaInset(edge: .bottom) {
+            if let onStartOver {
+                Button("Start Over", action: onStartOver)
+                    .buttonStyle(.link)
+                    .padding(.bottom, 14)
+            }
+        }
+    }
+}
+
