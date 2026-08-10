@@ -28,3 +28,13 @@ struct SetupPage<Content: View>: View {
                     .fixedSize(horizontal: false, vertical: true)
                 if let detail {
                     Text(detail)
+                        .font(.title3)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                content
+            }
+            .frame(maxWidth: 460)
+            .frame(maxWidth: .infinity)
+            .padding(32)
