@@ -81,3 +81,14 @@ struct PrimaryButton: View {
     var body: some View {
         Button(action: action) {
             Text(title)
+                .frame(minWidth: 180)
+        }
+        .buttonStyle(.borderedProminent)
+        .controlSize(.large)
+        .keyboardShortcut(.defaultAction)
+    }
+}
+
+/// Shows what the app is waiting for, so a still screen doesn't look stuck.
+struct WaitingLabel: View {
+    let text: String
