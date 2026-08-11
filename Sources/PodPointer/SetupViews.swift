@@ -143,3 +143,23 @@ struct CaseCheckPage: View {
     var body: some View {
         if let check = model.check {
             page(for: check)
+        }
+    }
+
+    @ViewBuilder
+    private func page(for check: CaseCheck) -> some View {
+        switch check.step {
+        case .connect:
+            connect
+        case .earDetection:
+            earDetection
+        case .placeInCase:
+            page(3, symbol: "airpodspro.chargingcase.wireless", title: "Put your AirPods in the case") {
+                InstructionList(items: [
+                    "Put both AirPods in the case.",
+                    "Leave the lid open. Closing it disconnects them.",
+                    "Keep the case in your hand."
+                ])
+                PrimaryButton("They're in the Case") { model.confirmInCase() }
+            }
+        case .watchingCase:
