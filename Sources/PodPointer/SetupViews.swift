@@ -103,3 +103,23 @@ struct WaitingLabel: View {
     }
 }
 
+struct WelcomePage: View {
+    @ObservedObject var model: AppModel
+
+    var body: some View {
+        SetupPage(
+            symbol: "airpodspro.chargingcase.wireless",
+            title: "Turn your AirPods case into a remote",
+            detail: "Point the case at your screen and tap it to control your slides or your Mac."
+        ) {
+            VStack(alignment: .leading, spacing: 14) {
+                feature("scope", "Rotate the case to move a laser dot or your cursor.")
+                feature("hand.tap", "Tap the case to change slides or click.")
+                feature("checkmark.seal", "Setup takes about 6 minutes and tests that it works.")
+            }
+            Text("You'll need your AirPods and their case. PodPointer will ask to use motion data from your AirPods. That data stays on this Mac.")
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
+            PrimaryButton("Get Started") { model.beginSetup() }
+        }
