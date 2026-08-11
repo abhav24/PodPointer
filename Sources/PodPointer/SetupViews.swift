@@ -92,3 +92,14 @@ struct PrimaryButton: View {
 /// Shows what the app is waiting for, so a still screen doesn't look stuck.
 struct WaitingLabel: View {
     let text: String
+
+    var body: some View {
+        HStack(spacing: 8) {
+            ProgressView()
+                .controlSize(.small)
+            Text(text)
+                .foregroundStyle(.secondary)
+        }
+    }
+}
+
