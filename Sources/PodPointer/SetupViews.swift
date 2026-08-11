@@ -49,3 +49,13 @@ struct SetupPage<Content: View>: View {
     }
 }
 
+/// Numbered instructions.
+struct InstructionList: View {
+    let items: [String]
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            ForEach(Array(items.enumerated()), id: \.offset) { index, item in
+                HStack(alignment: .firstTextBaseline, spacing: 10) {
+                    Text("\(index + 1).")
+                        .fontWeight(.semibold)
