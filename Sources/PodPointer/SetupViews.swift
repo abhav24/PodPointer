@@ -123,3 +123,23 @@ struct WelcomePage: View {
                 .fixedSize(horizontal: false, vertical: true)
             PrimaryButton("Get Started") { model.beginSetup() }
         }
+    }
+
+    private func feature(_ symbol: String, _ text: String) -> some View {
+        Label {
+            Text(text)
+                .fixedSize(horizontal: false, vertical: true)
+        } icon: {
+            Image(systemName: symbol)
+                .foregroundStyle(.tint)
+                .frame(width: 24)
+        }
+    }
+}
+
+struct CaseCheckPage: View {
+    @ObservedObject var model: AppModel
+
+    var body: some View {
+        if let check = model.check {
+            page(for: check)
