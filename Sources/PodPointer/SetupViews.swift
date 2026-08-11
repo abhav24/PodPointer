@@ -59,3 +59,14 @@ struct InstructionList: View {
                 HStack(alignment: .firstTextBaseline, spacing: 10) {
                     Text("\(index + 1).")
                         .fontWeight(.semibold)
+                        .monospacedDigit()
+                    Text(item)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+}
+
+struct PrimaryButton: View {
