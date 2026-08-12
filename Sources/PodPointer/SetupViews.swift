@@ -163,3 +163,23 @@ struct CaseCheckPage: View {
                 PrimaryButton("They're in the Case") { model.confirmInCase() }
             }
         case .watchingCase:
+            page(3, symbol: "move.3d", title: "Move the case around", detail: "Rotate it in your hand for a moment to confirm the AirPods are still sending motion.") {
+                WaitingLabel(text: "Waiting for the case to move")
+            }
+        case .motionLost:
+            motionLost
+        case .calibrate:
+            calibration
+        case .tapTest:
+            tapTest(check)
+        case .gestureTest:
+            gestureTest(check)
+        case .moveTest:
+            page(7, symbol: "hand.wave", title: "Wave the case. Don't tap it.", detail: "This checks that normal movement isn't mistaken for a tap.") {
+                countdown(Int(check.moveSecondsLeft(at: model.checkClock).rounded(.up)), label: "seconds left")
+                Text("Mistaken taps so far: \(check.results.falseTapsWhileMoving)")
+                    .foregroundStyle(.secondary)
+            }
+        case .pointTest:
+            page(8, symbol: "scope", title: "Aim at the green ring", detail: nil) {
+                InstructionList(items: [
