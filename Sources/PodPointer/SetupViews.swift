@@ -183,3 +183,23 @@ struct CaseCheckPage: View {
         case .pointTest:
             page(8, symbol: "scope", title: "Aim at the green ring", detail: nil) {
                 InstructionList(items: [
+                    "Find the red dot and the green ring on your screen.",
+                    "Rotate the case until the dot is inside the ring.",
+                    "Hold still and tap the case."
+                ])
+                Text("Ring \(check.targetIndex + 1) of \(CaseCheck.targets.count) · Hits: \(check.results.targetsHit)")
+                    .font(.headline)
+                Text("If the dot reaches the edge of your screen, keep rotating to reposition your aim. Each ring moves on after 15 seconds.")
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
+                Toggle("Flip up and down", isOn: $model.pointerConfiguration.invertVertical)
+                    .toggleStyle(.switch)
+                Toggle("Flip left and right", isOn: $model.pointerConfiguration.invertHorizontal)
+                    .toggleStyle(.switch)
+            }
+        case .results:
+            results(check.results)
+        }
+    }
+
