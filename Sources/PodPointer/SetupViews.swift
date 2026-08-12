@@ -203,3 +203,14 @@ struct CaseCheckPage: View {
         }
     }
 
+    private func page<Content: View>(
+        _ number: Int,
+        symbol: String,
+        title: String,
+        detail: String? = nil,
+        @ViewBuilder content: () -> Content
+    ) -> some View {
+        SetupPage(
+            progress: "Step \(number) of 9",
+            symbol: symbol,
+            title: title,
