@@ -237,3 +237,14 @@ struct CaseCheckPage: View {
                 ])
                 WaitingLabel(text: "Waiting for motion from your AirPods")
                 Button("Open Bluetooth Settings") { model.openBluetoothSettings() }
+                    .controlSize(.large)
+            }
+        }
+    }
+
+    private var earDetection: some View {
+        page(2, symbol: "ear", title: "Turn off Automatic Ear Detection", detail: "With this on, AirPods stop sending motion when they leave your ears. macOS doesn't let apps change it, so you'll need to do this yourself.") {
+            InstructionList(items: [
+                "Keep your AirPods in your ears.",
+                "Select Open Bluetooth Settings below.",
+                "Click ⓘ next to your AirPods.",
