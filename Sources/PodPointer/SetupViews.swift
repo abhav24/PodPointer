@@ -214,3 +214,14 @@ struct CaseCheckPage: View {
             progress: "Step \(number) of 9",
             symbol: symbol,
             title: title,
+            detail: detail,
+            onStartOver: { model.startOver() },
+            content: content
+        )
+    }
+
+    private var connect: some View {
+        page(1, symbol: "airpodspro", title: "Connect your AirPods") {
+            if model.permission == "Denied" || model.permission == "Restricted" {
+                InstructionList(items: [
+                    "Select the button below to open Privacy & Security.",
