@@ -225,3 +225,15 @@ struct CaseCheckPage: View {
             if model.permission == "Denied" || model.permission == "Restricted" {
                 InstructionList(items: [
                     "Select the button below to open Privacy & Security.",
+                    "Open Motion & Fitness and turn on PodPointer.",
+                    "Quit and reopen PodPointer."
+                ])
+                PrimaryButton("Open Privacy & Security") { model.openPrivacySettings() }
+            } else {
+                InstructionList(items: [
+                    "Put both AirPods in your ears.",
+                    "Connect them to this Mac, using Bluetooth settings if they don't connect by themselves.",
+                    "If a message asks about motion access, select Allow."
+                ])
+                WaitingLabel(text: "Waiting for motion from your AirPods")
+                Button("Open Bluetooth Settings") { model.openBluetoothSettings() }
