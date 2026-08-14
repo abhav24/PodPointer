@@ -248,3 +248,15 @@ struct CaseCheckPage: View {
                 "Keep your AirPods in your ears.",
                 "Select Open Bluetooth Settings below.",
                 "Click ⓘ next to your AirPods.",
+                "Turn off Automatic Ear Detection, then select Done.",
+                "Come back to this window."
+            ])
+            Button("Open Bluetooth Settings") { model.openBluetoothSettings() }
+                .controlSize(.large)
+            PrimaryButton("It's Off") { model.confirmEarDetectionOff() }
+            Text("You can turn it back on when you finish using PodPointer.")
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+        }
+    }
+
