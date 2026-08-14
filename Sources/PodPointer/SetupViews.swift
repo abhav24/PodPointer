@@ -260,3 +260,13 @@ struct CaseCheckPage: View {
         }
     }
 
+    private var motionLost: some View {
+        page(3, symbol: "exclamationmark.triangle", title: "Your AirPods stopped sending motion", detail: "This continues by itself as soon as motion comes back.") {
+            InstructionList(items: [
+                "Make sure the case lid is open.",
+                "Make sure the AirPods are still connected to this Mac.",
+                "Check that Automatic Ear Detection is off."
+            ])
+            if model.airPodsAudioFound, !model.soundUsesAirPods {
+                Button("Use AirPods for Sound") { model.useAirPodsForSound() }
+                    .controlSize(.large)
