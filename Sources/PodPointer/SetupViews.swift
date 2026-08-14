@@ -270,3 +270,13 @@ struct CaseCheckPage: View {
             if model.airPodsAudioFound, !model.soundUsesAirPods {
                 Button("Use AirPods for Sound") { model.useAirPodsForSound() }
                     .controlSize(.large)
+            }
+            Toggle("Keep the audio connection active", isOn: $model.keepsAudioActive)
+                .toggleStyle(.switch)
+            Text("Turn this on if motion keeps stopping. It plays silence through your AirPods.")
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+            Button("Check Ear Detection Again") { model.returnToEarDetection() }
+                .controlSize(.large)
+            WaitingLabel(text: "Waiting for motion")
+        }
