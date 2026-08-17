@@ -280,3 +280,13 @@ struct CaseCheckPage: View {
                 .controlSize(.large)
             WaitingLabel(text: "Waiting for motion")
         }
+    }
+
+    @ViewBuilder
+    private var calibration: some View {
+        if let step = model.calibrationStep {
+            page(4, symbol: calibrationSymbol(for: step), title: calibrationTitle(for: step), detail: calibrationDetail(for: step)) {
+                ProgressView(value: model.calibrationProgress)
+                Text("Hold the case the way you'll use it. This teaches PodPointer your grip.")
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
