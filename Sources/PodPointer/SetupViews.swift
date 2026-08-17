@@ -300,3 +300,14 @@ struct CaseCheckPage: View {
     }
 
     private func calibrationSymbol(for step: CalibrationStep) -> String {
+        if model.calibrationIsSettling { return "hand.raised" }
+        switch step {
+        case .holdStill: return "hand.raised"
+        case .sweepSideways: return "arrow.left.and.right"
+        case .turnRight: return "arrow.right"
+        case .sweepVertically: return "arrow.up.and.down"
+        case .turnUp: return "arrow.up"
+        case .tap: return "hand.tap"
+        }
+    }
+
