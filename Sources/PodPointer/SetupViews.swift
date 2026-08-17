@@ -290,3 +290,13 @@ struct CaseCheckPage: View {
                 Text("Hold the case the way you'll use it. This teaches PodPointer your grip.")
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        } else {
+            page(4, symbol: "arrow.clockwise", title: "Let's try that again", detail: model.calibrationMessage) {
+                PrimaryButton("Try Again") { model.startCalibration() }
+            }
+        }
+    }
+
+    private func calibrationSymbol(for step: CalibrationStep) -> String {
