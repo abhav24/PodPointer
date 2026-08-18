@@ -311,3 +311,12 @@ struct CaseCheckPage: View {
         }
     }
 
+    private func calibrationTitle(for step: CalibrationStep) -> String {
+        if model.calibrationIsSettling { return "Hold still for a moment" }
+        switch step {
+        case .holdStill: return "Hold the case still"
+        case .sweepSideways: return "Sweep side to side"
+        case .turnRight: return "Turn the case right, then stop"
+        case .sweepVertically: return "Sweep up and down"
+        case .turnUp: return "Tilt the case up, then stop"
+        case .tap: return "Tap the case \(CalibrationSession.requiredTaps) times"
