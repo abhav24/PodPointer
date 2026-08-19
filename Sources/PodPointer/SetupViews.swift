@@ -340,3 +340,13 @@ struct CaseCheckPage: View {
             return
             "Hold still and tap the case with a finger. Leave a short pause between taps. Taps so far: \(model.calibrationTaps)"
         }
+    }
+
+    @ViewBuilder
+    private func tapTest(_ check: CaseCheck) -> some View {
+        if let prompt = check.tapPromptNumber(at: model.checkClock) {
+            page(5, symbol: "hand.tap", title: "Tap once now", detail: "Tap once each time the number changes, holding still in between.") {
+                Text("\(prompt)")
+                    .font(.system(size: 72, weight: .bold, design: .rounded))
+                    .monospacedDigit()
+                ProgressView(value: Double(prompt), total: Double(CaseCheck.tapPrompts))
