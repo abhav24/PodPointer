@@ -330,3 +330,13 @@ struct CaseCheckPage: View {
             return "Keep your hand steady for a couple of seconds."
         case .sweepSideways:
             return "Point the case at the screen, then turn your wrist smoothly left and right until this bar fills."
+        case .turnRight:
+            return "Turn your wrist to the right and hold it there. This shows which way is right."
+        case .sweepVertically:
+            return "Tilt your wrist smoothly up and down until this bar fills."
+        case .turnUp:
+            return "Tilt your wrist upward and hold it there. This shows which way is up."
+        case .tap:
+            return
+            "Hold still and tap the case with a finger. Leave a short pause between taps. Taps so far: \(model.calibrationTaps)"
+        }
