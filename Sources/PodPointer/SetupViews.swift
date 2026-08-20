@@ -350,3 +350,13 @@ struct CaseCheckPage: View {
                     .font(.system(size: 72, weight: .bold, design: .rounded))
                     .monospacedDigit()
                 ProgressView(value: Double(prompt), total: Double(CaseCheck.tapPrompts))
+                Text("Taps counted: \(check.results.tapsHit) of \(CaseCheck.tapPrompts)")
+                    .foregroundStyle(.secondary)
+            }
+        } else {
+            page(5, symbol: "hand.tap", title: "Get ready to tap", detail: "A number will appear \(CaseCheck.tapPrompts) times. Tap the case once for each number, holding still in between.") {
+                countdown(Int(check.secondsUntilTapsStart(at: model.checkClock).rounded(.up)), label: "starting in")
+            }
+        }
+    }
+
