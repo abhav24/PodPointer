@@ -360,3 +360,13 @@ struct CaseCheckPage: View {
         }
     }
 
+    @ViewBuilder
+    private func gestureTest(_ check: CaseCheck) -> some View {
+        let number = "\(check.gestureIndex + 1) of \(CaseCheck.gesturePrompts.count)"
+        if let prompt = check.gesturePrompt(at: model.checkClock) {
+            page(6, symbol: "hand.tap", title: gestureTitle(for: prompt), detail: "Keep the taps quick and even, then hold still.") {
+                gestureAnswer(check.lastGestureAnswer)
+                Text("Prompt \(number) · Correct: \(check.results.gesturesHit)")
+                    .foregroundStyle(.secondary)
+            }
+        } else {
