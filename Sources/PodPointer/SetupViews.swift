@@ -370,3 +370,14 @@ struct CaseCheckPage: View {
                     .foregroundStyle(.secondary)
             }
         } else {
+            page(6, symbol: "hand.tap", title: "Get ready", detail: "You'll be asked for single, double, and triple taps in a mixed order.") {
+                gestureAnswer(check.lastGestureAnswer)
+                Text("Prompt \(number) · Correct: \(check.results.gesturesHit)")
+                    .foregroundStyle(.secondary)
+            }
+        }
+    }
+
+    private func gestureTitle(for gesture: CaseGesture) -> String {
+        switch gesture {
+        case .single: "Tap once"
