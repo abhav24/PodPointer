@@ -413,3 +413,14 @@ struct CaseCheckPage: View {
         }
     }
 
+    private func results(_ results: CaseCheckResults) -> some View {
+        SetupPage(
+            progress: "Your results",
+            symbol: results.passed ? "checkmark.seal.fill" : "slider.horizontal.3",
+            title: results.passed ? "Your case works!" : "Your case needs some tuning",
+            detail: results.passed ? "Next, try it with real slides." : "Adjust the settings below and run the tests again, or continue anyway.",
+            onStartOver: { model.startOver() }
+        ) {
+            VStack(spacing: 10) {
+                resultRow("Taps detected", value: "\(results.tapsHit) of \(results.tapsAsked)", passed: results.tapsPassed)
+                resultRow("Single, double, triple", value: "\(results.gesturesHit) of \(results.gesturesAsked)", passed: results.gesturesPassed)
