@@ -402,3 +402,14 @@ struct CaseCheckPage: View {
             EmptyView()
         }
     }
+
+    private func countdown(_ value: Int, label: String) -> some View {
+        VStack(spacing: 4) {
+            Text("\(value)")
+                .font(.system(size: 72, weight: .bold, design: .rounded))
+                .monospacedDigit()
+            Text(label)
+                .foregroundStyle(.secondary)
+        }
+    }
+
