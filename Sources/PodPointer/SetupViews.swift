@@ -424,3 +424,14 @@ struct CaseCheckPage: View {
             VStack(spacing: 10) {
                 resultRow("Taps detected", value: "\(results.tapsHit) of \(results.tapsAsked)", passed: results.tapsPassed)
                 resultRow("Single, double, triple", value: "\(results.gesturesHit) of \(results.gesturesAsked)", passed: results.gesturesPassed)
+                resultRow("Mistaken taps", value: "\(results.falseTapsWhileMoving + results.extraTaps)", passed: results.movingPassed && results.extraTaps <= 1)
+                resultRow("Rings hit", value: "\(results.targetsHit) of \(results.targetsAsked)", passed: results.pointingPassed)
+            }
+            if !results.tapsPassed {
+                slider(
+                    "Tap sensitivity: \(String(format: "%.1f", model.tapSensitivity))×",
+                    tip: results.tapsHit < 8 ? "Too few taps counted, so try moving this right." : "Too many taps counted, so try moving this left.",
+                    value: $model.tapSensitivity,
+                    range: 0.5...2
+                )
+            } else if !results.movingPassed {
