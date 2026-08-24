@@ -381,3 +381,13 @@ struct CaseCheckPage: View {
     private func gestureTitle(for gesture: CaseGesture) -> String {
         switch gesture {
         case .single: "Tap once"
+        case .double: "Double-tap"
+        case .triple: "Triple-tap"
+        }
+    }
+
+    @ViewBuilder
+    private func gestureAnswer(_ answer: GestureAnswer?) -> some View {
+        switch answer {
+        case .correct:
+            Label("Correct", systemImage: "checkmark.circle.fill")
