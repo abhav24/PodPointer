@@ -391,3 +391,14 @@ struct CaseCheckPage: View {
         switch answer {
         case .correct:
             Label("Correct", systemImage: "checkmark.circle.fill")
+                .foregroundStyle(.green)
+        case let .recognized(gesture):
+            Label("That counted as: \(gestureTitle(for: gesture).lowercased())", systemImage: "exclamationmark.triangle.fill")
+                .foregroundStyle(.orange)
+        case .nothing:
+            Label("No taps counted", systemImage: "exclamationmark.triangle.fill")
+                .foregroundStyle(.orange)
+        case nil:
+            EmptyView()
+        }
+    }
