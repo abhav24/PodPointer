@@ -435,3 +435,14 @@ struct CaseCheckPage: View {
                     range: 0.5...2
                 )
             } else if !results.movingPassed {
+                slider(
+                    "Tap sensitivity: \(String(format: "%.1f", model.tapSensitivity))×",
+                    tip: "Movement counted as tapping, so try moving this left.",
+                    value: $model.tapSensitivity,
+                    range: 0.5...2
+                )
+            }
+            if !results.gesturesPassed {
+                slider(
+                    "Time between taps: \(String(format: "%.2f", model.multiTapWindow)) seconds",
+                    tip: "If double taps count as single taps, move this right. A single tap waits this long before acting.",
