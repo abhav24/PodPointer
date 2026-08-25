@@ -446,3 +446,14 @@ struct CaseCheckPage: View {
                 slider(
                     "Time between taps: \(String(format: "%.2f", model.multiTapWindow)) seconds",
                     tip: "If double taps count as single taps, move this right. A single tap waits this long before acting.",
+                    value: $model.multiTapWindow,
+                    range: 0.25...0.7
+                )
+            }
+            if !results.pointingPassed {
+                slider(
+                    "Pointer range: \(Int(model.pointerConfiguration.rangeDegrees))°",
+                    tip: "Move this right for finer aim, or left to cover the screen with less movement.",
+                    value: $model.pointerConfiguration.rangeDegrees,
+                    range: 15...90
+                )
