@@ -457,3 +457,14 @@ struct CaseCheckPage: View {
                     value: $model.pointerConfiguration.rangeDegrees,
                     range: 15...90
                 )
+            }
+            HStack {
+                if !results.passed {
+                    Button("Run Tests Again") { model.runTestsAgain() }
+                        .controlSize(.large)
+                }
+                PrimaryButton(results.passed ? "Try It with Slides" : "Continue") { model.continueToSlides() }
+            }
+        }
+    }
+
