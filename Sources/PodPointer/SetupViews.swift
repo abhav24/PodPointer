@@ -477,3 +477,12 @@ struct CaseCheckPage: View {
         }
     }
 
+    private func slider(_ title: String, tip: String, value: Binding<Double>, range: ClosedRange<Double>) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(title)
+                .font(.headline)
+            Slider(value: value, in: range)
+            Text(tip)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+        }
