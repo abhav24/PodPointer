@@ -495,3 +495,12 @@ struct AllowControlPage: View {
     var body: some View {
         SetupPage(
             progress: "Step 9 of 9",
+            symbol: "lock.open",
+            title: "Let PodPointer control your slides",
+            detail: "To change slides and click, PodPointer needs Accessibility access. It only sends the arrow keys and clicks you tap for.",
+            onStartOver: { model.startOver() }
+        ) {
+            InstructionList(items: [
+                "Select Allow Access below.",
+                "In the message that appears, select Open System Settings.",
+                "Turn on PodPointer in the list.",
