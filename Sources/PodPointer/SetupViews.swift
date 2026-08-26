@@ -486,3 +486,12 @@ struct CaseCheckPage: View {
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
         }
+    }
+}
+
+struct AllowControlPage: View {
+    @ObservedObject var model: AppModel
+
+    var body: some View {
+        SetupPage(
+            progress: "Step 9 of 9",
