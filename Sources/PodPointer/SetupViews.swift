@@ -468,3 +468,12 @@ struct CaseCheckPage: View {
         }
     }
 
+    private func resultRow(_ title: String, value: String, passed: Bool) -> some View {
+        HStack {
+            Text(title)
+            Spacer()
+            Label(value, systemImage: passed ? "checkmark.circle.fill" : "exclamationmark.triangle.fill")
+                .foregroundStyle(passed ? .green : .orange)
+        }
+    }
+
