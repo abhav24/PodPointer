@@ -504,3 +504,13 @@ struct AllowControlPage: View {
                 "Select Allow Access below.",
                 "In the message that appears, select Open System Settings.",
                 "Turn on PodPointer in the list.",
+                "Come back to this window."
+            ])
+            PrimaryButton("Allow Access") { model.requestAccessibility() }
+            WaitingLabel(text: "Waiting for access")
+            Button("Skip for Now") { model.finishSetup() }
+                .buttonStyle(.link)
+        }
+    }
+}
+
