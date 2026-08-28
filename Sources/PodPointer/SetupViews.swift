@@ -526,3 +526,9 @@ struct TrySlidesPage: View {
             onStartOver: { model.startOver() }
         ) {
             InstructionList(items: [
+                "Open a deck in Keynote or PowerPoint.",
+                "Start the slideshow.",
+                "Tap the case for the next slide, or double-tap for the previous one.",
+                "Aim with the red dot. Triple-tap to turn it on or off.",
+                "When you're done, leave the slideshow and come back here."
+            ])
