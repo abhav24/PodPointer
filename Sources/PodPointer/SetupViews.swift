@@ -532,3 +532,9 @@ struct TrySlidesPage: View {
                 "Aim with the red dot. Triple-tap to turn it on or off.",
                 "When you're done, leave the slideshow and come back here."
             ])
+            if let lastAction = model.lastAction {
+                Text("Last tap: \(lastAction)")
+                    .font(.headline)
+            }
+            Text("Taps go to whichever app is in front, so keep your slideshow in front while you try it.")
+                .foregroundStyle(.secondary)
