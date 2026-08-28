@@ -514,3 +514,9 @@ struct AllowControlPage: View {
     }
 }
 
+struct TrySlidesPage: View {
+    @ObservedObject var model: AppModel
+
+    var body: some View {
+        SetupPage(
+            progress: "Step 9 of 9",
