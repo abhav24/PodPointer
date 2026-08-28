@@ -520,3 +520,9 @@ struct TrySlidesPage: View {
     var body: some View {
         SetupPage(
             progress: "Step 9 of 9",
+            symbol: "play.rectangle",
+            title: "Try it with real slides",
+            detail: "Your case is live. The red dot follows it everywhere.",
+            onStartOver: { model.startOver() }
+        ) {
+            InstructionList(items: [
