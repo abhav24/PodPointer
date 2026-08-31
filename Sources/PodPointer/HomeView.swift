@@ -10,3 +10,16 @@ struct HomeView: View {
             controlSection
             if !model.hasAccessibility {
                 accessSection
+            }
+            if !model.isReceivingMotion {
+                connectionSection
+            }
+            calibrationSection
+            advancedSection
+        }
+        .formStyle(.grouped)
+    }
+
+    private var controlSection: some View {
+        Section {
+            Picker("Mode", selection: Binding(
