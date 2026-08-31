@@ -36,3 +36,16 @@ struct HomeView: View {
                 Text("Choose Presenter to control slides, or Mouse to control your Mac.")
                     .foregroundStyle(.secondary)
             case .presenter:
+                control("Rotate", "Moves the laser dot")
+                control("Tap", "Next slide")
+                control("Double-tap", "Previous slide")
+                control("Triple-tap", "Turns the dot on or off")
+            case .mouse:
+                control("Rotate", "Moves the cursor")
+                control("Tap", "Click")
+                control("Double-tap", "Double-click")
+                control("Triple-tap", "Pauses or resumes the cursor")
+                Text("Moving a real mouse or trackpad pauses the case until you stop.")
+                    .foregroundStyle(.secondary)
+            }
+            if model.displays.count > 1 {
