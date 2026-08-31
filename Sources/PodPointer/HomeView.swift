@@ -49,3 +49,16 @@ struct HomeView: View {
                     .foregroundStyle(.secondary)
             }
             if model.displays.count > 1 {
+                Picker("Display", selection: $model.selectedDisplayID) {
+                    ForEach(model.displays) { Text($0.name).tag($0.id) }
+                }
+            }
+            Button("Recenter Pointer") { model.recenter() }
+                .disabled(!model.canUsePointer)
+        } header: {
+            Text("Control")
+        } footer: {
+            Text("Keep the case lid open and Automatic Ear Detection off while you use PodPointer.")
+        }
+    }
+
