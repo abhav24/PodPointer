@@ -23,3 +23,16 @@ struct HomeView: View {
     private var controlSection: some View {
         Section {
             Picker("Mode", selection: Binding(
+                get: { model.mode },
+                set: { model.setMode($0) }
+            )) {
+                ForEach(ControlMode.allCases) { Text($0.rawValue).tag($0) }
+            }
+            .pickerStyle(.segmented)
+            .disabled(!model.canUsePointer)
+
+            switch model.mode {
+            case .off:
+                Text("Choose Presenter to control slides, or Mouse to control your Mac.")
+                    .foregroundStyle(.secondary)
+            case .presenter:
