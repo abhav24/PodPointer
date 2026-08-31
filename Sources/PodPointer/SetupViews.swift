@@ -538,3 +538,9 @@ struct TrySlidesPage: View {
             }
             Text("Taps go to whichever app is in front, so keep your slideshow in front while you try it.")
                 .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
+            PrimaryButton("Finish Setup") { model.finishSetup() }
+        }
+    }
+}
