@@ -76,3 +76,18 @@ struct HomeView: View {
         }
     }
 
+    private var calibrationSection: some View {
+        Section {
+            if let step = model.calibrationStep {
+                Text(calibrationInstruction(for: step))
+                    .font(.headline)
+                ProgressView(value: model.calibrationProgress)
+                Button("Cancel") { model.cancelCalibration() }
+            } else {
+                Button("Calibrate Again") { model.startCalibration() }
+            }
+            if let message = model.calibrationMessage {
+                Text(message)
+                    .foregroundStyle(.secondary)
+            }
+        } header: {
