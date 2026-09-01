@@ -62,3 +62,17 @@ struct HomeView: View {
         }
     }
 
+    private var accessSection: some View {
+        Section("Taps can't control your Mac yet") {
+            Text("To change slides and click, turn on PodPointer in the list that System Settings opens.")
+            Button("Allow Access") { model.requestAccessibility() }
+        }
+    }
+
+    private var connectionSection: some View {
+        Section("Your AirPods aren't sending motion") {
+            Text("Connect your AirPods to this Mac and open the case lid. Check that Automatic Ear Detection is off in Bluetooth settings.")
+            Button("Open Bluetooth Settings") { model.openBluetoothSettings() }
+        }
+    }
+
