@@ -106,3 +106,18 @@ struct HomeView: View {
                 Slider(value: $model.pointerConfiguration.minCutoff, in: 0.3...5) {
                     Text(String(format: "Steadiness: %.1f Hz", model.pointerConfiguration.minCutoff))
                 }
+                Slider(value: $model.tapSensitivity, in: 0.5...2) {
+                    Text(String(format: "Tap sensitivity: %.1f×", model.tapSensitivity))
+                }
+                Slider(value: $model.multiTapWindow, in: 0.25...0.7) {
+                    Text(String(format: "Time between taps: %.2f s", model.multiTapWindow))
+                }
+                Toggle("Flip up and down", isOn: $model.pointerConfiguration.invertVertical)
+                Toggle("Flip left and right", isOn: $model.pointerConfiguration.invertHorizontal)
+                Toggle("Send keys and clicks", isOn: $model.sendsActions)
+                Toggle("Keep audio connection active", isOn: $model.keepsAudioActive)
+                LabeledContent("AirPods", value: model.isConnected ? "Connected" : "Not connected")
+                LabeledContent("Motion", value: model.isReceivingMotion ? "Arriving" : "Not arriving")
+                LabeledContent("Rate", value: String(format: "%.0f Hz", model.rate.hertz))
+                LabeledContent("Longest gap", value: String(format: "%.0f ms", model.rate.longestGapMilliseconds))
+                LabeledContent("Sending AirPod", value: model.sensorLocation)
