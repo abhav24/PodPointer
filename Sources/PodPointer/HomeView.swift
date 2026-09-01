@@ -91,3 +91,18 @@ struct HomeView: View {
                     .foregroundStyle(.secondary)
             }
         } header: {
+            Text("Calibration")
+        } footer: {
+            Text("Calibrate again if you change how you hold the case.")
+        }
+    }
+
+    private var advancedSection: some View {
+        Section {
+            DisclosureGroup("Advanced", isExpanded: $model.showsAdvanced) {
+                Slider(value: $model.pointerConfiguration.rangeDegrees, in: 15...90) {
+                    Text("Pointer range: \(Int(model.pointerConfiguration.rangeDegrees))°")
+                }
+                Slider(value: $model.pointerConfiguration.minCutoff, in: 0.3...5) {
+                    Text(String(format: "Steadiness: %.1f Hz", model.pointerConfiguration.minCutoff))
+                }
