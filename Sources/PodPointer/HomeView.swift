@@ -121,3 +121,18 @@ struct HomeView: View {
                 LabeledContent("Rate", value: String(format: "%.0f Hz", model.rate.hertz))
                 LabeledContent("Longest gap", value: String(format: "%.0f ms", model.rate.longestGapMilliseconds))
                 LabeledContent("Sending AirPod", value: model.sensorLocation)
+                LabeledContent("Jolt", value: String(format: "%.2f g", model.strongestJolt))
+                LabeledContent(
+                    "Taps detected",
+                    value: CaseGesture.allCases.map { "\($0.rawValue) \(model.gestureCounts[$0, default: 0])" }.joined(separator: " · ")
+                )
+                logView
+                HStack {
+                    Button("Copy Test Report") { model.copyReport() }
+                    Button("Show Motion Recording") { model.showRecordingInFinder() }
+                    Button("Run Setup Again") { model.startOver() }
+                }
+            }
+        }
+    }
+
