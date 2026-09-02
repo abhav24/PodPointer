@@ -20,6 +20,13 @@ final class AppModel: ObservableObject {
     static let version = "0.1.0"
 
     private static let calibrationKey = "caseCalibration"
+    private static let finishedSetupKey = "hasFinishedSetup"
+    private static let rangeKey = "pointerRange"
+    private static let steadinessKey = "pointerSteadiness"
+    private static let sensitivityKey = "tapSensitivity"
+    private static let multiTapKey = "multiTapWindow"
+    private static let invertHorizontalKey = "invertHorizontal"
+    private static let invertVerticalKey = "invertVertical"
     private static let staleSampleSeconds = 0.5
     private static let realMousePauseSeconds = 1.0
     private static let pointerTimeConstant = 0.035
