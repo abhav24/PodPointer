@@ -7,6 +7,14 @@ struct DisplayOption: Identifiable, Hashable {
     let name: String
 }
 
+enum AppStage: Equatable {
+    case welcome
+    case caseCheck
+    case allowControl
+    case trySlides
+    case home
+}
+
 @MainActor
 final class AppModel: ObservableObject {
     static let version = "0.1.0"
