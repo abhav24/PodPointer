@@ -144,3 +144,11 @@ struct HomeView: View {
                         Text(line)
                             .font(.caption.monospaced())
                             .textSelection(.enabled)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .id(index)
+                    }
+                }
+            }
+            .frame(height: 120)
+            .onChange(of: model.log.count) { _, count in
+                proxy.scrollTo(count - 1, anchor: .bottom)
