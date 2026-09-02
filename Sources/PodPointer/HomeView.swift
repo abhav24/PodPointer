@@ -169,3 +169,12 @@ struct HomeView: View {
             return "Sweep smoothly side to side."
         case .turnRight:
             return "Turn the case right, then stop."
+        case .sweepVertically:
+            return "Sweep smoothly up and down."
+        case .turnUp:
+            return "Tilt the case up, then stop."
+        case .tap:
+            return "Hold still and tap \(CalibrationSession.requiredTaps) times (\(model.calibrationTaps) so far)."
+        }
+    }
+}
