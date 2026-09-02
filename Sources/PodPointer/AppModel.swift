@@ -32,6 +32,10 @@ final class AppModel: ObservableObject {
     private static let pointerTimeConstant = 0.035
     private static let maxLogLines = 200
 
+    @Published private(set) var stage = AppStage.welcome
+    @Published private(set) var lastAction: String?
+    @Published var showsAdvanced = false
+
     // Motion
     @Published private(set) var permission = "Not asked yet"
     @Published private(set) var isConnected = false
