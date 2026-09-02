@@ -161,3 +161,11 @@ struct HomeView: View {
     }
 
     private func calibrationInstruction(for step: CalibrationStep) -> String {
+        if model.calibrationIsSettling { return "Hold still for a moment." }
+        switch step {
+        case .holdStill:
+            return "Hold the case still."
+        case .sweepSideways:
+            return "Sweep smoothly side to side."
+        case .turnRight:
+            return "Turn the case right, then stop."
