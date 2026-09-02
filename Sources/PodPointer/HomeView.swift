@@ -152,3 +152,12 @@ struct HomeView: View {
             .frame(height: 120)
             .onChange(of: model.log.count) { _, count in
                 proxy.scrollTo(count - 1, anchor: .bottom)
+            }
+        }
+    }
+
+    private func control(_ gesture: String, _ action: String) -> some View {
+        LabeledContent(gesture, value: action)
+    }
+
+    private func calibrationInstruction(for step: CalibrationStep) -> String {
