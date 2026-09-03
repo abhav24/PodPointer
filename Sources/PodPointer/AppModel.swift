@@ -52,6 +52,7 @@ final class AppModel: ObservableObject {
     @Published private(set) var calibrationStep: CalibrationStep?
     @Published private(set) var calibrationProgress = 0.0
     @Published private(set) var calibrationTaps = 0
+    @Published private(set) var calibrationIsSettling = false
     @Published private(set) var calibrationMessage: String?
 
     // Control
