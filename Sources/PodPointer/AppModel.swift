@@ -66,7 +66,13 @@ final class AppModel: ObservableObject {
         }
     }
     @Published var pointerConfiguration = PointerConfiguration() {
-        didSet { processor?.pointerConfiguration = pointerConfiguration }
+        didSet {
+            processor?.pointerConfiguration = pointerConfiguration
+            UserDefaults.standard.set(pointerConfiguration.rangeDegrees, forKey: Self.rangeKey)
+            UserDefaults.standard.set(pointerConfiguration.minCutoff, forKey: Self.steadinessKey)
+            UserDefaults.standard.set(pointerConfiguration.invertHorizontal, forKey: Self.invertHorizontalKey)
+            UserDefaults.standard.set(pointerConfiguration.invertVertical, forKey: Self.invertVerticalKey)
+        }
     }
     @Published var tapSensitivity = 1.0 {
         didSet { processor?.tapSensitivity = tapSensitivity }
