@@ -75,7 +75,16 @@ final class AppModel: ObservableObject {
         }
     }
     @Published var tapSensitivity = 1.0 {
-        didSet { processor?.tapSensitivity = tapSensitivity }
+        didSet {
+            processor?.tapSensitivity = tapSensitivity
+            UserDefaults.standard.set(tapSensitivity, forKey: Self.sensitivityKey)
+        }
+    }
+    @Published var multiTapWindow = 0.4 {
+        didSet {
+            processor?.multiTapWindow = multiTapWindow
+            UserDefaults.standard.set(multiTapWindow, forKey: Self.multiTapKey)
+        }
     }
     @Published var sendsActions = false
     @Published private(set) var hasAccessibility = InputSender.isTrusted
