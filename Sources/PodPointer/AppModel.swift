@@ -196,8 +196,73 @@ final class AppModel: ObservableObject {
         }
     }
 
-        addTimer(interval: 1.0 / 120) { $0.drawPointer() }
-        addTimer(interval: 0.25) { $0.checkHealth() }
+    func finishSetup() {
+        UserDefaults.standard.set(true, forKey: Self.finishedSetupKey)
+        setMode(.off)
+        lastAction = nil
+        stage = .home
+        addLog("Setup finished")
+    }
+
+    private func enterTrySlides() {
+        sendsActions = true
+        stage = .trySlides
+        setMode(.presenter)
+    }
+
+    private func startMotion() {
+        guard !hasStartedMotion else { return }
+        hasStartedMotion = true
+        motion.start()
+        addLog("Waiting for motion from the AirPods")
+    }
+
+    func showRecordingInFinder() {
+        if let url = MotionRecorder.fileURL, FileManager.default.fileExists(atPath: url.path) {
+            NSWorkspace.shared.activateFileViewerSelecting([url])
+        }
+    }
+
+    private func closeCaseCheck() {
+        recorder.stop()
+        liveCheck = nil
+        check = nil
+        lastCheckStep = nil
+        cancelCalibrationQuietly()
+        overlay.showTarget(at: nil, radius: 0)
+        setMode(.off)
+    }
+
+    func openPrivacySettings() {
+        if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security") {
+            NSWorkspace.shared.open(url)
+        }
+    }
+
+    func confirmEarDetectionOff() {
+        liveCheck?.confirmEarDetectionOff()
+        updateCheck()
+    }
+
+    func confirmInCase() {
+        liveCheck?.confirmInCase(at: Self.now)
+        updateCheck()
+    }
+
+    func returnToEarDetection() {
+        liveCheck?.returnToEarDetection()
+        updateCheck()
+    }
+
+    func openBluetoothSettings() {
+        if let url = URL(string: "x-apple.systempreferences:com.apple.BluetoothSettings") {
+            NSWorkspace.shared.open(url)
+        }
+    }
+
+    func useAirPodsForSound() {
+        addLog(AudioOutput.useAirPods() ? "Sound output set to AirPods" : "Couldn't set the sound output to AirPods")
+        refreshSoundOutput()
     }
 
     func setMode(_ newMode: ControlMode) {
