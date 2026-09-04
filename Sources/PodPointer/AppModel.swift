@@ -147,9 +147,50 @@ final class AppModel: ObservableObject {
         }
         motion.onError = { [weak self] in self?.addLog("Motion error: \($0)") }
 
-        if motion.isAvailable {
-            motion.start()
-            addLog("Waiting for motion from the AirPods")
+        addTimer(interval: 1.0 / 120) { $0.drawPointer() }
+        addTimer(interval: 0.05) { $0.updateCheck() }
+        addTimer(interval: 0.25) { $0.checkHealth() }
+
+        if UserDefaults.standard.bool(forKey: Self.finishedSetupKey), isCalibrated {
+            stage = .home
+            startMotion()
+        }
+    }
+
+    /// Starts setup. Motion starts here so the permission prompt follows the explanation.
+    func beginSetup() {
+        startMotion()
+        liveCheck = CaseCheck()
+        lastCheckStep = nil
+        lastCheckResults = nil
+        cancelCalibrationQuietly()
+        setMode(.off)
+        stage = .caseCheck
+        recorder.start()
+        lastMarkedPrompt = ""
+        addLog("Setup started")
+        updateCheck()
+    }
+
+    func startOver() {
+        closeCaseCheck()
+        UserDefaults.standard.set(false, forKey: Self.finishedSetupKey)
+        sendsActions = false
+        lastAction = nil
+        calibrationMessage = nil
+        stage = .welcome
+    }
+
+    func runTestsAgain() {
+        liveCheck?.restartTests(at: Self.now)
+        updateCheck()
+    }
+
+    /// Moves from the results to trying real slides.
+    func continueToSlides() {
+        closeCaseCheck()
+        if InputSender.isTrusted {
+            enterTrySlides()
         } else {
             addLog("Motion from AirPods isn't available right now")
         }
