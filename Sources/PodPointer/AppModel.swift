@@ -192,7 +192,7 @@ final class AppModel: ObservableObject {
         if InputSender.isTrusted {
             enterTrySlides()
         } else {
-            addLog("Motion from AirPods isn't available right now")
+            stage = .allowControl
         }
 
         addTimer(interval: 1.0 / 120) { $0.drawPointer() }
