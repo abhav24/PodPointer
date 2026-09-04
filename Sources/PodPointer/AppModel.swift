@@ -104,6 +104,8 @@ final class AppModel: ObservableObject {
     private let motion = MotionController()
     private let overlay = LaserOverlay()
     private let silentAudio = SilentAudio()
+    private let recorder = MotionRecorder()
+    private var lastMarkedPrompt = ""
     private var processor: CaseInputProcessor?
     private var calibrationSession: CalibrationSession?
     private var tracker = SampleRateTracker()
