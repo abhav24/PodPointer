@@ -194,6 +194,7 @@ final class AppModel: ObservableObject {
         } else {
             stage = .allowControl
         }
+    }
 
         addTimer(interval: 1.0 / 120) { $0.drawPointer() }
         addTimer(interval: 0.25) { $0.checkHealth() }
