@@ -92,6 +92,15 @@ final class AppModel: ObservableObject {
 
     @Published private(set) var log: [String] = []
 
+    // Case check
+    @Published private(set) var check: CaseCheck?
+    @Published private(set) var checkClock = 0.0
+    @Published private(set) var airPodsAudioFound = false
+    @Published private(set) var soundUsesAirPods = false
+    private var liveCheck: CaseCheck?
+    private var lastCheckStep: CaseCheckStep?
+    private var lastCheckResults: CaseCheckResults?
+
     private let motion = MotionController()
     private let overlay = LaserOverlay()
     private let silentAudio = SilentAudio()
