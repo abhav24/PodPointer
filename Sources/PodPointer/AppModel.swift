@@ -135,6 +135,7 @@ final class AppModel: ObservableObject {
         guard !hasStarted else { return }
         hasStarted = true
         refreshDisplays()
+        loadSettings()
         loadCalibration()
 
         motion.onReading = { [weak self] reading, location in
