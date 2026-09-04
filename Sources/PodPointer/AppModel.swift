@@ -121,6 +121,7 @@ final class AppModel: ObservableObject {
     private var hasWarnedAboutSensor = false
     private var timers: [Timer] = []
     private var hasStarted = false
+    private var hasStartedMotion = false
 
     private static let timeFormat: DateFormatter = {
         let formatter = DateFormatter()
