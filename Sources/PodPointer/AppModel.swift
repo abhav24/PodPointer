@@ -356,6 +356,10 @@ final class AppModel: ObservableObject {
         let output = current.process(reading)
         processor = current
         targetPoint = output.point
+        if output.tapped {
+            recorder.mark("tap", at: reading.timestamp)
+            liveCheck?.registerTap(at: Self.now, point: output.point, aspectRatio: pointerConfiguration.aspectRatio)
+        }
         if let gesture = output.gesture {
             perform(gesture)
         }
