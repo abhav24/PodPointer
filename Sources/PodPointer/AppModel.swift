@@ -327,6 +327,7 @@ final class AppModel: ObservableObject {
             sensorLocations: sensorLocationsSeen,
             isCalibrated: isCalibrated,
             gestureCounts: gestureCounts,
+            checkResults: lastCheckResults,
             events: log
         )
         NSPasteboard.general.clearContents()
@@ -404,6 +405,7 @@ final class AppModel: ObservableObject {
             use(result)
             save(result)
             calibrationMessage = "Calibrated. Choose a mode to start."
+            liveCheck?.calibrationFinished(at: Self.now)
             addLog(String(format: "Calibrated on the %@ AirPod, tap threshold %.2f g", result.sensorLocation, result.tapThreshold))
         case let .failed(failure):
             calibrationSession = nil
