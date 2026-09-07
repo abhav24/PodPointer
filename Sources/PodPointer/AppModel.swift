@@ -345,6 +345,8 @@ final class AppModel: ObservableObject {
         }
         noteSensor(location)
         publishStats(for: reading)
+        liveCheck?.processMotion(rotationSpeed: reading.rotationRate.magnitude, at: Self.now)
+        recorder.record(reading)
 
         if calibrationSession != nil {
             continueCalibration(with: reading)
@@ -417,6 +419,11 @@ final class AppModel: ObservableObject {
 
     private func perform(_ gesture: CaseGesture) {
         gestureCounts[gesture, default: 0] += 1
+        // Taps during the case check are scored, and shouldn't control anything.
+        if let step = liveCheck?.step, step != .results {
+            addLog("Tap: \(gesture.rawValue)")
+            return
+        }
         guard let action = CaseAction(gesture: gesture, mode: mode) else {
             addLog("Tap: \(gesture.rawValue)")
             return
