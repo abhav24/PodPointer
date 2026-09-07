@@ -403,6 +403,7 @@ final class AppModel: ObservableObject {
         calibrationStep = session.step
         calibrationProgress = session.progress
         calibrationTaps = session.tapsFound
+        calibrationIsSettling = session.isSettling
 
         switch status {
         case .inProgress:
