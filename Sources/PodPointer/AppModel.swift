@@ -460,6 +460,7 @@ final class AppModel: ObservableObject {
         case .doubleClick: InputSender.click(count: 2)
         case .togglePointer: break
         }
+        lastAction = action.rawValue
         addLog("Tap: \(gesture.rawValue), sent \(action.rawValue)")
     }
 
