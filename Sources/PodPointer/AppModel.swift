@@ -559,6 +559,10 @@ final class AppModel: ObservableObject {
     private func checkHealth() {
         hasAccessibility = InputSender.isTrusted
         permission = motion.permissionDescription
+        refreshSoundOutput()
+        if stage == .allowControl, hasAccessibility {
+            enterTrySlides()
+        }
 
         guard isReceivingMotion, let lastSampleDate,
               Date().timeIntervalSince(lastSampleDate) > Self.staleSampleSeconds else { return }
