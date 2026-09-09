@@ -628,6 +628,7 @@ final class AppModel: ObservableObject {
     private func use(_ calibration: CaseCalibration) {
         var next = CaseInputProcessor(calibration: calibration, pointerConfiguration: pointerConfiguration)
         next.tapSensitivity = tapSensitivity
+        next.multiTapWindow = multiTapWindow
         processor = next
         isCalibrated = true
         hasWarnedAboutSensor = false
