@@ -642,6 +642,24 @@ final class AppModel: ObservableObject {
         }
     }
 
+    private func loadSettings() {
+        let defaults = UserDefaults.standard
+        if defaults.object(forKey: Self.rangeKey) != nil {
+            pointerConfiguration.rangeDegrees = defaults.double(forKey: Self.rangeKey)
+        }
+        if defaults.object(forKey: Self.steadinessKey) != nil {
+            pointerConfiguration.minCutoff = defaults.double(forKey: Self.steadinessKey)
+        }
+        pointerConfiguration.invertHorizontal = defaults.bool(forKey: Self.invertHorizontalKey)
+        pointerConfiguration.invertVertical = defaults.bool(forKey: Self.invertVerticalKey)
+        if defaults.object(forKey: Self.sensitivityKey) != nil {
+            tapSensitivity = defaults.double(forKey: Self.sensitivityKey)
+        }
+        if defaults.object(forKey: Self.multiTapKey) != nil {
+            multiTapWindow = defaults.double(forKey: Self.multiTapKey)
+        }
+    }
+
     private func loadCalibration() {
         guard let data = UserDefaults.standard.data(forKey: Self.calibrationKey),
               let saved = try? JSONDecoder().decode(CaseCalibration.self, from: data) else { return }
