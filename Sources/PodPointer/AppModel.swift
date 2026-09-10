@@ -684,6 +684,8 @@ final class AppModel: ObservableObject {
         }
     }
 
+    private static var now: Double { ProcessInfo.processInfo.systemUptime }
+
     private static func displayID(of screen: NSScreen) -> CGDirectDisplayID? {
         screen.deviceDescription[NSDeviceDescriptionKey("NSScreenNumber")] as? CGDirectDisplayID
     }
