@@ -8,7 +8,7 @@ struct PodPointerApp: App {
 
     var body: some Scene {
         Window("PodPointer", id: "main") {
-            ContentView(model: model)
+            RootView(model: model)
                 .onAppear { model.start() }
         }
         .windowResizability(.contentMinSize)
