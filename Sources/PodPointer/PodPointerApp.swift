@@ -37,8 +37,7 @@ struct RootView: View {
                 HomeView(model: model)
             }
         }
-        .formStyle(.grouped)
-        .frame(minWidth: 460, idealWidth: 500, minHeight: 620, idealHeight: 820)
+        .frame(minWidth: 540, idealWidth: 560, minHeight: 620, idealHeight: 680)
         .onReceive(NotificationCenter.default.publisher(for: NSApplication.didChangeScreenParametersNotification)) { _ in
             model.refreshDisplays()
         }
