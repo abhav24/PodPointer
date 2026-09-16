@@ -10,7 +10,7 @@ No Shortcut, AppleScript command, or public API was found that changes Automatic
 
 ## Calibration
 
-The AirPods sit at an unknown angle in your hand, so the sensor's axes don't match the screen. Calibration has four steps:
+The AirPods sit at an unknown angle in your hand, so the sensor's axes don't match the screen. Calibration has these steps:
 
 1. **Hold still:** measures the gyroscope's resting error and the normal sensor noise.
 2. **Sweep sideways:** finds the axis most of the rotation happened around. Your first movement is to the right, which sets the direction.
