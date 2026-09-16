@@ -4,7 +4,9 @@
 
 The case has no motion data that apps can read, but the AirPods inside it do. PodPointer reads them through Apple's public [`CMHeadphoneMotionManager`](https://developer.apple.com/documentation/coremotion/cmheadphonemotionmanager.md) API, available on macOS 14 and later.
 
-According to [PodMouse's README](https://github.com/0xCodez/PodMouse), this works with the lid open and Automatic Ear Detection off. With ear detection on, AirPods stop sending motion when they leave your ears, and closing the lid disconnects them. PodPointer hasn't confirmed this on hardware yet, which is why it's the first item in the [test plan](TESTING.md).
+According to [PodMouse's README](https://github.com/0xCodez/PodMouse), this works with the lid open and Automatic Ear Detection off. With ear detection on, AirPods stop sending motion when they leave your ears, and closing the lid disconnects them. PodPointer hasn't confirmed this on hardware yet, which is why it's the first thing [setup](TESTING.md) tests.
+
+No Shortcut, AppleScript command, or public API was found that changes Automatic Ear Detection, so you have to turn it off yourself. The app can't read the setting either, so it checks the result instead: if motion stops once the AirPods are in the case, the setting is probably still on.
 
 ## Calibration
 
