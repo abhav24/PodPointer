@@ -13,9 +13,13 @@ No Shortcut, AppleScript command, or public API was found that changes Automatic
 The AirPods sit at an unknown angle in your hand, so the sensor's axes don't match the screen. Calibration has these steps:
 
 1. **Hold still:** measures the gyroscope's resting error and the normal sensor noise.
-2. **Sweep sideways:** finds the axis most of the rotation happened around. Your first movement is to the right, which sets the direction.
-3. **Sweep up and down:** does the same for vertical movement, then removes any overlap with the sideways axis.
-4. **Tap five times:** sets the tap threshold at 60% of your typical tap strength, and above the noise.
+2. **Sweep side to side:** finds the axis most of the rotation happened around.
+3. **Turn right and stop:** sets which way along that axis is right, using the total angle turned.
+4. **Sweep up and down:** does the same for vertical movement, then removes any overlap with the sideways axis.
+5. **Tilt up and stop:** sets which way is up.
+6. **Tap five times:** sets the tap threshold at 60% of your typical tap strength, and above the noise.
+
+Each step waits for your hand to stop first, so motion left over from the previous step can't affect it. If a direction still comes out reversed, there are flip switches during the aiming test and under **Advanced**.
 
 ## Pointing
 
