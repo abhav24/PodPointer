@@ -1,4 +1,4 @@
-# Hardware test plan
+# Testing with real AirPods
 
 These tests answer what unit tests can't. Allow about 15 minutes. Follow the order, because each test depends on the one before it.
 
@@ -8,10 +8,14 @@ These tests answer what unit tests can't. Allow about 15 minutes. Follow the ord
 
 Check that **Motion** says **Arriving**, then move the case and watch **Jolt** change.
 
-If motion doesn't arrive, try these one at a time:
-- Select the AirPods as the sound output again.
-- Turn on **Keep audio connection active**.
-- Close the lid, open it again, and wait a few seconds.
+| Test | What you do | Passes with |
+|---|---|---|
+| Motion | Put the AirPods in the open case and move it | Motion keeps arriving |
+| Calibration | Hold still, sweep the case, and tap | Calibration finishes |
+| Tapping | Tap once at each of 10 prompts | At least 8 taps counted, and no more than 1 extra |
+| Tap groups | Do 9 single, double, and triple taps in a mixed order | At least 7 recognized correctly |
+| False taps | Wave the case for 15 seconds without tapping | No more than 1 false tap |
+| Pointing | Aim at 5 rings and tap on each | At least 4 rings hit |
 
 **Passes if** motion keeps arriving for 2 minutes. Note the **Rate** and **Longest gap**, and whether **Sending AirPod** changes.
 
