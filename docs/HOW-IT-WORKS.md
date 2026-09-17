@@ -46,6 +46,7 @@ Following the shake as it fades lets quick double and triple taps through, while
 Tapping also shakes the case, so the pointer jumps back to where it was just before the tap and stays there briefly.
 
 A single tap waits 0.4 seconds in case another tap follows. That's the delay you'll notice before the next slide appears, and you can adjust it with **Time between taps**.
+
 A single tap waits 0.35 seconds in case a second tap follows. That's the delay you'll notice before the next slide appears.
 
 ## Open questions
