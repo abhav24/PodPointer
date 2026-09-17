@@ -47,6 +47,7 @@ Tapping also shakes the case, so the pointer jumps back to where it was just bef
 
 A single tap waits 0.4 seconds in case another tap follows. That's the delay you'll notice before the next slide appears, and you can adjust it with **Time between taps**.
 
+The AirPods bounce inside the case, so one real tap can show up as two jolts up to about 100 ms apart. Jolts closer than 140 ms count as one tap.
 A single tap waits 0.35 seconds in case a second tap follows. That's the delay you'll notice before the next slide appears.
 
 ## Open questions
