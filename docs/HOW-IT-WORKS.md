@@ -37,8 +37,11 @@ This doesn't depend on an absolute direction, so drift doesn't build up the way 
 A tap is a sudden change in acceleration between two samples that:
 
 - is above your calibrated threshold
-- starts while the hand has been steady for the last quarter of a second
-- ends within 0.16 seconds, because longer jolts are usually hand movements
+- stands out from recent movement
+- isn't explained by the fading shake from an earlier tap
+- doesn't happen during fast rotation, unless it's part of a tap group
+
+Following the shake as it fades lets quick double and triple taps through, while the shake itself doesn't count as extra taps.
 
 Tapping also shakes the case, so the pointer jumps back to where it was just before the tap and stays there briefly.
 
