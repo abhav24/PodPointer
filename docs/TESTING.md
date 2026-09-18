@@ -1,6 +1,6 @@
 # Testing with real AirPods
 
-These tests answer what unit tests can't. Allow about 15 minutes. Follow the order, because each test depends on the one before it.
+Testing is built into the app's setup, so you don't need to count anything or judge by feel.
 
 **Setup:** build and open the app, then follow the setup steps in the [README](../README.md).
 
@@ -17,7 +17,7 @@ Check that **Motion** says **Arriving**, then move the case and watch **Jolt** c
 | False taps | Wave the case for 15 seconds without tapping | No more than 1 false tap |
 | Pointing | Aim at 5 rings and tap on each | At least 4 rings hit |
 
-**Passes if** motion keeps arriving for 2 minutes. Note the **Rate** and **Longest gap**, and whether **Sending AirPod** changes.
+If motion stops, the app explains what to try and continues by itself once motion returns.
 
 ## 2. Does calibration finish?
 
