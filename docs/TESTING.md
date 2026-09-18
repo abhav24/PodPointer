@@ -19,7 +19,7 @@ It tests these in order:
 
 If motion stops, the app explains what to try and continues by itself once motion returns.
 
-## 2. Does calibration finish?
+## 2. Try it with slides
 
 Select **Calibrate** and follow the steps.
 
