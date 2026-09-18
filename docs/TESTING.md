@@ -21,7 +21,7 @@ If motion stops, the app explains what to try and continues by itself once motio
 
 ## 2. Try it with slides
 
-Select **Calibrate** and follow the steps.
+The last setup step walks you through a real slideshow. This passes if the slides change and the dot stays visible. If you can, also try an external display, using **Display** on the home screen to select it.
 
 **Passes if** it finishes within two tries.
 
