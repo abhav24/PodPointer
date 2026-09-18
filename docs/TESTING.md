@@ -6,7 +6,7 @@ Testing is built into the app's setup, so you don't need to count anything or ju
 
 Build and open the app by following the [README](../README.md). Setup starts by itself the first time. To run it again, open **Advanced** and select **Run Setup Again**.
 
-Check that **Motion** says **Arriving**, then move the case and watch **Jolt** change.
+It tests these in order:
 
 | Test | What you do | Passes with |
 |---|---|---|
