@@ -2,7 +2,7 @@
 
 Testing is built into the app's setup, so you don't need to count anything or judge by feel.
 
-**Setup:** build and open the app, then follow the setup steps in the [README](../README.md).
+## 1. Follow setup
 
 ## 1. Does motion arrive from the open case?
 
