@@ -27,7 +27,7 @@ The last setup step walks you through a real slideshow. This passes if the slide
 
 Choose **Mouse**, then move the cursor and tap a button. Move a real mouse too, and check that the case pauses until you stop.
 
-**Passes if** clicks land where you aim.
+This passes if clicks land where you aim.
 
 ## Share your results
 
