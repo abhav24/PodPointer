@@ -42,12 +42,7 @@ Use the script rather than `swift run`, because macOS only shows the motion perm
 
 ## Set up
 
-1. Connect your AirPods to your Mac and select them as the sound output.
-2. Open the AirPods section of System Settings and turn off **Automatic Ear Detection**. You can turn it back on when you're done.
-3. Put the AirPods in the case and **keep the lid open**. Closing the lid disconnects them.
-4. Open PodPointer and allow motion access.
-5. Select **Calibrate** and follow the steps while holding the case the way you'll use it.
-6. Choose **Presenter** or **Mouse**. Taps only appear in the log until you turn on **Send keys and clicks** and allow Accessibility access.
+Open the app and follow the steps on screen. Setup takes about 5 minutes and covers:
 
 If you use Mouse mode, moving a real mouse or trackpad pauses the case until you stop.
 
