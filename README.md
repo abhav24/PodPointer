@@ -44,7 +44,14 @@ Use the script rather than `swift run`, because macOS only shows the motion perm
 
 Open the app and follow the steps on screen. Setup takes about 5 minutes and covers:
 
-If you use Mouse mode, moving a real mouse or trackpad pauses the case until you stop.
+1. Connecting your AirPods
+2. Turning off **Automatic Ear Detection**, which you need to do yourself because no Shortcut or public API can change it
+3. Putting the AirPods in the case with the **lid open**
+4. Calibrating for your grip
+5. Scored tests for tapping, single, double, and triple taps, false taps, and aiming
+6. Trying real slides
+
+You can run setup again from **Advanced**.
 
 ## Permissions and privacy
 
