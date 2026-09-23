@@ -62,6 +62,8 @@ You can run setup again from **Advanced**.
 
 PodPointer has no network code. It saves your calibration and settings on your Mac only. Test reports are copied to your clipboard only when you ask, and they leave out your AirPods' name.
 
+During setup, PodPointer also records raw motion to `~/Library/Application Support/PodPointer/last-setup-motion.csv` so tap detection can be tuned against real taps. Each setup run replaces that file, and it stays on your Mac unless you share it.
+
 ## Known limits
 
 - The lid has to stay open, and open-lid battery use hasn't been measured.
