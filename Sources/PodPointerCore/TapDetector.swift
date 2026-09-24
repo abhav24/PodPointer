@@ -43,8 +43,10 @@ public struct TapDetector: Sendable {
     /// The AirPods bounce inside the case, so one tap can show up as two jolts
     /// up to about 100 ms apart. Closer jolts than this are the same tap.
     private static let minimumTapSpacing = 0.14
-    private static let movementWindowSeconds = 0.3
-    /// Movement right after a tap is shake from the tap, not the hand moving.
+    /// A jolt soon after a tap and much weaker than it is the same tap bouncing.
+    private static let bounceSeconds = 0.25
+    private static let bounceStrengthRatio = 0.4
+    /// Motion right after a tap is shake from the tap, not the hand moving.
     private static let afterTapSettleSeconds = 0.25
     /// Fast rotation means the hand is moving, so a jolt probably isn't a tap.
     private static let movingRotationLimit = 1.5
