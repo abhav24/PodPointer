@@ -21,6 +21,19 @@ public struct DetectedTap: Equatable, Sendable {
 public struct TapDetector: Sendable {
     public var threshold: Double
 
+    /// How long to watch a jolt before calling it a tap. No longer than
+    /// `minimumTapSpacing`, so the next tap in a group is never missed.
+    private static let confirmSeconds = 0.14
+    /// A tap barely turns the case. Moving it turns it much faster and further.
+    private static let tapRotationLimit = 3.3
+    private static let tapTurnLimitRadians = 9 * Double.pi / 180
+    /// In g. Above this, the case is being swung, not tapped.
+    private static let tapAccelerationLimit = 2.0
+    /// A tap's jolt is about as large as its acceleration. When the hand moves
+    /// the case, acceleration builds up over many samples instead.
+    private static let minimumSharpness = 0.55
+    private static let peakJoltSeconds = 0.1
+
     /// How fast the shake from a tap is assumed to fade, in seconds.
     private static let shakeFadeSeconds = 0.06
     /// How far a jolt must stand out from the remaining shake.
