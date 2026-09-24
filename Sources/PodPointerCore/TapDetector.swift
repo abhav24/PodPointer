@@ -1,5 +1,13 @@
 import Foundation
 
+/// A tap that passed every check.
+public struct DetectedTap: Equatable, Sendable {
+    /// When the tap began, a little before it was confirmed.
+    public var time: Double
+    /// The largest change in acceleration between samples, in g.
+    public var strength: Double
+}
+
 /// Finds taps on the case from sudden changes in acceleration.
 ///
 /// A tap leaves the case shaking for a moment, so the detector follows that
