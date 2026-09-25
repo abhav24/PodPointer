@@ -85,8 +85,9 @@ public struct TapDetector: Sendable {
     private var lastTapTime = -Double.infinity
     private var lastTapStrength = 0.0
     private var tapsInGroup = 0
-    private var recentJolts: [(time: Double, jolt: Double)] = []
-    private var recentRotation: [(time: Double, speed: Double)] = []
+    private var candidate: Candidate?
+    private var calmSamples: [CalmSample] = []
+    private var jolts: [(time: Double, jolt: Double)] = []
 
     public init(threshold: Double) {
         self.threshold = threshold
