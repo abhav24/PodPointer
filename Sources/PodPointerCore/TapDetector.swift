@@ -93,8 +93,11 @@ public struct TapDetector: Sendable {
         self.threshold = threshold
     }
 
-    /// Returns true on the sample where a tap begins.
-    public mutating func process(acceleration: Vector3, rotationSpeed: Double, at time: Double) -> Bool {
+    /// True while a jolt is being checked. The pointer should wait for the result.
+    public var isChecking: Bool { candidate != nil }
+
+    /// Returns a tap on the sample where it's confirmed.
+    public mutating func process(acceleration: Vector3, rotation: Vector3, at time: Double) -> DetectedTap? {
         defer {
             previousAcceleration = acceleration
             previousTime = time
