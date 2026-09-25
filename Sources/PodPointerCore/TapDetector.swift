@@ -83,6 +83,7 @@ public struct TapDetector: Sendable {
     private var previousTime = -Double.infinity
     private var shake = 0.0
     private var lastTapTime = -Double.infinity
+    private var lastTapStrength = 0.0
     private var tapsInGroup = 0
     private var recentJolts: [(time: Double, jolt: Double)] = []
     private var recentRotation: [(time: Double, speed: Double)] = []
