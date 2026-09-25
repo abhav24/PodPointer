@@ -62,6 +62,22 @@ public struct TapDetector: Sendable {
     private static let tapGroupSeconds = 0.7
     private static let longestTapGroup = 3
     private static let resetGapSeconds = 0.5
+    private static let joltHistorySeconds = 0.5
+
+    private struct Candidate {
+        let time: Double
+        var turn: Vector3
+        var peakRotation: Double
+        var peakAcceleration: Double
+        var peakJolt: Double
+    }
+
+    private struct CalmSample {
+        let time: Double
+        let jolt: Double
+        let acceleration: Double
+        let rotation: Double
+    }
 
     private var previousAcceleration: Vector3?
     private var previousTime = -Double.infinity
