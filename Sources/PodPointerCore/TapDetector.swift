@@ -111,9 +111,13 @@ public struct TapDetector: Sendable {
         }
 
         let jolt = (acceleration - previous).magnitude
-        shake *= exp(-(time - previousTime) / Self.shakeFadeSeconds)
-        recentJolts.removeAll { time - $0.time > Self.movementWindowSeconds }
-        recentRotation.removeAll { time - $0.time > Self.rotationWindowSeconds }
+        let elapsed = time - previousTime
+        let rotationSpeed = rotation.magnitude
+        let accelerationSize = acceleration.magnitude
+        shake *= exp(-elapsed / Self.shakeFadeSeconds)
+        jolts.removeAll { time - $0.time > Self.joltHistorySeconds }
+        jolts.append((time, jolt))
+        calmSamples.removeAll { time - $0.time > Self.calmWindowSeconds }
 
         // Triple is the longest gesture, so a fourth tap gets the normal checks.
         // Otherwise, one false tap while moving could set off a chain of them.
