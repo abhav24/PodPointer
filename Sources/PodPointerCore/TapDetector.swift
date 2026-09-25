@@ -104,9 +104,10 @@ public struct TapDetector: Sendable {
         }
         guard let previous = previousAcceleration, time - previousTime < Self.resetGapSeconds else {
             shake = 0
-            recentJolts.removeAll()
-            recentRotation.removeAll()
-            return false
+            candidate = nil
+            calmSamples.removeAll()
+            jolts.removeAll()
+            return nil
         }
 
         let jolt = (acceleration - previous).magnitude
