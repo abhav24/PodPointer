@@ -181,6 +181,22 @@ public struct TapDetector: Sendable {
             candidate = current
             return nil
         }
+
+        candidate = nil
+        guard current.peakJolt >= current.peakAcceleration * Self.minimumSharpness else { return nil }
+        let isBounce = current.time - lastTapTime < Self.bounceSeconds
+            && current.peakJolt < lastTapStrength * Self.bounceStrengthRatio
+        guard !isBounce else { return nil }
+        tapsInGroup = current.time - lastTapTime < Self.tapGroupSeconds ? tapsInGroup + 1 : 1
+        lastTapTime = current.time
+        lastTapStrength = current.peakJolt
+        return DetectedTap(time: current.time, strength: current.peakJolt)
+    }
+
+    private func joltCouldBeTap(_ jolt: Double, at time: Double) -> Bool {
+        guard jolt >= threshold,
+              time - lastTapTime >= Self.minimumTapSpacing,
+              jolt >= shake * Self.aboveShakeRatio else { return false }
         // Triple is the longest gesture, so a fourth tap gets the normal checks.
         // Otherwise, one false tap while moving could set off a chain of them.
         let isInTapGroup = time - lastTapTime < Self.tapGroupSeconds && tapsInGroup < Self.longestTapGroup
