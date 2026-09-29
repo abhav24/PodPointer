@@ -165,6 +165,22 @@ public struct TapDetector: Sendable {
         guard var current = candidate else { return nil }
         current.turn = current.turn + rotation * elapsed
         current.peakRotation = max(current.peakRotation, rotationSpeed)
+        current.peakAcceleration = max(current.peakAcceleration, accelerationSize)
+        if time - current.time <= Self.peakJoltSeconds {
+            current.peakJolt = max(current.peakJolt, jolt)
+        }
+
+        // Most movement fails within a few samples, so the pointer barely waits.
+        guard current.peakRotation <= Self.tapRotationLimit,
+              current.peakAcceleration <= Self.tapAccelerationLimit,
+              current.turn.magnitude <= Self.tapTurnLimitRadians else {
+            candidate = nil
+            return nil
+        }
+        guard time - current.time >= Self.confirmSeconds else {
+            candidate = current
+            return nil
+        }
         // Triple is the longest gesture, so a fourth tap gets the normal checks.
         // Otherwise, one false tap while moving could set off a chain of them.
         let isInTapGroup = time - lastTapTime < Self.tapGroupSeconds && tapsInGroup < Self.longestTapGroup
