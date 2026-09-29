@@ -134,6 +134,22 @@ public struct TapDetector: Sendable {
                 turn: rotation * elapsed,
                 peakRotation: rotationSpeed,
                 peakAcceleration: accelerationSize,
+                peakJolt: jolt
+            )
+        }
+        shake = max(shake, jolt)
+
+        let hasSettled = candidate == nil && time - lastTapTime >= Self.afterTapSettleSeconds
+        if hasSettled || tapsInGroup >= Self.longestTapGroup {
+            calmSamples.append(CalmSample(time: time, jolt: jolt, acceleration: accelerationSize, rotation: rotationSpeed))
+        }
+        return tap
+    }
+
+    /// False if the case kept jolting since `time`, which means it's being shaken.
+    public func hasSettled(since time: Double) -> Bool {
+        let recent = jolts.filter { $0.time >= time }
+        guard !recent.isEmpty else { return true }
         // Triple is the longest gesture, so a fourth tap gets the normal checks.
         // Otherwise, one false tap while moving could set off a chain of them.
         let isInTapGroup = time - lastTapTime < Self.tapGroupSeconds && tapsInGroup < Self.longestTapGroup
