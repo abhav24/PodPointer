@@ -119,6 +119,21 @@ public struct TapDetector: Sendable {
         jolts.append((time, jolt))
         calmSamples.removeAll { time - $0.time > Self.calmWindowSeconds }
 
+        let tap = checkCandidate(
+            jolt: jolt,
+            rotation: rotation,
+            rotationSpeed: rotationSpeed,
+            accelerationSize: accelerationSize,
+            elapsed: elapsed,
+            at: time
+        )
+
+        if candidate == nil, joltCouldBeTap(jolt, at: time) {
+            candidate = Candidate(
+                time: time,
+                turn: rotation * elapsed,
+                peakRotation: rotationSpeed,
+                peakAcceleration: accelerationSize,
         // Triple is the longest gesture, so a fourth tap gets the normal checks.
         // Otherwise, one false tap while moving could set off a chain of them.
         let isInTapGroup = time - lastTapTime < Self.tapGroupSeconds && tapsInGroup < Self.longestTapGroup
