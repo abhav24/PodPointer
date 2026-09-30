@@ -203,9 +203,14 @@ public struct TapDetector: Sendable {
         return isInTapGroup || isCalm(before: jolt, at: time)
     }
 
-    private var recentMovement: Double {
-        guard !recentJolts.isEmpty else { return 0 }
-        return recentJolts.reduce(0) { $0 + $1.jolt } / Double(recentJolts.count)
+    private func isCalm(before jolt: Double, at time: Double) -> Bool {
+        guard let oldest = calmSamples.first, time - oldest.time >= Self.minimumCalmSeconds else { return false }
+        let movement = average(calmSamples.map(\.jolt))
+        let beforeOnset = calmSamples.filter { time - $0.time >= Self.onsetSeconds }
+        return jolt >= movement * Self.aboveMovementRatio
+            && calmSamples.allSatisfy { $0.rotation < Self.calmRotationLimit }
+            && average(beforeOnset.map(\.acceleration)) <= Self.calmAccelerationLimit
+            && average(beforeOnset.map(\.jolt)) <= threshold * Self.calmJoltRatio
     }
 
     private var isSteady: Bool {
