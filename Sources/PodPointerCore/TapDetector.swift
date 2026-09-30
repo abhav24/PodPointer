@@ -200,10 +200,7 @@ public struct TapDetector: Sendable {
         // Triple is the longest gesture, so a fourth tap gets the normal checks.
         // Otherwise, one false tap while moving could set off a chain of them.
         let isInTapGroup = time - lastTapTime < Self.tapGroupSeconds && tapsInGroup < Self.longestTapGroup
-        if hasSettled || tapsInGroup >= Self.longestTapGroup {
-            recentRotation.append((time, rotationSpeed))
-        }
-        return isTap
+        return isInTapGroup || isCalm(before: jolt, at: time)
     }
 
     private var recentMovement: Double {
