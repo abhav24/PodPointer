@@ -241,7 +241,6 @@ public struct TapSequence: Sendable {
 
     public private(set) var lastTap = -Double.infinity
     private var count = 0
-    private var lastTap = -Double.infinity
 
     public init(windowSeconds: Double = 0.4) {
         self.windowSeconds = windowSeconds
