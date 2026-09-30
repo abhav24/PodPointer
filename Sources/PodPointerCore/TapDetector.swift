@@ -213,8 +213,8 @@ public struct TapDetector: Sendable {
             && average(beforeOnset.map(\.jolt)) <= threshold * Self.calmJoltRatio
     }
 
-    private var isSteady: Bool {
-        recentRotation.allSatisfy { $0.speed < Self.movingRotationLimit }
+    private func average(_ values: [Double]) -> Double {
+        values.isEmpty ? 0 : values.reduce(0, +) / Double(values.count)
     }
 }
 
