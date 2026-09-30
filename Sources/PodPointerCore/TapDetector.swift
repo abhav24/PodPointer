@@ -222,6 +222,14 @@ public enum CaseGesture: String, CaseIterable, Sendable {
     case single
     case double
     case triple
+
+    public var tapCount: Int {
+        switch self {
+        case .single: return 1
+        case .double: return 2
+        case .triple: return 3
+        }
+    }
 }
 
 /// Groups taps into single, double, and triple taps.
