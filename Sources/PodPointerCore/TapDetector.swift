@@ -236,6 +236,10 @@ public enum CaseGesture: String, CaseIterable, Sendable {
 public struct TapSequence: Sendable {
     /// How long to wait for another tap. A single tap acts after this delay.
     public var windowSeconds: Double
+    /// No longer gesture exists, so a triple tap only waits to rule out shaking.
+    private static let tripleWaitSeconds = 0.3
+
+    public private(set) var lastTap = -Double.infinity
     private var count = 0
     private var lastTap = -Double.infinity
 
@@ -256,6 +260,10 @@ public struct TapSequence: Sendable {
     public mutating func poll(at time: Double) -> CaseGesture? {
         guard count > 0, time - lastTap >= windowSeconds else { return nil }
         defer { count = 0 }
-        return count == 1 ? .single : .double
+        switch count {
+        case 1: return .single
+        case 2: return .double
+        default: return .triple
+        }
     }
 }
