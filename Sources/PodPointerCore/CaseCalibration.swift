@@ -75,7 +75,7 @@ public struct CalibrationSession: Sendable {
     private static let minimumAxisSeparation = 0.5
     private static let requiredTurnRadians = 15 * Double.pi / 180
     private static let maximumTurnStep = 0.1
-    private static let tapPeakSeconds = 0.15
+    private static let minimumTapJolt = 0.08
     private static let tapSpacingSeconds = 0.25
 
     public private(set) var step = CalibrationStep.holdStill
