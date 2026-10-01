@@ -246,8 +246,7 @@ public struct TapSequence: Sendable {
         self.windowSeconds = windowSeconds
     }
 
-    /// Returns a gesture right away on the third tap, since no longer gesture exists.
-    public mutating func registerTap(at time: Double) -> CaseGesture? {
+    public mutating func registerTap(at time: Double) {
         count += 1
         lastTap = time
         guard count >= 3 else { return nil }
