@@ -47,7 +47,7 @@ public enum CalibrationFailure: String, Error, Equatable, Sendable {
     case unclearMovement = "The movement was hard to read. Keep each sweep in one direction and try again."
     case axesTooSimilar = "The two sweeps looked the same. Sweep sideways, then up and down, and try again."
     case noDirection = "The case didn't turn far enough. Turn it further, then stop, and try again."
-    case tooFewTaps = "Too few taps were detected. Tap the case more firmly and try again."
+    case tooFewTaps = "Too few taps were detected. Hold the case steady, tap it with one finger, and try again."
     case tapsTooWeak = "The taps were hard to tell apart from noise. Tap more firmly and try again."
 }
 
