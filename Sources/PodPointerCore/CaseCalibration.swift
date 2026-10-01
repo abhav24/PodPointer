@@ -103,8 +103,8 @@ public struct CalibrationSession: Sendable {
     private var verticalAxis = Vector3.zero
 
     private var tapPeaks: [Double] = []
-    private var currentPeak: Double?
-    private var currentPeakStart = -Double.infinity
+    private var tapFinder: TapDetector?
+    private var lastTapTime = -Double.infinity
 
     public init(sensorLocation: String) {
         self.sensorLocation = sensorLocation
