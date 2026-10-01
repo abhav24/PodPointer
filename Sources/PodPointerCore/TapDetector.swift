@@ -249,9 +249,6 @@ public struct TapSequence: Sendable {
     public mutating func registerTap(at time: Double) {
         count += 1
         lastTap = time
-        guard count >= 3 else { return nil }
-        count = 0
-        return .triple
     }
 
     /// Returns a gesture once enough time has passed with no further tap.
