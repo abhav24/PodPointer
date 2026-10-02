@@ -64,7 +64,7 @@ public struct CaseInputProcessor: Sendable {
     }
 
     private static func detectionThreshold(for calibration: CaseCalibration) -> Double {
-        calibration.tapThreshold * thresholdMargin
+        min(max(calibration.tapThreshold * thresholdMargin, minimumThreshold), maximumThreshold)
     }
 
     public mutating func process(_ reading: MotionReading) -> CaseOutput {
