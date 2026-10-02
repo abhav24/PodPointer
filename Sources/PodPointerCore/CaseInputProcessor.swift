@@ -2,6 +2,7 @@ import Foundation
 
 public struct CaseOutput: Equatable, Sendable {
     public var point: PointerPoint
+    /// Set once a tap group ends and the case has settled.
     public var gesture: CaseGesture?
     /// True on the sample where a tap began.
     public var tapped: Bool
