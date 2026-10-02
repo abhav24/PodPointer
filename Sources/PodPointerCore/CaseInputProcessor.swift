@@ -55,6 +55,7 @@ public struct CaseInputProcessor: Sendable {
     private var detector: TapDetector
     private var sequence = TapSequence()
     private var holdUntil = -Double.infinity
+    private var heldMotion: [HeldMotion] = []
 
     public init(calibration: CaseCalibration, pointerConfiguration: PointerConfiguration = PointerConfiguration()) {
         self.calibration = calibration
