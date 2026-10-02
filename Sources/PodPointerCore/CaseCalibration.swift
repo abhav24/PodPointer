@@ -217,18 +217,20 @@ public struct CalibrationSession: Sendable {
         return elapsed >= Self.turnTimeoutSeconds ? .failed(.noDirection) : .inProgress
     }
 
-    private mutating func processTap(impulse: Double, time: Double, elapsed: Double) -> CalibrationStatus {
-        if let peak = currentPeak {
-            if time - currentPeakStart <= Self.tapPeakSeconds {
-                currentPeak = max(peak, impulse)
-            } else {
-                tapPeaks.append(peak)
-                currentPeak = nil
-                tapsFound = tapPeaks.count
-            }
-        } else if impulse >= max(noiseFloor * 2, 0.02), time - currentPeakStart >= Self.tapSpacingSeconds {
-            currentPeak = impulse
-            currentPeakStart = time
+    /// Uses the same checks as real tap detection, so a swing or a shake here
+    /// can't set the tap strength.
+    private mutating func processTap(_ reading: MotionReading, time: Double, elapsed: Double) -> CalibrationStatus {
+        var finder = tapFinder ?? TapDetector(threshold: max(noiseFloor * 2, Self.minimumTapJolt))
+        let tap = finder.process(
+            acceleration: reading.userAcceleration,
+            rotation: reading.rotationRate - gyroBias,
+            at: time
+        )
+        tapFinder = finder
+        if let tap, tap.time - lastTapTime >= Self.tapSpacingSeconds {
+            lastTapTime = tap.time
+            tapPeaks.append(tap.strength)
+            tapsFound = tapPeaks.count
         }
 
         progress = Double(min(tapPeaks.count, Self.requiredTaps)) / Double(Self.requiredTaps)
