@@ -4,7 +4,10 @@ public struct CaseOutput: Equatable, Sendable {
     public var point: PointerPoint
     /// Set once a tap group ends and the case has settled.
     public var gesture: CaseGesture?
-    /// True on the sample where a tap began.
+    /// How long ago the gesture's last tap happened.
+    public var gestureAge: Double
+    /// True on the sample where a tap is confirmed. A gesture can still be
+    /// dropped later if the case keeps shaking.
     public var tapped: Bool
 }
 
