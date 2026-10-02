@@ -45,6 +45,12 @@ public struct CaseInputProcessor: Sendable {
     private static let settleCheckDelay = 0.2
     private static let degreesPerRadian = 180 / Double.pi
 
+    private struct HeldMotion {
+        let horizontalRate: Double
+        let verticalRate: Double
+        let time: Double
+    }
+
     private var engine: PointerEngine
     private var detector: TapDetector
     private var sequence = TapSequence()
