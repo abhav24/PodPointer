@@ -70,6 +70,17 @@ public struct CaseInputProcessor: Sendable {
     public mutating func process(_ reading: MotionReading) -> CaseOutput {
         let time = reading.timestamp
         let rotation = reading.rotationRate - calibration.gyroBias
+
+        let tap = detector.process(acceleration: reading.userAcceleration, rotation: rotation, at: time)
+        if let tap {
+            // A tap also shakes the pointer, so undo that and hold it in place.
+            heldMotion.removeAll()
+            engine.rollBack(from: tap.time)
+            holdUntil = tap.time + Self.holdAfterTapSeconds
+            sequence.registerTap(at: tap.time)
+        }
+
+        let lastTap = sequence.lastTap
         var gesture: CaseGesture?
 
         let tapped = detector.process(
