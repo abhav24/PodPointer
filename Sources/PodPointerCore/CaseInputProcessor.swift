@@ -87,9 +87,9 @@ public struct CaseInputProcessor: Sendable {
             gesture = finished
         }
 
-        let tapped = detector.process(
-            acceleration: reading.userAcceleration,
-            rotationSpeed: rotation.magnitude,
+        let point = advancePointer(
+            horizontalRate: rotation.dot(calibration.horizontalAxis) * Self.degreesPerRadian,
+            verticalRate: rotation.dot(calibration.verticalAxis) * Self.degreesPerRadian,
             at: time
         )
         if tapped {
