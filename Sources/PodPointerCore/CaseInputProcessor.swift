@@ -101,6 +101,7 @@ public struct CaseInputProcessor: Sendable {
     }
 
     public mutating func setPosition(_ point: PointerPoint) {
+        heldMotion.removeAll()
         engine.set(position: point)
     }
 }
