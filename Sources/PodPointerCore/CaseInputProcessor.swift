@@ -82,6 +82,10 @@ public struct CaseInputProcessor: Sendable {
 
         let lastTap = sequence.lastTap
         var gesture: CaseGesture?
+        if !detector.isChecking, let finished = sequence.poll(at: time),
+           detector.hasSettled(since: lastTap + Self.settleCheckDelay) {
+            gesture = finished
+        }
 
         let tapped = detector.process(
             acceleration: reading.userAcceleration,
