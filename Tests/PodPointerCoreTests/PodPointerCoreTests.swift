@@ -228,7 +228,7 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
         var detector = TapDetector(threshold: threshold)
         var taps = 0
         for (index, value) in acceleration.enumerated() {
-            let tapped = detector.process(
+            let tap = detector.process(
                 acceleration: Vector3(x: value, y: 0, z: 0),
                 rotationSpeed: rotation,
                 at: Double(index) * sampleInterval
