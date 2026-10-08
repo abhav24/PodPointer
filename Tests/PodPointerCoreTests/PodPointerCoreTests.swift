@@ -276,6 +276,31 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
         #expect(tapCount(zip(strong, weak).map(+)) == 2)
     }
 
+    @Test func aJoltThatStartsATurnIsNotATap() {
+        // Calm at the jolt, but the case keeps turning after it.
+        var detector = TapDetector(threshold: 0.3)
+        var taps = 0
+        let values = signal(tapsAt: [30])
+        for (index, value) in values.enumerated() {
+            let tap = detector.process(
+                acceleration: Vector3(x: value, y: 0, z: 0),
+                rotation: Vector3(x: index >= 30 ? 1.5 : 0, y: 0, z: 0),
+                at: Double(index) * sampleInterval
+            )
+            if tap != nil { taps += 1 }
+        }
+        #expect(taps == 0)
+    }
+
+    @Test func accelerationThatBuildsUpIsNotATap() {
+        // A smooth push: over 1 g, but with no sharp jolt.
+        let push = (0..<120).map { index -> Double in
+            let phase = (Double(index) - 30) / 15
+            return (0...1).contains(phase) ? 1.2 * sin(phase * .pi) : 0
+        }
+        #expect(tapCount(push) == 0)
+    }
+
     @Test func falseTapsCannotChainWhileMoving() {
         // One tap while steady, then fast movement with repeated jolts.
         var detector = TapDetector(threshold: 0.3)
