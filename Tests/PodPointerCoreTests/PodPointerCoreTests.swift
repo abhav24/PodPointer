@@ -307,7 +307,7 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
         var taps = 0
         let values = signal(tapsAt: Array(stride(from: 30, to: 150, by: 10)), length: 170)
         for (index, value) in values.enumerated() {
-            let tapped = detector.process(
+            let tap = detector.process(
                 acceleration: Vector3(x: value, y: 0, z: 0),
                 rotationSpeed: index > 30 ? 3 : 0,
                 at: Double(index) * sampleInterval
@@ -335,7 +335,7 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
                 rotation: Vector3(x: shake, y: 0, z: 0),
                 at: Double(index) * sampleInterval
             )
-            if tapped { taps += 1 }
+            if tap != nil { taps += 1 }
         }
         #expect(taps == 2)
     }
