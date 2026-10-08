@@ -230,7 +230,7 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
         for (index, value) in acceleration.enumerated() {
             let tap = detector.process(
                 acceleration: Vector3(x: value, y: 0, z: 0),
-                rotationSpeed: rotation,
+                rotation: Vector3(x: rotation, y: 0, z: 0),
                 at: Double(index) * sampleInterval
             )
             if tapped { taps += 1 }
