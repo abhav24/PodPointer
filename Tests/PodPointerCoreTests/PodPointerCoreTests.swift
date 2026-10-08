@@ -259,6 +259,12 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
         #expect(tapCount(signal(tapsAt: [30, 42, 54])) == 3)
     }
 
+    @Test func aMuchWeakerBounceIsTheSameTap() {
+        let strong = signal(tapsAt: [30])
+        let bounce = signal(tapsAt: [39], strength: 0.3)
+        #expect(tapCount(zip(strong, bounce).map(+), threshold: 0.2) == 1)
+    }
+
     @Test func aFastTripleTapCounts() {
         // Taps 160 ms apart, which is faster than most people tap.
         #expect(tapCount(signal(tapsAt: [30, 38, 46])) == 3)
