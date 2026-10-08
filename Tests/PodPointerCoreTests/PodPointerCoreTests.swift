@@ -233,7 +233,7 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
                 rotation: Vector3(x: rotation, y: 0, z: 0),
                 at: Double(index) * sampleInterval
             )
-            if tapped { taps += 1 }
+            if tap != nil { taps += 1 }
         }
         return taps
     }
