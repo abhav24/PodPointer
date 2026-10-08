@@ -302,7 +302,7 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
     }
 
     @Test func falseTapsCannotChainWhileMoving() {
-        // One tap while steady, then fast movement with repeated jolts.
+        // One tap while steady, then jolts that never let the shake fade.
         var detector = TapDetector(threshold: 0.3)
         var taps = 0
         let values = signal(tapsAt: Array(stride(from: 30, to: 150, by: 10)), length: 170)
@@ -332,7 +332,7 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
         for (index, value) in values.enumerated() {
             let tapped = detector.process(
                 acceleration: Vector3(x: value, y: 0, z: 0),
-                rotationSpeed: (31...41).contains(index) ? 3 : 0,
+                rotation: Vector3(x: shake, y: 0, z: 0),
                 at: Double(index) * sampleInterval
             )
             if tapped { taps += 1 }
