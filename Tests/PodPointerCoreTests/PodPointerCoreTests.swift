@@ -411,9 +411,8 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
         return result
     }
 
-    @Test func promptedGesturesAreRecognized() throws {
-        let result = try replay()
-        #expect(result.prompts.count == CaseCheck.gesturePrompts.count)
+    /// How many prompts were first answered with the right gesture.
+    private func correctAnswers(in result: Replay, until end: Double) -> Int {
         var correct = 0
         for (index, prompt) in result.prompts.enumerated() {
             let end = index + 1 < result.prompts.count ? result.prompts[index + 1].time : result.gestureTestEnd
