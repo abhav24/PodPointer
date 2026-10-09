@@ -312,7 +312,7 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
                 rotation: .zero,
                 at: Double(index) * sampleInterval
             )
-            if tapped { taps += 1 }
+            if tap != nil { taps += 1 }
         }
         #expect(taps == 3)
     }
@@ -360,8 +360,7 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
     private struct Replay {
         var gestures: [(time: Double, gesture: CaseGesture)] = []
         var prompts: [(time: Double, gesture: CaseGesture)] = []
-        var tapTestEnd = 0.0
-        var gestureTestEnd = 0.0
+        var events: [(time: Double, name: String)] = []
     }
 
     private func replay() throws -> Replay {
