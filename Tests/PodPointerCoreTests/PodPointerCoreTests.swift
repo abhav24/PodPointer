@@ -309,7 +309,7 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
         for (index, value) in values.enumerated() {
             let tap = detector.process(
                 acceleration: Vector3(x: value, y: 0, z: 0),
-                rotationSpeed: index > 30 ? 3 : 0,
+                rotation: .zero,
                 at: Double(index) * sampleInterval
             )
             if tapped { taps += 1 }
@@ -355,7 +355,7 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
     }
 }
 
-/// Replays taps recorded from real AirPods Pro in a case, with the prompts they answered.
+/// Replays motion recorded from real AirPods in a case, with the prompts it answered.
 @Suite struct RecordedTapTests {
     private struct Replay {
         var gestures: [(time: Double, gesture: CaseGesture)] = []
