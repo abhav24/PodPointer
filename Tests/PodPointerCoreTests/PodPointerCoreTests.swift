@@ -391,9 +391,9 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
             let time = try #require(Double(fields[0]))
             if fields[1].isEmpty {
                 let event = fields[7]
-                if event == "end:tapTest" { result.tapTestEnd = time }
-                if event == "end:gestureTest" { result.gestureTestEnd = time }
-                if event.hasPrefix("ask:"), let gesture = CaseGesture(rawValue: String(event.dropFirst(4))) {
+                result.events.append((time, event))
+                if let range = event.range(of: "ask:"),
+                   let gesture = CaseGesture(rawValue: String(event[range.upperBound...])) {
                     result.prompts.append((time, gesture))
                 }
                 continue
