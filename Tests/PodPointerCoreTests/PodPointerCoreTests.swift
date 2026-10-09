@@ -415,8 +415,8 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
     private func correctAnswers(in result: Replay, until end: Double) -> Int {
         var correct = 0
         for (index, prompt) in result.prompts.enumerated() {
-            let end = index + 1 < result.prompts.count ? result.prompts[index + 1].time : result.gestureTestEnd
-            let answer = result.gestures.first { $0.time >= prompt.time && $0.time < end }
+            let next = index + 1 < result.prompts.count ? result.prompts[index + 1].time : end
+            let answer = result.gestures.first { $0.time >= prompt.time && $0.time < next }
             if answer?.gesture == prompt.gesture { correct += 1 }
         }
         #expect(correct >= 8)
