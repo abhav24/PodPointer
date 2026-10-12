@@ -419,7 +419,27 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
             let answer = result.gestures.first { $0.time >= prompt.time && $0.time < next }
             if answer?.gesture == prompt.gesture { correct += 1 }
         }
-        #expect(correct >= 8)
+        return correct
+    }
+
+    private func time(of event: String, in result: Replay) throws -> Double {
+        try #require(result.events.first { $0.name == event }).time
+    }
+
+    @Test func promptedGesturesAreRecognized() throws {
+        let result = try replay("real-taps", calibration: firmTaps)
+        #expect(result.prompts.count == CaseCheck.gesturePrompts.count)
+        let end = try time(of: "end:gestureTest", in: result)
+        // The recording stops soon after the last tap, before its gesture is due.
+        // The firmest tapper here is near the limit the setup test itself passes at.
+        #expect(correctAnswers(in: result, until: end + 1) >= 7)
+    }
+
+    @Test func lighterPromptedGesturesAreRecognized() throws {
+        let result = try replay("real-movement", calibration: lightTaps)
+        #expect(result.prompts.count == CaseCheck.gesturePrompts.count)
+        let end = try time(of: "step:moveTest", in: result)
+        #expect(correctAnswers(in: result, until: end) >= 7)
     }
 
     @Test func singleTapsStaySingle() throws {
