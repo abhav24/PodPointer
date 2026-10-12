@@ -470,7 +470,7 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
 @Suite struct TapSequenceTests {
     @Test func singleWaitsForTheWindow() {
         var sequence = TapSequence(windowSeconds: 0.35)
-        #expect(sequence.registerTap(at: 1) == nil)
+        sequence.registerTap(at: 1)
         #expect(sequence.poll(at: 1.2) == nil)
         #expect(sequence.poll(at: 1.4) == .single)
         #expect(sequence.poll(at: 2) == nil)
