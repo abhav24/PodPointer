@@ -478,8 +478,8 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
 
     @Test func doubleAndTriple() {
         var sequence = TapSequence(windowSeconds: 0.35)
-        _ = sequence.registerTap(at: 1)
-        _ = sequence.registerTap(at: 1.2)
+        sequence.registerTap(at: 1)
+        sequence.registerTap(at: 1.2)
         #expect(sequence.poll(at: 1.6) == .double)
 
         _ = sequence.registerTap(at: 3)
