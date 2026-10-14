@@ -583,7 +583,7 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
         for index in 0..<80 {
             let isTap = index == 20
             let output = processor.process(reading(
-                rotation: isTap ? Vector3(x: 5, y: 0, z: 5) : .zero,
+                rotation: isTap ? Vector3(x: 1.5, y: 0, z: 1.5) : .zero,
                 acceleration: Vector3(x: isTap ? 1 : 0, y: 0, z: 0),
                 at: Double(index) * sampleInterval
             ))
