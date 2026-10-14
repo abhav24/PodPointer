@@ -482,9 +482,11 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
         sequence.registerTap(at: 1.2)
         #expect(sequence.poll(at: 1.6) == .double)
 
-        _ = sequence.registerTap(at: 3)
-        _ = sequence.registerTap(at: 3.2)
-        #expect(sequence.registerTap(at: 3.4) == .triple)
+        sequence.registerTap(at: 3)
+        sequence.registerTap(at: 3.2)
+        sequence.registerTap(at: 3.4)
+        #expect(sequence.poll(at: 3.6) == nil)
+        #expect(sequence.poll(at: 3.7) == .triple)
     }
 }
 
