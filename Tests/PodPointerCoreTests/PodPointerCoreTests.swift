@@ -694,7 +694,7 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
 
     @Test func sensitivityChangesWhatCountsAsATap() {
         func gestureCount(sensitivity: Double) -> Int {
-            var processor = CaseInputProcessor(calibration: calibration(tapThreshold: 0.6))
+            var processor = CaseInputProcessor(calibration: calibration(tapThreshold: 0.12))
             processor.tapSensitivity = sensitivity
             var count = 0
             for index in 0..<80 {
