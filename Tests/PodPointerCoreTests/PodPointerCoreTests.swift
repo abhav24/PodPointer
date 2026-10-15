@@ -699,7 +699,7 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
             var count = 0
             for index in 0..<80 {
                 let output = processor.process(reading(
-                    acceleration: Vector3(x: index == 20 ? 0.4 : 0, y: 0, z: 0),
+                    acceleration: Vector3(x: index == 20 ? 0.12 : 0, y: 0, z: 0),
                     at: Double(index) * sampleInterval
                 ))
                 if output.gesture != nil { count += 1 }
