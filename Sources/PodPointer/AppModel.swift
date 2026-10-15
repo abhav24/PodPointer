@@ -17,7 +17,7 @@ enum AppStage: Equatable {
 
 @MainActor
 final class AppModel: ObservableObject {
-    static let version = "0.1.0"
+    static let version = "0"
 
     private static let calibrationKey = "caseCalibration"
     private static let finishedSetupKey = "hasFinishedSetup"
