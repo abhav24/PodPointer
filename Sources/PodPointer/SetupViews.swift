@@ -3,7 +3,10 @@ import SwiftUI
 
 /// The shared layout for each page of setup.
 struct SetupPage<Content: View>: View {
-    var progress: String?
+    static var stepCount: Int { 10 }
+
+    var step: Int?
+    var heading: String?
     let symbol: String
     let title: String
     var detail: String?
