@@ -362,6 +362,13 @@ final class AppModel: ObservableObject {
         }
         if let gesture = output.gesture {
             recorder.mark("gesture:\(gesture.rawValue)", at: reading.timestamp)
+            for _ in 0..<gesture.tapCount {
+                liveCheck?.registerTap(
+                    at: Self.now - output.gestureAge,
+                    point: output.point,
+                    aspectRatio: pointerConfiguration.aspectRatio
+                )
+            }
             liveCheck?.registerGesture(gesture, at: Self.now)
             perform(gesture)
         }
