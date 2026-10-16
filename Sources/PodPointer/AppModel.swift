@@ -35,6 +35,7 @@ final class AppModel: ObservableObject {
     @Published private(set) var stage = AppStage.welcome
     @Published private(set) var lastAction: String?
     @Published var showsAdvanced = false
+    @Published var showsDiagnostics = false
 
     // Motion
     @Published private(set) var permission = "Not asked yet"
