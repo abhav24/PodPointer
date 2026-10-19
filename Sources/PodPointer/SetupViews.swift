@@ -32,7 +32,7 @@ struct SetupPage<Content: View>: View {
                 Image(systemName: symbol)
                     .font(.system(size: 52))
                     .foregroundStyle(.tint)
-                    .frame(height: 72)
+                    .frame(height: 68)
                 Text(title)
                     .font(.title.bold())
                     .multilineTextAlignment(.center)
