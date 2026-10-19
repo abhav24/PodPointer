@@ -30,7 +30,7 @@ struct SetupPage<Content: View>: View {
                         .foregroundStyle(.secondary)
                 }
                 Image(systemName: symbol)
-                    .font(.system(size: 56))
+                    .font(.system(size: 52))
                     .foregroundStyle(.tint)
                     .frame(height: 72)
                 Text(title)
