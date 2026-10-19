@@ -16,8 +16,16 @@ struct SetupPage<Content: View>: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
-                if let progress {
-                    Text(progress)
+                if let step {
+                    VStack(spacing: 8) {
+                        Text("Step \(step) of \(Self.stepCount)")
+                            .font(.subheadline.weight(.medium))
+                            .foregroundStyle(.secondary)
+                        ProgressView(value: Double(step), total: Double(Self.stepCount))
+                            .frame(maxWidth: 220)
+                    }
+                } else if let heading {
+                    Text(heading)
                         .font(.subheadline.weight(.medium))
                         .foregroundStyle(.secondary)
                 }
