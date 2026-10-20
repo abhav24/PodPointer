@@ -54,7 +54,9 @@ struct SetupPage<Content: View>: View {
             if let onStartOver {
                 Button("Start Over", action: onStartOver)
                     .buttonStyle(.link)
-                    .padding(.bottom, 14)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 10)
+                    .background(.bar)
             }
         }
     }
