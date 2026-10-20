@@ -62,6 +62,18 @@ struct SetupPage<Content: View>: View {
     }
 }
 
+/// A soft rounded panel that groups related content on a page.
+struct Card<Content: View>: View {
+    @ViewBuilder let content: Content
+
+    var body: some View {
+        content
+            .padding(16)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(.quaternary.opacity(0.5), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+    }
+}
+
 /// Numbered instructions.
 struct InstructionList: View {
     let items: [String]
