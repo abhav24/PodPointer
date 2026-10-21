@@ -84,7 +84,9 @@ struct InstructionList: View {
                 ForEach(Array(items.enumerated()), id: \.offset) { index, item in
                     HStack(alignment: .top, spacing: 12) {
                         Text("\(index + 1)")
-                    Text("\(index + 1).")
+                            .font(.callout.weight(.semibold))
+                            .monospacedDigit()
+                            .foregroundStyle(.white)
                         .fontWeight(.semibold)
                         .monospacedDigit()
                     Text(item)
