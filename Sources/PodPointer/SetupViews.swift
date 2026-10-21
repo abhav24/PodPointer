@@ -81,8 +81,9 @@ struct InstructionList: View {
     var body: some View {
         Card {
             VStack(alignment: .leading, spacing: 12) {
-            ForEach(Array(items.enumerated()), id: \.offset) { index, item in
-                HStack(alignment: .firstTextBaseline, spacing: 10) {
+                ForEach(Array(items.enumerated()), id: \.offset) { index, item in
+                    HStack(alignment: .top, spacing: 12) {
+                        Text("\(index + 1)")
                     Text("\(index + 1).")
                         .fontWeight(.semibold)
                         .monospacedDigit()
