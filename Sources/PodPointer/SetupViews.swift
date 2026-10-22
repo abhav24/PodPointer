@@ -90,8 +90,9 @@ struct InstructionList: View {
                             .frame(width: 22, height: 22)
                             .background(.tint, in: Circle())
                         Text(item)
-                    Text(item)
-                        .fixedSize(horizontal: false, vertical: true)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .padding(.top, 2)
+                    }
                 }
             }
         }
