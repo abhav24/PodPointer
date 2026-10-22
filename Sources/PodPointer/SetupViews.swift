@@ -87,8 +87,9 @@ struct InstructionList: View {
                             .font(.callout.weight(.semibold))
                             .monospacedDigit()
                             .foregroundStyle(.white)
-                        .fontWeight(.semibold)
-                        .monospacedDigit()
+                            .frame(width: 22, height: 22)
+                            .background(.tint, in: Circle())
+                        Text(item)
                     Text(item)
                         .fixedSize(horizontal: false, vertical: true)
                 }
