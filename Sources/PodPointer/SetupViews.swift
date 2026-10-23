@@ -96,7 +96,6 @@ struct InstructionList: View {
                 }
             }
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
 
