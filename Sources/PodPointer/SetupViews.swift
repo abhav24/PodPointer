@@ -220,7 +220,7 @@ struct CaseCheckPage: View {
         case .gestureTest:
             gestureTest(check)
         case .moveTest:
-            page(7, symbol: "hand.wave", title: "Wave the case. Don't tap it.", detail: "This checks that normal movement isn't mistaken for a tap.") {
+            page(7, symbol: "hand.wave", title: "Move and shake the case. Don't tap it.", detail: "Move it up and down and side to side, then shake it. This checks that movement isn't mistaken for a tap.") {
                 countdown(Int(check.moveSecondsLeft(at: model.checkClock).rounded(.up)), label: "seconds left")
                 Text("Mistaken taps so far: \(check.results.falseTapsWhileMoving)")
                     .foregroundStyle(.secondary)
@@ -409,7 +409,7 @@ struct CaseCheckPage: View {
     private func gestureTest(_ check: CaseCheck) -> some View {
         let number = "\(check.gestureIndex + 1) of \(CaseCheck.gesturePrompts.count)"
         if let prompt = check.gesturePrompt(at: model.checkClock) {
-            page(6, symbol: "hand.tap", title: gestureTitle(for: prompt), detail: "Keep the taps quick and even, then hold still.") {
+            page(6, symbol: "hand.tap", title: gestureTitle(for: prompt), detail: "Keep the taps light, quick, and even, then hold still.") {
                 gestureAnswer(check.lastGestureAnswer)
                 Text("Prompt \(number) · Correct: \(check.results.gesturesHit)")
                     .foregroundStyle(.secondary)
@@ -564,7 +564,7 @@ struct TrySlidesPage: View {
 
     var body: some View {
         SetupPage(
-            progress: "Step 9 of 9",
+            step: 10,
             symbol: "play.rectangle",
             title: "Try it with real slides",
             detail: "Your case is live. The red dot follows it everywhere.",
