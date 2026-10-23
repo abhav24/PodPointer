@@ -256,7 +256,7 @@ struct CaseCheckPage: View {
         @ViewBuilder content: () -> Content
     ) -> some View {
         SetupPage(
-            progress: "Step \(number) of 9",
+            step: number,
             symbol: symbol,
             title: title,
             detail: detail,
@@ -460,7 +460,7 @@ struct CaseCheckPage: View {
 
     private func results(_ results: CaseCheckResults) -> some View {
         SetupPage(
-            progress: "Your results",
+            heading: "Your results",
             symbol: results.passed ? "checkmark.seal.fill" : "slider.horizontal.3",
             title: results.passed ? "Your case works!" : "Your case needs some tuning",
             detail: results.passed ? "Next, try it with real slides." : "Adjust the settings below and run the tests again, or continue anyway.",
