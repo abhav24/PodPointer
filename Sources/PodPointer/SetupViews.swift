@@ -164,11 +164,9 @@ struct WelcomePage: View {
                     .fixedSize(horizontal: false, vertical: true)
                 PrimaryButton("Get Started") { model.beginSetup() }
             }
-            Text("You'll need your AirPods and their case. PodPointer will ask to use motion data from your AirPods. That data stays on this Mac.")
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
-                .fixedSize(horizontal: false, vertical: true)
-            PrimaryButton("Get Started") { model.beginSetup() }
+            .frame(maxWidth: 460)
+            .frame(maxWidth: .infinity)
+            .padding(32)
         }
     }
 
@@ -401,7 +399,7 @@ struct CaseCheckPage: View {
                     .foregroundStyle(.secondary)
             }
         } else {
-            page(5, symbol: "hand.tap", title: "Get ready to tap", detail: "A number will appear \(CaseCheck.tapPrompts) times. Tap the case once for each number, holding still in between.") {
+            page(5, symbol: "hand.tap", title: "Get ready to tap", detail: "A number will appear \(CaseCheck.tapPrompts) times. Tap the case lightly once for each number, holding it steady the whole time.") {
                 countdown(Int(check.secondsUntilTapsStart(at: model.checkClock).rounded(.up)), label: "starting in")
             }
         }
@@ -541,7 +539,7 @@ struct AllowControlPage: View {
 
     var body: some View {
         SetupPage(
-            progress: "Step 9 of 9",
+            step: 9,
             symbol: "lock.open",
             title: "Let PodPointer control your slides",
             detail: "To change slides and click, PodPointer needs Accessibility access. It only sends the arrow keys and clicks you tap for.",
