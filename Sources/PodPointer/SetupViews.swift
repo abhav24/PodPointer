@@ -390,7 +390,7 @@ struct CaseCheckPage: View {
     @ViewBuilder
     private func tapTest(_ check: CaseCheck) -> some View {
         if let prompt = check.tapPromptNumber(at: model.checkClock) {
-            page(5, symbol: "hand.tap", title: "Tap once now", detail: "Tap once each time the number changes, holding still in between.") {
+            page(5, symbol: "hand.tap", title: "Tap once now", detail: "Tap lightly once each time the number changes, holding the case steady.") {
                 Text("\(prompt)")
                     .font(.system(size: 72, weight: .bold, design: .rounded))
                     .monospacedDigit()
@@ -472,6 +472,7 @@ struct CaseCheckPage: View {
                 resultRow("Single, double, triple", value: "\(results.gesturesHit) of \(results.gesturesAsked)", passed: results.gesturesPassed)
                 resultRow("Mistaken taps", value: "\(results.falseTapsWhileMoving + results.extraTaps)", passed: results.movingPassed && results.extraTaps <= 1)
                 resultRow("Rings hit", value: "\(results.targetsHit) of \(results.targetsAsked)", passed: results.pointingPassed)
+                }
             }
             if !results.tapsPassed {
                 slider(
