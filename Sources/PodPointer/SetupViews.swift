@@ -383,7 +383,7 @@ struct CaseCheckPage: View {
             return "Tilt your wrist upward and hold it there. This shows which way is up."
         case .tap:
             return
-            "Hold still and tap the case with a finger. Leave a short pause between taps. Taps so far: \(model.calibrationTaps)"
+            "Hold the case steady and tap it lightly with one finger, with a short pause between taps. Hitting it hard enough to swing the case won't count. Taps so far: \(model.calibrationTaps)"
         }
     }
 
@@ -466,7 +466,8 @@ struct CaseCheckPage: View {
             detail: results.passed ? "Next, try it with real slides." : "Adjust the settings below and run the tests again, or continue anyway.",
             onStartOver: { model.startOver() }
         ) {
-            VStack(spacing: 10) {
+            Card {
+                VStack(spacing: 10) {
                 resultRow("Taps detected", value: "\(results.tapsHit) of \(results.tapsAsked)", passed: results.tapsPassed)
                 resultRow("Single, double, triple", value: "\(results.gesturesHit) of \(results.gesturesAsked)", passed: results.gesturesPassed)
                 resultRow("Mistaken taps", value: "\(results.falseTapsWhileMoving + results.extraTaps)", passed: results.movingPassed && results.extraTaps <= 1)
