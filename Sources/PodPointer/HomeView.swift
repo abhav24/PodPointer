@@ -8,6 +8,7 @@ struct HomeView: View {
 
     var body: some View {
         Form {
+            statusSection
             controlSection
             if !model.hasAccessibility {
                 accessSection
