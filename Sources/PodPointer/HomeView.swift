@@ -18,6 +18,7 @@ struct HomeView: View {
             }
             calibrationSection
             advancedSection
+            diagnosticsSection
         }
         .formStyle(.grouped)
     }
