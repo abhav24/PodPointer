@@ -71,10 +71,10 @@ struct HomeView: View {
                 Text("Choose Presenter to control slides, or Mouse to control your Mac.")
                     .foregroundStyle(.secondary)
             case .presenter:
-                control("Rotate", "Moves the laser dot")
-                control("Tap", "Next slide")
-                control("Double-tap", "Previous slide")
-                control("Triple-tap", "Turns the dot on or off")
+                control("rotate.3d", "Rotate", "Moves the laser dot")
+                control("hand.tap", "Tap", "Next slide")
+                control("hand.tap", "Double-tap", "Previous slide")
+                control("hand.tap", "Triple-tap", "Turns the dot on or off")
             case .mouse:
                 control("Rotate", "Moves the cursor")
                 control("Tap", "Click")
