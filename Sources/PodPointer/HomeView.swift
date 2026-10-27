@@ -63,6 +63,7 @@ struct HomeView: View {
                 ForEach(ControlMode.allCases) { Text($0.rawValue).tag($0) }
             }
             .pickerStyle(.segmented)
+            .labelsHidden()
             .disabled(!model.canUsePointer)
 
             switch model.mode {
