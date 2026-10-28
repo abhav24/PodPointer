@@ -133,6 +133,7 @@ struct HomeView: View {
             Text("Calibration")
         } footer: {
             Text("Calibrate again if you change how you hold the case.")
+                .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
 
