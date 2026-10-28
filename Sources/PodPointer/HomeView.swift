@@ -120,7 +120,10 @@ struct HomeView: View {
                 ProgressView(value: model.calibrationProgress)
                 Button("Cancel") { model.cancelCalibration() }
             } else {
-                Button("Calibrate Again") { model.startCalibration() }
+                HStack {
+                    Button("Calibrate Again") { model.startCalibration() }
+                    Button("Run Setup Again") { model.startOver() }
+                }
             }
             if let message = model.calibrationMessage {
                 Text(message)
