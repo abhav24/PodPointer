@@ -94,6 +94,7 @@ struct HomeView: View {
             Text("Control")
         } footer: {
             Text("Keep the case lid open and Automatic Ear Detection off while you use PodPointer.")
+                .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
 
