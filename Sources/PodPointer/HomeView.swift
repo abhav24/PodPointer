@@ -76,10 +76,10 @@ struct HomeView: View {
                 control("hand.tap", "Double-tap", "Previous slide")
                 control("hand.tap", "Triple-tap", "Turns the dot on or off")
             case .mouse:
-                control("Rotate", "Moves the cursor")
-                control("Tap", "Click")
-                control("Double-tap", "Double-click")
-                control("Triple-tap", "Pauses or resumes the cursor")
+                control("rotate.3d", "Rotate", "Moves the cursor")
+                control("hand.tap", "Tap", "Click")
+                control("hand.tap", "Double-tap", "Double-click")
+                control("hand.tap", "Triple-tap", "Pauses or resumes the cursor")
                 Text("Moving a real mouse or trackpad pauses the case until you stop.")
                     .foregroundStyle(.secondary)
             }
