@@ -202,8 +202,12 @@ struct HomeView: View {
         }
     }
 
-    private func control(_ gesture: String, _ action: String) -> some View {
-        LabeledContent(gesture, value: action)
+    private func control(_ symbol: String, _ gesture: String, _ action: String) -> some View {
+        LabeledContent {
+            Text(action)
+        } label: {
+            Label(gesture, systemImage: symbol)
+        }
     }
 
     private func calibrationInstruction(for step: CalibrationStep) -> String {
