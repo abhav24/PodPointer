@@ -156,6 +156,13 @@ struct HomeView: View {
                 Toggle("Flip left and right", isOn: $model.pointerConfiguration.invertHorizontal)
                 Toggle("Send keys and clicks", isOn: $model.sendsActions)
                 Toggle("Keep audio connection active", isOn: $model.keepsAudioActive)
+            }
+        }
+    }
+
+    private var diagnosticsSection: some View {
+        Section {
+            DisclosureGroup("Diagnostics", isExpanded: $model.showsDiagnostics) {
                 LabeledContent("AirPods", value: model.isConnected ? "Connected" : "Not connected")
                 LabeledContent("Motion", value: model.isReceivingMotion ? "Arriving" : "Not arriving")
                 LabeledContent("Rate", value: String(format: "%.0f Hz", model.rate.hertz))
