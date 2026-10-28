@@ -177,7 +177,6 @@ struct HomeView: View {
                 HStack {
                     Button("Copy Test Report") { model.copyReport() }
                     Button("Show Motion Recording") { model.showRecordingInFinder() }
-                    Button("Run Setup Again") { model.startOver() }
                 }
             }
         }
