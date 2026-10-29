@@ -37,6 +37,7 @@ struct RootView: View {
                 HomeView(model: model)
             }
         }
+        .frame(minWidth: 540, idealWidth: 600, minHeight: 620, idealHeight: 720)
         .frame(minWidth: 540, idealWidth: 560, minHeight: 620, idealHeight: 680)
         .onReceive(NotificationCenter.default.publisher(for: NSApplication.didChangeScreenParametersNotification)) { _ in
             model.refreshDisplays()
