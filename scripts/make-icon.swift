@@ -8,3 +8,14 @@ func color(_ red: CGFloat, _ green: CGFloat, _ blue: CGFloat, _ alpha: CGFloat =
 
 func draw(in context: CGContext) {
     let tile = CGRect(x: 100, y: 100, width: 824, height: 824)
+    let tilePath = CGPath(roundedRect: tile, cornerWidth: 185, cornerHeight: 185, transform: nil)
+    let space = CGColorSpace(name: CGColorSpace.sRGB)!
+
+    context.saveGState()
+    context.setShadow(offset: CGSize(width: 0, height: -12), blur: 28, color: color(0, 0, 0, 0.35))
+    context.addPath(tilePath)
+    context.setFillColor(color(30, 30, 90))
+    context.fillPath()
+    context.restoreGState()
+
+    context.saveGState()
