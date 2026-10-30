@@ -30,3 +30,14 @@ func draw(in context: CGContext) {
     // The beam from the case to the laser dot.
     let beam = CGMutablePath()
     beam.move(to: CGPoint(x: beamStart.x - 44, y: beamStart.y + 18))
+    beam.addLine(to: CGPoint(x: dot.x - 12, y: dot.y + 12))
+    beam.addLine(to: CGPoint(x: dot.x + 12, y: dot.y - 12))
+    beam.addLine(to: CGPoint(x: beamStart.x + 18, y: beamStart.y - 44))
+    beam.closeSubpath()
+    context.saveGState()
+    context.addPath(beam)
+    context.clip()
+    let beamFade = CGGradient(colorsSpace: space, colors: [color(255, 70, 80, 0.05), color(255, 70, 80, 0.75)] as CFArray, locations: [0, 1])!
+    context.drawLinearGradient(beamFade, start: beamStart, end: dot, options: [])
+    context.restoreGState()
+
