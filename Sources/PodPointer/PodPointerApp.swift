@@ -38,7 +38,7 @@ struct RootView: View {
             }
         }
         .frame(minWidth: 540, idealWidth: 600, minHeight: 620, idealHeight: 720)
-        .frame(minWidth: 540, idealWidth: 560, minHeight: 620, idealHeight: 680)
+        .tint(.indigo)
         .onReceive(NotificationCenter.default.publisher(for: NSApplication.didChangeScreenParametersNotification)) { _ in
             model.refreshDisplays()
         }
