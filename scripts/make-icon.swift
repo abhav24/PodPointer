@@ -19,3 +19,14 @@ func draw(in context: CGContext) {
     context.restoreGState()
 
     context.saveGState()
+    context.addPath(tilePath)
+    context.clip()
+    let background = CGGradient(colorsSpace: space, colors: [color(82, 76, 214), color(24, 22, 72)] as CFArray, locations: [0, 1])!
+    context.drawLinearGradient(background, start: CGPoint(x: 300, y: 924), end: CGPoint(x: 700, y: 100), options: [.drawsBeforeStartLocation, .drawsAfterEndLocation])
+
+    let dot = CGPoint(x: 700, y: 700)
+    let beamStart = CGPoint(x: 430, y: 470)
+
+    // The beam from the case to the laser dot.
+    let beam = CGMutablePath()
+    beam.move(to: CGPoint(x: beamStart.x - 44, y: beamStart.y + 18))
