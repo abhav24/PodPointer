@@ -76,3 +76,16 @@ func draw(in context: CGContext) {
     context.strokePath()
     context.restoreGState()
     context.setFillColor(color(70, 215, 130))
+    context.fillEllipse(in: CGRect(x: -11, y: -22, width: 22, height: 22))
+    context.restoreGState()
+
+    context.restoreGState()
+}
+
+func png(size: Int) throws -> Data {
+    let bitmap = NSBitmapImageRep(
+        bitmapDataPlanes: nil, pixelsWide: size, pixelsHigh: size, bitsPerSample: 8, samplesPerPixel: 4,
+        hasAlpha: true, isPlanar: false, colorSpaceName: .deviceRGB, bytesPerRow: 0, bitsPerPixel: 0
+    )!
+    NSGraphicsContext.saveGraphicsState()
+    NSGraphicsContext.current = NSGraphicsContext(bitmapImageRep: bitmap)
