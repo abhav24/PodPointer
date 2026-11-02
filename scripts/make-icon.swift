@@ -101,3 +101,16 @@ guard CommandLine.arguments.count == 2 else {
     exit(2)
 }
 
+let iconset = FileManager.default.temporaryDirectory.appendingPathComponent("AppIcon-\(UUID().uuidString).iconset")
+try FileManager.default.createDirectory(at: iconset, withIntermediateDirectories: true)
+for size in [16, 32, 128, 256, 512] {
+    try png(size: size).write(to: iconset.appendingPathComponent("icon_\(size)x\(size).png"))
+    try png(size: size * 2).write(to: iconset.appendingPathComponent("icon_\(size)x\(size)@2x.png"))
+}
+let iconutil = Process()
+iconutil.executableURL = URL(fileURLWithPath: "/usr/bin/iconutil")
+iconutil.arguments = ["-c", "icns", iconset.path, "-o", CommandLine.arguments[1]]
+try iconutil.run()
+iconutil.waitUntilExit()
+try FileManager.default.removeItem(at: iconset)
+exit(iconutil.terminationStatus)
