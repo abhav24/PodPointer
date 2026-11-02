@@ -41,3 +41,14 @@ func draw(in context: CGContext) {
     context.drawLinearGradient(beamFade, start: beamStart, end: dot, options: [])
     context.restoreGState()
 
+    // The target ring and the glowing dot.
+    context.setStrokeColor(color(255, 255, 255, 0.4))
+    context.setLineWidth(10)
+    context.strokeEllipse(in: CGRect(x: dot.x - 100, y: dot.y - 100, width: 200, height: 200))
+    let glow = CGGradient(colorsSpace: space, colors: [color(255, 70, 80, 0.9), color(255, 70, 80, 0)] as CFArray, locations: [0, 1])!
+    context.drawRadialGradient(glow, startCenter: dot, startRadius: 0, endCenter: dot, endRadius: 92, options: [])
+    context.setFillColor(color(255, 90, 95))
+    context.fillEllipse(in: CGRect(x: dot.x - 36, y: dot.y - 36, width: 72, height: 72))
+    context.setFillColor(color(255, 225, 225))
+    context.fillEllipse(in: CGRect(x: dot.x - 14, y: dot.y - 14, width: 28, height: 28))
+
