@@ -89,3 +89,15 @@ func png(size: Int) throws -> Data {
     )!
     NSGraphicsContext.saveGraphicsState()
     NSGraphicsContext.current = NSGraphicsContext(bitmapImageRep: bitmap)
+    let context = NSGraphicsContext.current!.cgContext
+    context.scaleBy(x: CGFloat(size) / 1024, y: CGFloat(size) / 1024)
+    draw(in: context)
+    NSGraphicsContext.restoreGraphicsState()
+    return bitmap.representation(using: .png, properties: [:])!
+}
+
+guard CommandLine.arguments.count == 2 else {
+    print("Usage: swift scripts/make-icon.swift OUTPUT.icns")
+    exit(2)
+}
+
