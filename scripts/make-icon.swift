@@ -52,3 +52,15 @@ func draw(in context: CGContext) {
     context.setFillColor(color(255, 225, 225))
     context.fillEllipse(in: CGRect(x: dot.x - 14, y: dot.y - 14, width: 28, height: 28))
 
+    // The case, tilted to point at the dot.
+    context.saveGState()
+    context.translateBy(x: 370, y: 370)
+    context.rotate(by: -CGFloat.pi / 4)
+    let body = CGRect(x: -150, y: -125, width: 300, height: 250)
+    let bodyPath = CGPath(roundedRect: body, cornerWidth: 86, cornerHeight: 86, transform: nil)
+    context.saveGState()
+    context.setShadow(offset: CGSize(width: 0, height: -14), blur: 34, color: color(0, 0, 0, 0.45))
+    context.addPath(bodyPath)
+    context.setFillColor(color(245, 245, 250))
+    context.fillPath()
+    context.restoreGState()
