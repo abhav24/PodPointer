@@ -8,6 +8,8 @@
     <string>PodPointer</string>
     <key>CFBundleExecutable</key>
     <string>PodPointer</string>
+    <key>CFBundleIconFile</key>
+    <string>AppIcon</string>
     <key>CFBundleIdentifier</key>
     <string>io.github.abhav24.PodPointer</string>
     <key>CFBundleInfoDictionaryVersion</key>
