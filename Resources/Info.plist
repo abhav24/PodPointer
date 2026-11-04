@@ -30,6 +30,8 @@
     <true/>
     <key>NSMotionUsageDescription</key>
     <string>PodPointer uses motion from the AirPods in your case to move the pointer and detect taps.</string>
+    <key>NSHumanReadableCopyright</key>
+    <string>MIT License. Not affiliated with Apple Inc.</string>
     <key>NSPrincipalClass</key>
     <string>NSApplication</string>
 </dict>
