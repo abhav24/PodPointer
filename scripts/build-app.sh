@@ -10,8 +10,12 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-swift build -c release
-binary="$(swift build -c release --show-bin-path)/PodPointer"
+build_flags=(-c release)
+if [[ "${UNIVERSAL:-}" == "1" ]]; then
+    build_flags+=(--arch arm64 --arch x86_64)
+fi
+swift build "${build_flags[@]}"
+binary="$(swift build "${build_flags[@]}" --show-bin-path)/PodPointer"
 
 app="build/PodPointer.app"
 rm -rf "$app"
