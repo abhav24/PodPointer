@@ -19,7 +19,7 @@ binary="$(swift build "${build_flags[@]}" --show-bin-path)/PodPointer"
 
 app="build/PodPointer.app"
 rm -rf "$app"
-mkdir -p "$app/Contents/MacOS"
+mkdir -p "$app/Contents/MacOS" "$app/Contents/Resources"
 cp "$binary" "$app/Contents/MacOS/PodPointer"
 cp Resources/Info.plist "$app/Contents/Info.plist"
 
