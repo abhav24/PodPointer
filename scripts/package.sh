@@ -11,3 +11,9 @@ version="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' Resour
 dmg="dist/PodPointer-v$version.dmg"
 staging="$(mktemp -d)"
 trap 'rm -rf "$staging"' EXIT
+
+ditto build/PodPointer.app "$staging/PodPointer.app"
+ln -s /Applications "$staging/Applications"
+
+mkdir -p dist
+rm -f "$dmg"
