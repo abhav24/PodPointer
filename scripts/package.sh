@@ -4,3 +4,10 @@
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
+
+UNIVERSAL=1 scripts/build-app.sh
+
+version="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' Resources/Info.plist)"
+dmg="dist/PodPointer-v$version.dmg"
+staging="$(mktemp -d)"
+trap 'rm -rf "$staging"' EXIT
