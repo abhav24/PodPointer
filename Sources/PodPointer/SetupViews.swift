@@ -30,9 +30,9 @@ struct SetupPage<Content: View>: View {
                         .foregroundStyle(.secondary)
                 }
                 Image(systemName: symbol)
-                    .font(.system(size: 56))
+                    .font(.system(size: 52))
                     .foregroundStyle(.tint)
-                    .frame(height: 72)
+                    .frame(height: 68)
                 Text(title)
                     .font(.title.bold())
                     .multilineTextAlignment(.center)
@@ -54,9 +54,23 @@ struct SetupPage<Content: View>: View {
             if let onStartOver {
                 Button("Start Over", action: onStartOver)
                     .buttonStyle(.link)
-                    .padding(.bottom, 14)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 10)
+                    .background(.bar)
             }
         }
+    }
+}
+
+/// A soft rounded panel that groups related content on a page.
+struct Card<Content: View>: View {
+    @ViewBuilder let content: Content
+
+    var body: some View {
+        content
+            .padding(16)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(.quaternary.opacity(0.5), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
     }
 }
 
