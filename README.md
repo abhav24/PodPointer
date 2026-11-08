@@ -1,20 +1,20 @@
-# PodPointer
+<p align="center">
+  <img src="docs/icon.png" width="128" alt="PodPointer icon">
+</p>
 
-Point your AirPods case at the screen and tap it. PodPointer turns the case into a presentation remote and air mouse for your Mac.
+<h1 align="center">PodPointer</h1>
 
-> **Status: early and not yet proven on real hardware.** The logic has unit tests, but the full experience hasn't been confirmed with AirPods. [Help test it](docs/TESTING.md).
+<p align="center">Point your AirPods case at the screen and tap it to control your Mac.</p>
 
-## How it works
+<p align="center">
+  <a href="https://github.com/abhav24/PodPointer/releases/download/v0/PodPointer-v0.dmg"><strong>Download PodPointer v0</strong></a>
+</p>
 
-The AirPods inside the case have motion sensors. When you move the case, they move with it, so PodPointer reads their motion through Apple's public `CMHeadphoneMotionManager` API.
+PodPointer turns your AirPods case into a presentation remote and an air mouse. There's nothing extra to buy, because the motion sensors in the AirPods inside the case do all the work.
 
-- **Pointing:** rotating the case moves a pointer, the way moving a mouse moves the cursor.
-- **Tapping:** a short jolt while your hand is steady counts as a tap.
-- **Calibration:** the AirPods can sit at any angle in your hand, so a short setup learns which movement means right and up, and how hard you tap.
+> **v0 is an early release.** It's been tested on one pair of AirPods Pro 2 with an Apple silicon Mac running macOS 27. Other AirPods, Macs, and hands may behave differently, so [your test results](docs/TESTING.md) help a lot.
 
-Read more in [how it works](docs/HOW-IT-WORKS.md).
-
-## Controls
+## What you can do
 
 | Case | Presenter mode | Mouse mode |
 |---|---|---|
