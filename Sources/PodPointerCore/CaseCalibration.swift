@@ -47,7 +47,7 @@ public enum CalibrationFailure: String, Error, Equatable, Sendable {
     case unclearMovement = "The movement was hard to read. Keep each sweep in one direction and try again."
     case axesTooSimilar = "The two sweeps looked the same. Sweep sideways, then up and down, and try again."
     case noDirection = "The case didn't turn far enough. Turn it further, then stop, and try again."
-    case tooFewTaps = "Too few taps were detected. Tap the case more firmly and try again."
+    case tooFewTaps = "Too few taps were detected. Hold the case steady, tap it with one finger, and try again."
     case tapsTooWeak = "The taps were hard to tell apart from noise. Tap more firmly and try again."
 }
 
@@ -75,7 +75,7 @@ public struct CalibrationSession: Sendable {
     private static let minimumAxisSeparation = 0.5
     private static let requiredTurnRadians = 15 * Double.pi / 180
     private static let maximumTurnStep = 0.1
-    private static let tapPeakSeconds = 0.15
+    private static let minimumTapJolt = 0.08
     private static let tapSpacingSeconds = 0.25
 
     public private(set) var step = CalibrationStep.holdStill
@@ -103,8 +103,8 @@ public struct CalibrationSession: Sendable {
     private var verticalAxis = Vector3.zero
 
     private var tapPeaks: [Double] = []
-    private var currentPeak: Double?
-    private var currentPeakStart = -Double.infinity
+    private var tapFinder: TapDetector?
+    private var lastTapTime = -Double.infinity
 
     public init(sensorLocation: String) {
         self.sensorLocation = sensorLocation
@@ -132,7 +132,7 @@ public struct CalibrationSession: Sendable {
         case .turnRight, .turnUp:
             return processTurn(reading, sampleStep: sampleStep, elapsed: elapsed)
         case .tap:
-            return processTap(impulse: impulse, time: time, elapsed: elapsed)
+            return processTap(reading, time: time, elapsed: elapsed)
         }
     }
 
@@ -217,18 +217,20 @@ public struct CalibrationSession: Sendable {
         return elapsed >= Self.turnTimeoutSeconds ? .failed(.noDirection) : .inProgress
     }
 
-    private mutating func processTap(impulse: Double, time: Double, elapsed: Double) -> CalibrationStatus {
-        if let peak = currentPeak {
-            if time - currentPeakStart <= Self.tapPeakSeconds {
-                currentPeak = max(peak, impulse)
-            } else {
-                tapPeaks.append(peak)
-                currentPeak = nil
-                tapsFound = tapPeaks.count
-            }
-        } else if impulse >= max(noiseFloor * 2, 0.02), time - currentPeakStart >= Self.tapSpacingSeconds {
-            currentPeak = impulse
-            currentPeakStart = time
+    /// Uses the same checks as real tap detection, so a swing or a shake here
+    /// can't set the tap strength.
+    private mutating func processTap(_ reading: MotionReading, time: Double, elapsed: Double) -> CalibrationStatus {
+        var finder = tapFinder ?? TapDetector(threshold: max(noiseFloor * 2, Self.minimumTapJolt))
+        let tap = finder.process(
+            acceleration: reading.userAcceleration,
+            rotation: reading.rotationRate - gyroBias,
+            at: time
+        )
+        tapFinder = finder
+        if let tap, tap.time - lastTapTime >= Self.tapSpacingSeconds {
+            lastTapTime = tap.time
+            tapPeaks.append(tap.strength)
+            tapsFound = tapPeaks.count
         }
 
         progress = Double(min(tapPeaks.count, Self.requiredTaps)) / Double(Self.requiredTaps)
