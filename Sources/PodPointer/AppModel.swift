@@ -63,13 +63,18 @@ final class AppModel: ObservableObject {
     private var processor: CaseInputProcessor?
     private var calibrationSession: CalibrationSession?
     private var tracker = SampleRateTracker()
-    private var debouncer = StemPressDebouncer()
-    private var sensorLocations: [String] = []
+    private var sensorLocationsSeen: [String] = []
+    private var previousAcceleration: Vector3?
+    private var joltSinceLastPublish = 0.0
     private var lastSampleDate: Date?
     private var lastPublishDate = Date.distantPast
-    private var pointerModeChangeDate = Date.distantPast
-    private var healthTimer: Timer?
-    private var started = false
+    private var targetPoint = PointerPoint.center
+    private var shownPoint = PointerPoint.center
+    private var lastFrameDate = Date()
+    private var isPausedForRealMouse = false
+    private var hasWarnedAboutSensor = false
+    private var timers: [Timer] = []
+    private var hasStarted = false
 
     private static let timeFormat: DateFormatter = {
         let formatter = DateFormatter()
@@ -77,9 +82,11 @@ final class AppModel: ObservableObject {
         return formatter
     }()
 
+    var canUsePointer: Bool { isCalibrated && calibrationStep == nil }
+
     func start() {
-        guard !started else { return }
-        started = true
+        guard !hasStarted else { return }
+        hasStarted = true
         refreshDisplays()
 
         motion.onSample = { [weak self] in self?.handle($0) }
