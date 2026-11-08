@@ -559,6 +559,10 @@ final class AppModel: ObservableObject {
     private func checkHealth() {
         hasAccessibility = InputSender.isTrusted
         permission = motion.permissionDescription
+        refreshSoundOutput()
+        if stage == .allowControl, hasAccessibility {
+            enterTrySlides()
+        }
 
         guard isReceivingMotion, let lastSampleDate,
               Date().timeIntervalSince(lastSampleDate) > Self.staleSampleSeconds else { return }
@@ -624,6 +628,7 @@ final class AppModel: ObservableObject {
     private func use(_ calibration: CaseCalibration) {
         var next = CaseInputProcessor(calibration: calibration, pointerConfiguration: pointerConfiguration)
         next.tapSensitivity = tapSensitivity
+        next.multiTapWindow = multiTapWindow
         processor = next
         isCalibrated = true
         hasWarnedAboutSensor = false
@@ -634,6 +639,24 @@ final class AppModel: ObservableObject {
     private func save(_ calibration: CaseCalibration) {
         if let data = try? JSONEncoder().encode(calibration) {
             UserDefaults.standard.set(data, forKey: Self.calibrationKey)
+        }
+    }
+
+    private func loadSettings() {
+        let defaults = UserDefaults.standard
+        if defaults.object(forKey: Self.rangeKey) != nil {
+            pointerConfiguration.rangeDegrees = defaults.double(forKey: Self.rangeKey)
+        }
+        if defaults.object(forKey: Self.steadinessKey) != nil {
+            pointerConfiguration.minCutoff = defaults.double(forKey: Self.steadinessKey)
+        }
+        pointerConfiguration.invertHorizontal = defaults.bool(forKey: Self.invertHorizontalKey)
+        pointerConfiguration.invertVertical = defaults.bool(forKey: Self.invertVerticalKey)
+        if defaults.object(forKey: Self.sensitivityKey) != nil {
+            tapSensitivity = defaults.double(forKey: Self.sensitivityKey)
+        }
+        if defaults.object(forKey: Self.multiTapKey) != nil {
+            multiTapWindow = defaults.double(forKey: Self.multiTapKey)
         }
     }
 
@@ -660,6 +683,8 @@ final class AppModel: ObservableObject {
             log.removeFirst(log.count - Self.maxLogLines)
         }
     }
+
+    private static var now: Double { ProcessInfo.processInfo.systemUptime }
 
     private static func displayID(of screen: NSScreen) -> CGDirectDisplayID? {
         screen.deviceDescription[NSDeviceDescriptionKey("NSScreenNumber")] as? CGDirectDisplayID
