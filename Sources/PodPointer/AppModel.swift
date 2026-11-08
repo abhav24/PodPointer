@@ -23,11 +23,21 @@ final class AppModel: ObservableObject {
     @Published private(set) var isReceivingMotion = false
     @Published private(set) var rate = SampleRateSnapshot.empty
     @Published private(set) var sensorLocation = "-"
-    @Published private(set) var attitude = "-"
-    @Published private(set) var isStale = true
+    @Published private(set) var strongestJolt = 0.0
+    @Published var keepsAudioActive = false {
+        didSet { updateSilentAudio() }
+    }
 
-    // Pointer
-    @Published private(set) var pointerMode = PointerMode.off
+    // Calibration
+    @Published private(set) var isCalibrated = false
+    @Published private(set) var calibrationStep: CalibrationStep?
+    @Published private(set) var calibrationProgress = 0.0
+    @Published private(set) var calibrationTaps = 0
+    @Published private(set) var calibrationMessage: String?
+
+    // Control
+    @Published private(set) var mode = ControlMode.off
+    @Published private(set) var isPointerOn = true
     @Published private(set) var displays: [DisplayOption] = []
     @Published var selectedDisplayID: CGDirectDisplayID = CGMainDisplayID() {
         didSet { showOverlayIfNeeded() }
