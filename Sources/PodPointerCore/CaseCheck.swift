@@ -224,3 +224,28 @@ public struct CaseCheck: Equatable, Sendable {
         }
     }
 
+    private mutating func enterWatching(at time: Double) {
+        step = .watchingCase
+        stepStart = time
+        movingSeconds = 0
+    }
+
+    private mutating func advanceGesture(at time: Double) {
+        if gestureIndex + 1 < Self.gesturePrompts.count {
+            gestureIndex += 1
+            gesturePromptStart = time + Self.gesturePauseSeconds
+        } else {
+            step = .moveTest
+            stepStart = time
+        }
+    }
+
+    private mutating func advanceTarget(at time: Double) {
+        if targetIndex + 1 < Self.targets.count {
+            targetIndex += 1
+            targetStart = time
+        } else {
+            step = .results
+        }
+    }
+}
