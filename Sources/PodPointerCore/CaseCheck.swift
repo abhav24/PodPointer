@@ -115,3 +115,50 @@ public struct CaseCheck: Equatable, Sendable {
         advanceGesture(at: time)
     }
 
+    public func moveSecondsLeft(at time: Double) -> Double {
+        max(stepStart + Self.moveSeconds - time, 0)
+    }
+
+    public mutating func processMotion(rotationSpeed: Double, at time: Double) {
+        let elapsed = min(max(time - lastSampleTime, 0), Self.maximumMovingStep)
+        lastSampleTime = time
+
+        switch step {
+        case .connect:
+            step = .earDetection
+        case .motionLost:
+            enterWatching(at: time)
+        case .watchingCase:
+            if rotationSpeed > Self.movingRotationSpeed {
+                movingSeconds += elapsed
+            }
+            if movingSeconds >= Self.requiredMovingSeconds {
+                step = .calibrate
+            }
+        default:
+            break
+        }
+    }
+
+    public mutating func confirmEarDetectionOff() {
+        guard step == .earDetection else { return }
+        step = .placeInCase
+    }
+
+    public mutating func confirmInCase(at time: Double) {
+        guard step == .placeInCase else { return }
+        enterWatching(at: time)
+    }
+
+    public mutating func returnToEarDetection() {
+        step = .earDetection
+    }
+
+    public mutating func calibrationFinished(at time: Double) {
+        guard step == .calibrate else { return }
+        step = .tapTest
+        stepStart = time + Self.getReadySeconds
+        promptsHit.removeAll()
+        results = CaseCheckResults()
+    }
+
