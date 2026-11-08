@@ -1,24 +1,18 @@
 import CoreMotion
 import Foundation
+import PodPointerCore
 
-struct MotionSample {
-    let yaw: Double
-    let pitch: Double
-    let roll: Double
-    let timestamp: Double
-    let sensorLocation: String
-}
-
-/// Streams head motion from connected AirPods. Callbacks arrive on the main queue.
+/// Streams motion from connected AirPods. Callbacks arrive on the main queue.
 final class MotionController: NSObject, CMHeadphoneMotionManagerDelegate {
-    var onSample: ((MotionSample) -> Void)?
+    var onReading: ((MotionReading, _ sensorLocation: String) -> Void)?
     var onConnectionChange: ((Bool) -> Void)?
     var onError: ((String) -> Void)?
 
     private let manager = CMHeadphoneMotionManager()
 
     var isAvailable: Bool { manager.isDeviceMotionAvailable }
-    var authorizationDescription: String {
+
+    var permissionDescription: String {
         switch CMHeadphoneMotionManager.authorizationStatus() {
         case .authorized: "Allowed"
         case .denied: "Denied"
@@ -35,13 +29,16 @@ final class MotionController: NSObject, CMHeadphoneMotionManagerDelegate {
                 self?.onError?(error.localizedDescription)
             }
             guard let motion else { return }
-            self?.onSample?(MotionSample(
-                yaw: motion.attitude.yaw,
-                pitch: motion.attitude.pitch,
-                roll: motion.attitude.roll,
-                timestamp: motion.timestamp,
-                sensorLocation: Self.describe(motion.sensorLocation)
-            ))
+            let rotation = motion.rotationRate
+            let acceleration = motion.userAcceleration
+            self?.onReading?(
+                MotionReading(
+                    rotationRate: Vector3(x: rotation.x, y: rotation.y, z: rotation.z),
+                    userAcceleration: Vector3(x: acceleration.x, y: acceleration.y, z: acceleration.z),
+                    timestamp: motion.timestamp
+                ),
+                Self.describe(motion.sensorLocation)
+            )
         }
     }
 
