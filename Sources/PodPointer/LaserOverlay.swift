@@ -2,7 +2,7 @@ import AppKit
 import PodPointerCore
 import QuartzCore
 
-/// A red dot in a transparent, click-through window above the slides.
+/// A red dot in a transparent, click-through window above everything else.
 final class LaserOverlay {
     private static let dotSize: CGFloat = 22
 
@@ -28,7 +28,7 @@ final class LaserOverlay {
         view.wantsLayer = true
         panel.contentView = view
 
-        dot.frame = CGRect(x: 0, y: 0, width: Self.dotSize, height: Self.dotSize)
+        dot.bounds = CGRect(x: 0, y: 0, width: Self.dotSize, height: Self.dotSize)
         dot.cornerRadius = Self.dotSize / 2
         dot.backgroundColor = NSColor.systemRed.cgColor
         dot.shadowColor = NSColor.systemRed.cgColor
@@ -51,7 +51,7 @@ final class LaserOverlay {
         let size = panel.frame.size
         CATransaction.begin()
         CATransaction.setDisableActions(true)
-        // Layers use a bottom-left origin, and PointerPoint uses top-left.
+        // Layers put the origin at the bottom left, and PointerPoint at the top left.
         dot.position = CGPoint(x: point.x * size.width, y: (1 - point.y) * size.height)
         CATransaction.commit()
     }
