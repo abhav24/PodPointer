@@ -1,10 +1,23 @@
 import Foundation
 
+/// A tap that passed every check.
+public struct DetectedTap: Equatable, Sendable {
+    /// When the tap began, a little before it was confirmed.
+    public var time: Double
+    /// The largest change in acceleration between samples, in g.
+    public var strength: Double
+}
+
 /// Finds taps on the case from sudden changes in acceleration.
 ///
-/// A tap leaves the case shaking for a moment, so the detector follows that
-/// shake as it fades. A later jolt only counts if it clearly stands out from
-/// what's left of the shake, which lets quick double and triple taps through.
+/// Moving the case can cause jolts as large as a tap, so size alone can't tell
+/// them apart. A jolt counts as a tap only if the case was calm before it, and
+/// then barely turned and only briefly shook. The detector waits a moment after
+/// each jolt to check this, so a tap is reported slightly after it began.
+///
+/// A tap also leaves the case shaking, so the detector follows that shake as it
+/// fades. A later jolt must stand out from what's left of it, which lets quick
+/// double and triple taps through.
 public struct TapDetector: Sendable {
     public var threshold: Double
 
