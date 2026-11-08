@@ -1,5 +1,4 @@
 import AppKit
-import PodPointerCore
 import SwiftUI
 
 @main
@@ -9,7 +8,7 @@ struct PodPointerApp: App {
 
     var body: some Scene {
         Window("PodPointer", id: "main") {
-            ContentView(model: model)
+            RootView(model: model)
                 .onAppear { model.start() }
         }
         .windowResizability(.contentMinSize)
@@ -20,16 +19,23 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool { true }
 }
 
-struct ContentView: View {
+struct RootView: View {
     @ObservedObject var model: AppModel
 
     var body: some View {
-        Form {
-            setupSection
-            calibrationSection
-            controlSection
-            tuningSection
-            logSection
+        Group {
+            switch model.stage {
+            case .welcome:
+                WelcomePage(model: model)
+            case .caseCheck:
+                CaseCheckPage(model: model)
+            case .allowControl:
+                AllowControlPage(model: model)
+            case .trySlides:
+                TrySlidesPage(model: model)
+            case .home:
+                HomeView(model: model)
+            }
         }
         .formStyle(.grouped)
         .frame(minWidth: 460, idealWidth: 500, minHeight: 620, idealHeight: 820)
