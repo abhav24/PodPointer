@@ -32,6 +32,10 @@ final class AppModel: ObservableObject {
     private static let pointerTimeConstant = 0.035
     private static let maxLogLines = 200
 
+    @Published private(set) var stage = AppStage.welcome
+    @Published private(set) var lastAction: String?
+    @Published var showsAdvanced = false
+
     // Motion
     @Published private(set) var permission = "Not asked yet"
     @Published private(set) var isConnected = false
@@ -48,6 +52,7 @@ final class AppModel: ObservableObject {
     @Published private(set) var calibrationStep: CalibrationStep?
     @Published private(set) var calibrationProgress = 0.0
     @Published private(set) var calibrationTaps = 0
+    @Published private(set) var calibrationIsSettling = false
     @Published private(set) var calibrationMessage: String?
 
     // Control
@@ -61,10 +66,25 @@ final class AppModel: ObservableObject {
         }
     }
     @Published var pointerConfiguration = PointerConfiguration() {
-        didSet { processor?.pointerConfiguration = pointerConfiguration }
+        didSet {
+            processor?.pointerConfiguration = pointerConfiguration
+            UserDefaults.standard.set(pointerConfiguration.rangeDegrees, forKey: Self.rangeKey)
+            UserDefaults.standard.set(pointerConfiguration.minCutoff, forKey: Self.steadinessKey)
+            UserDefaults.standard.set(pointerConfiguration.invertHorizontal, forKey: Self.invertHorizontalKey)
+            UserDefaults.standard.set(pointerConfiguration.invertVertical, forKey: Self.invertVerticalKey)
+        }
     }
     @Published var tapSensitivity = 1.0 {
-        didSet { processor?.tapSensitivity = tapSensitivity }
+        didSet {
+            processor?.tapSensitivity = tapSensitivity
+            UserDefaults.standard.set(tapSensitivity, forKey: Self.sensitivityKey)
+        }
+    }
+    @Published var multiTapWindow = 0.4 {
+        didSet {
+            processor?.multiTapWindow = multiTapWindow
+            UserDefaults.standard.set(multiTapWindow, forKey: Self.multiTapKey)
+        }
     }
     @Published var sendsActions = false
     @Published private(set) var hasAccessibility = InputSender.isTrusted
