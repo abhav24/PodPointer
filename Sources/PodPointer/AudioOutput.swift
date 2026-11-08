@@ -45,3 +45,31 @@ enum AudioOutput {
         return devices
     }
 
+    private static func hasOutput(_ device: AudioDeviceID) -> Bool {
+        var address = address(kAudioDevicePropertyStreams, scope: kAudioObjectPropertyScopeOutput)
+        var size: UInt32 = 0
+        return AudioObjectGetPropertyDataSize(device, &address, 0, nil, &size) == noErr && size > 0
+    }
+
+    private static func name(of device: AudioDeviceID) -> String? {
+        var address = address(kAudioObjectPropertyName)
+        var size = UInt32(MemoryLayout<Unmanaged<CFString>?>.size)
+        var name: Unmanaged<CFString>?
+        guard AudioObjectGetPropertyData(device, &address, 0, nil, &size, &name) == noErr else { return nil }
+        return name?.takeRetainedValue() as String?
+    }
+
+    private static func read<Value: FixedWidthInteger>(_ selector: AudioObjectPropertySelector, of object: AudioObjectID) -> Value? {
+        var address = address(selector)
+        var size = UInt32(MemoryLayout<Value>.size)
+        var value: Value = 0
+        return AudioObjectGetPropertyData(object, &address, 0, nil, &size, &value) == noErr ? value : nil
+    }
+
+    private static func address(
+        _ selector: AudioObjectPropertySelector,
+        scope: AudioObjectPropertyScope = kAudioObjectPropertyScopeGlobal
+    ) -> AudioObjectPropertyAddress {
+        AudioObjectPropertyAddress(mSelector: selector, mScope: scope, mElement: kAudioObjectPropertyElementMain)
+    }
+}
