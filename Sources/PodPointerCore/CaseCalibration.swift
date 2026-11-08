@@ -143,3 +143,52 @@ public struct CalibrationSession: Sendable {
         progress = min(elapsed / Self.sweepSeconds, 1)
         guard elapsed >= Self.sweepSeconds else { return .inProgress }
 
+        guard sweepSamples.count >= Self.minimumSweepSamples else { return .failed(.tooLittleMovement) }
+        guard let axis = Self.principalAxis(of: sweepSamples) else { return .failed(.unclearMovement) }
+        sweepSamples.removeAll()
+
+        if step == .sweepSideways {
+            horizontalAxis = axis
+            advance(to: .sweepVertically)
+            return .inProgress
+        }
+
+        // Remove any part of the vertical axis that also means "sideways".
+        let separated = axis - horizontalAxis * axis.dot(horizontalAxis)
+        guard separated.magnitude >= Self.minimumAxisSeparation else { return .failed(.axesTooSimilar) }
+        verticalAxis = separated.normalized
+        advance(to: .tap)
+        return .inProgress
+    }
+
+    private mutating func processTap(impulse: Double, time: Double, elapsed: Double) -> CalibrationStatus {
+        if let peak = currentPeak {
+            if time - currentPeakStart <= Self.tapPeakSeconds {
+                currentPeak = max(peak, impulse)
+            } else {
+                tapPeaks.append(peak)
+                currentPeak = nil
+                tapsFound = tapPeaks.count
+            }
+        } else if impulse >= max(noiseFloor * 2, 0.02), time - currentPeakStart >= Self.tapSpacingSeconds {
+            currentPeak = impulse
+            currentPeakStart = time
+        }
+
+        progress = Double(min(tapPeaks.count, Self.requiredTaps)) / Double(Self.requiredTaps)
+        guard tapPeaks.count >= Self.requiredTaps || elapsed >= Self.tapTimeoutSeconds else {
+            return .inProgress
+        }
+        guard tapPeaks.count >= Self.minimumTaps else { return .failed(.tooFewTaps) }
+
+        let median = tapPeaks.sorted()[tapPeaks.count / 2]
+        guard median > noiseFloor * 1.5 else { return .failed(.tapsTooWeak) }
+        return .finished(CaseCalibration(
+            horizontalAxis: horizontalAxis,
+            verticalAxis: verticalAxis,
+            gyroBias: gyroBias,
+            tapThreshold: max(median * 0.6, noiseFloor * 1.5),
+            sensorLocation: sensorLocation
+        ))
+    }
+
