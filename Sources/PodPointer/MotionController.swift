@@ -45,3 +45,20 @@ final class MotionController: NSObject, CMHeadphoneMotionManagerDelegate {
         }
     }
 
+    func headphoneMotionManagerDidConnect(_ manager: CMHeadphoneMotionManager) {
+        DispatchQueue.main.async { self.onConnectionChange?(true) }
+    }
+
+    func headphoneMotionManagerDidDisconnect(_ manager: CMHeadphoneMotionManager) {
+        DispatchQueue.main.async { self.onConnectionChange?(false) }
+    }
+
+    private static func describe(_ location: CMDeviceMotion.SensorLocation) -> String {
+        switch location {
+        case .default: "default"
+        case .headphoneLeft: "left"
+        case .headphoneRight: "right"
+        @unknown default: "unknown"
+        }
+    }
+}
