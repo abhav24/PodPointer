@@ -260,3 +260,54 @@ struct CaseCheckPage: View {
         }
     }
 
+    private var motionLost: some View {
+        page(3, symbol: "exclamationmark.triangle", title: "Your AirPods stopped sending motion", detail: "This continues by itself as soon as motion comes back.") {
+            InstructionList(items: [
+                "Make sure the case lid is open.",
+                "Make sure the AirPods are still connected to this Mac.",
+                "Check that Automatic Ear Detection is off."
+            ])
+            if model.airPodsAudioFound, !model.soundUsesAirPods {
+                Button("Use AirPods for Sound") { model.useAirPodsForSound() }
+                    .controlSize(.large)
+            }
+            Toggle("Keep the audio connection active", isOn: $model.keepsAudioActive)
+                .toggleStyle(.switch)
+            Text("Turn this on if motion keeps stopping. It plays silence through your AirPods.")
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+            Button("Check Ear Detection Again") { model.returnToEarDetection() }
+                .controlSize(.large)
+            WaitingLabel(text: "Waiting for motion")
+        }
+    }
+
+    @ViewBuilder
+    private var calibration: some View {
+        if let step = model.calibrationStep {
+            page(4, symbol: calibrationSymbol(for: step), title: calibrationTitle(for: step), detail: calibrationDetail(for: step)) {
+                ProgressView(value: model.calibrationProgress)
+                Text("Hold the case the way you'll use it. This teaches PodPointer your grip.")
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        } else {
+            page(4, symbol: "arrow.clockwise", title: "Let's try that again", detail: model.calibrationMessage) {
+                PrimaryButton("Try Again") { model.startCalibration() }
+            }
+        }
+    }
+
+    private func calibrationSymbol(for step: CalibrationStep) -> String {
+        if model.calibrationIsSettling { return "hand.raised" }
+        switch step {
+        case .holdStill: return "hand.raised"
+        case .sweepSideways: return "arrow.left.and.right"
+        case .turnRight: return "arrow.right"
+        case .sweepVertically: return "arrow.up.and.down"
+        case .turnUp: return "arrow.up"
+        case .tap: return "hand.tap"
+        }
+    }
+
