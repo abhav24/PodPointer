@@ -311,3 +311,52 @@ struct CaseCheckPage: View {
         }
     }
 
+    private func calibrationTitle(for step: CalibrationStep) -> String {
+        if model.calibrationIsSettling { return "Hold still for a moment" }
+        switch step {
+        case .holdStill: return "Hold the case still"
+        case .sweepSideways: return "Sweep side to side"
+        case .turnRight: return "Turn the case right, then stop"
+        case .sweepVertically: return "Sweep up and down"
+        case .turnUp: return "Tilt the case up, then stop"
+        case .tap: return "Tap the case \(CalibrationSession.requiredTaps) times"
+        }
+    }
+
+    private func calibrationDetail(for step: CalibrationStep) -> String {
+        if model.calibrationIsSettling { return "The next instruction appears when your hand stops." }
+        switch step {
+        case .holdStill:
+            return "Keep your hand steady for a couple of seconds."
+        case .sweepSideways:
+            return "Point the case at the screen, then turn your wrist smoothly left and right until this bar fills."
+        case .turnRight:
+            return "Turn your wrist to the right and hold it there. This shows which way is right."
+        case .sweepVertically:
+            return "Tilt your wrist smoothly up and down until this bar fills."
+        case .turnUp:
+            return "Tilt your wrist upward and hold it there. This shows which way is up."
+        case .tap:
+            return
+            "Hold still and tap the case with a finger. Leave a short pause between taps. Taps so far: \(model.calibrationTaps)"
+        }
+    }
+
+    @ViewBuilder
+    private func tapTest(_ check: CaseCheck) -> some View {
+        if let prompt = check.tapPromptNumber(at: model.checkClock) {
+            page(5, symbol: "hand.tap", title: "Tap once now", detail: "Tap once each time the number changes, holding still in between.") {
+                Text("\(prompt)")
+                    .font(.system(size: 72, weight: .bold, design: .rounded))
+                    .monospacedDigit()
+                ProgressView(value: Double(prompt), total: Double(CaseCheck.tapPrompts))
+                Text("Taps counted: \(check.results.tapsHit) of \(CaseCheck.tapPrompts)")
+                    .foregroundStyle(.secondary)
+            }
+        } else {
+            page(5, symbol: "hand.tap", title: "Get ready to tap", detail: "A number will appear \(CaseCheck.tapPrompts) times. Tap the case once for each number, holding still in between.") {
+                countdown(Int(check.secondsUntilTapsStart(at: model.checkClock).rounded(.up)), label: "starting in")
+            }
+        }
+    }
+
