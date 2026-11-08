@@ -83,31 +83,41 @@ public struct TapDetector: Sendable {
     private var previousTime = -Double.infinity
     private var shake = 0.0
     private var lastTapTime = -Double.infinity
+    private var lastTapStrength = 0.0
     private var tapsInGroup = 0
-    private var recentJolts: [(time: Double, jolt: Double)] = []
-    private var recentRotation: [(time: Double, speed: Double)] = []
+    private var candidate: Candidate?
+    private var calmSamples: [CalmSample] = []
+    private var jolts: [(time: Double, jolt: Double)] = []
 
     public init(threshold: Double) {
         self.threshold = threshold
     }
 
-    /// Returns true on the sample where a tap begins.
-    public mutating func process(acceleration: Vector3, rotationSpeed: Double, at time: Double) -> Bool {
+    /// True while a jolt is being checked. The pointer should wait for the result.
+    public var isChecking: Bool { candidate != nil }
+
+    /// Returns a tap on the sample where it's confirmed.
+    public mutating func process(acceleration: Vector3, rotation: Vector3, at time: Double) -> DetectedTap? {
         defer {
             previousAcceleration = acceleration
             previousTime = time
         }
         guard let previous = previousAcceleration, time - previousTime < Self.resetGapSeconds else {
             shake = 0
-            recentJolts.removeAll()
-            recentRotation.removeAll()
-            return false
+            candidate = nil
+            calmSamples.removeAll()
+            jolts.removeAll()
+            return nil
         }
 
         let jolt = (acceleration - previous).magnitude
-        shake *= exp(-(time - previousTime) / Self.shakeFadeSeconds)
-        recentJolts.removeAll { time - $0.time > Self.movementWindowSeconds }
-        recentRotation.removeAll { time - $0.time > Self.rotationWindowSeconds }
+        let elapsed = time - previousTime
+        let rotationSpeed = rotation.magnitude
+        let accelerationSize = acceleration.magnitude
+        shake *= exp(-elapsed / Self.shakeFadeSeconds)
+        jolts.removeAll { time - $0.time > Self.joltHistorySeconds }
+        jolts.append((time, jolt))
+        calmSamples.removeAll { time - $0.time > Self.calmWindowSeconds }
 
         // Triple is the longest gesture, so a fourth tap gets the normal checks.
         // Otherwise, one false tap while moving could set off a chain of them.
