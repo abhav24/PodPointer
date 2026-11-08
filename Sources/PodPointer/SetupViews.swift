@@ -103,3 +103,103 @@ struct WaitingLabel: View {
     }
 }
 
+struct WelcomePage: View {
+    @ObservedObject var model: AppModel
+
+    var body: some View {
+        SetupPage(
+            symbol: "airpodspro.chargingcase.wireless",
+            title: "Turn your AirPods case into a remote",
+            detail: "Point the case at your screen and tap it to control your slides or your Mac."
+        ) {
+            VStack(alignment: .leading, spacing: 14) {
+                feature("scope", "Rotate the case to move a laser dot or your cursor.")
+                feature("hand.tap", "Tap the case to change slides or click.")
+                feature("checkmark.seal", "Setup takes about 6 minutes and tests that it works.")
+            }
+            Text("You'll need your AirPods and their case. PodPointer will ask to use motion data from your AirPods. That data stays on this Mac.")
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
+            PrimaryButton("Get Started") { model.beginSetup() }
+        }
+    }
+
+    private func feature(_ symbol: String, _ text: String) -> some View {
+        Label {
+            Text(text)
+                .fixedSize(horizontal: false, vertical: true)
+        } icon: {
+            Image(systemName: symbol)
+                .foregroundStyle(.tint)
+                .frame(width: 24)
+        }
+    }
+}
+
+struct CaseCheckPage: View {
+    @ObservedObject var model: AppModel
+
+    var body: some View {
+        if let check = model.check {
+            page(for: check)
+        }
+    }
+
+    @ViewBuilder
+    private func page(for check: CaseCheck) -> some View {
+        switch check.step {
+        case .connect:
+            connect
+        case .earDetection:
+            earDetection
+        case .placeInCase:
+            page(3, symbol: "airpodspro.chargingcase.wireless", title: "Put your AirPods in the case") {
+                InstructionList(items: [
+                    "Put both AirPods in the case.",
+                    "Leave the lid open. Closing it disconnects them.",
+                    "Keep the case in your hand."
+                ])
+                PrimaryButton("They're in the Case") { model.confirmInCase() }
+            }
+        case .watchingCase:
+            page(3, symbol: "move.3d", title: "Move the case around", detail: "Rotate it in your hand for a moment to confirm the AirPods are still sending motion.") {
+                WaitingLabel(text: "Waiting for the case to move")
+            }
+        case .motionLost:
+            motionLost
+        case .calibrate:
+            calibration
+        case .tapTest:
+            tapTest(check)
+        case .gestureTest:
+            gestureTest(check)
+        case .moveTest:
+            page(7, symbol: "hand.wave", title: "Wave the case. Don't tap it.", detail: "This checks that normal movement isn't mistaken for a tap.") {
+                countdown(Int(check.moveSecondsLeft(at: model.checkClock).rounded(.up)), label: "seconds left")
+                Text("Mistaken taps so far: \(check.results.falseTapsWhileMoving)")
+                    .foregroundStyle(.secondary)
+            }
+        case .pointTest:
+            page(8, symbol: "scope", title: "Aim at the green ring", detail: nil) {
+                InstructionList(items: [
+                    "Find the red dot and the green ring on your screen.",
+                    "Rotate the case until the dot is inside the ring.",
+                    "Hold still and tap the case."
+                ])
+                Text("Ring \(check.targetIndex + 1) of \(CaseCheck.targets.count) · Hits: \(check.results.targetsHit)")
+                    .font(.headline)
+                Text("If the dot reaches the edge of your screen, keep rotating to reposition your aim. Each ring moves on after 15 seconds.")
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
+                Toggle("Flip up and down", isOn: $model.pointerConfiguration.invertVertical)
+                    .toggleStyle(.switch)
+                Toggle("Flip left and right", isOn: $model.pointerConfiguration.invertHorizontal)
+                    .toggleStyle(.switch)
+            }
+        case .results:
+            results(check.results)
+        }
+    }
+
