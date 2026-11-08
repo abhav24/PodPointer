@@ -63,16 +63,11 @@ public struct CaseInputProcessor: Sendable {
             engine.rollBack(from: time)
             holdUntil = time + Self.holdAfterTapSeconds
             gesture = sequence.registerTap(at: time)
-        case .rejected:
-            isHolding = false
-        }
-        if isHolding, time >= holdUntil {
-            isHolding = false
         }
         gesture = gesture ?? sequence.poll(at: time)
 
         let point: PointerPoint
-        if isHolding {
+        if time < holdUntil {
             point = engine.hold(at: time)
         } else {
             point = engine.advance(
@@ -81,7 +76,7 @@ public struct CaseInputProcessor: Sendable {
                 at: time
             )
         }
-        return CaseOutput(point: point, gesture: gesture)
+        return CaseOutput(point: point, gesture: gesture, tapped: tapped)
     }
 
     public mutating func setPosition(_ point: PointerPoint) {
