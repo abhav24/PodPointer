@@ -49,3 +49,57 @@ struct SetupPage<Content: View>: View {
     }
 }
 
+/// Numbered instructions.
+struct InstructionList: View {
+    let items: [String]
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            ForEach(Array(items.enumerated()), id: \.offset) { index, item in
+                HStack(alignment: .firstTextBaseline, spacing: 10) {
+                    Text("\(index + 1).")
+                        .fontWeight(.semibold)
+                        .monospacedDigit()
+                    Text(item)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+}
+
+struct PrimaryButton: View {
+    let title: String
+    let action: () -> Void
+
+    init(_ title: String, action: @escaping () -> Void) {
+        self.title = title
+        self.action = action
+    }
+
+    var body: some View {
+        Button(action: action) {
+            Text(title)
+                .frame(minWidth: 180)
+        }
+        .buttonStyle(.borderedProminent)
+        .controlSize(.large)
+        .keyboardShortcut(.defaultAction)
+    }
+}
+
+/// Shows what the app is waiting for, so a still screen doesn't look stuck.
+struct WaitingLabel: View {
+    let text: String
+
+    var body: some View {
+        HStack(spacing: 8) {
+            ProgressView()
+                .controlSize(.small)
+            Text(text)
+                .foregroundStyle(.secondary)
+        }
+    }
+}
+
