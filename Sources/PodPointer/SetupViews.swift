@@ -360,3 +360,56 @@ struct CaseCheckPage: View {
         }
     }
 
+    @ViewBuilder
+    private func gestureTest(_ check: CaseCheck) -> some View {
+        let number = "\(check.gestureIndex + 1) of \(CaseCheck.gesturePrompts.count)"
+        if let prompt = check.gesturePrompt(at: model.checkClock) {
+            page(6, symbol: "hand.tap", title: gestureTitle(for: prompt), detail: "Keep the taps quick and even, then hold still.") {
+                gestureAnswer(check.lastGestureAnswer)
+                Text("Prompt \(number) · Correct: \(check.results.gesturesHit)")
+                    .foregroundStyle(.secondary)
+            }
+        } else {
+            page(6, symbol: "hand.tap", title: "Get ready", detail: "You'll be asked for single, double, and triple taps in a mixed order.") {
+                gestureAnswer(check.lastGestureAnswer)
+                Text("Prompt \(number) · Correct: \(check.results.gesturesHit)")
+                    .foregroundStyle(.secondary)
+            }
+        }
+    }
+
+    private func gestureTitle(for gesture: CaseGesture) -> String {
+        switch gesture {
+        case .single: "Tap once"
+        case .double: "Double-tap"
+        case .triple: "Triple-tap"
+        }
+    }
+
+    @ViewBuilder
+    private func gestureAnswer(_ answer: GestureAnswer?) -> some View {
+        switch answer {
+        case .correct:
+            Label("Correct", systemImage: "checkmark.circle.fill")
+                .foregroundStyle(.green)
+        case let .recognized(gesture):
+            Label("That counted as: \(gestureTitle(for: gesture).lowercased())", systemImage: "exclamationmark.triangle.fill")
+                .foregroundStyle(.orange)
+        case .nothing:
+            Label("No taps counted", systemImage: "exclamationmark.triangle.fill")
+                .foregroundStyle(.orange)
+        case nil:
+            EmptyView()
+        }
+    }
+
+    private func countdown(_ value: Int, label: String) -> some View {
+        VStack(spacing: 4) {
+            Text("\(value)")
+                .font(.system(size: 72, weight: .bold, design: .rounded))
+                .monospacedDigit()
+            Text(label)
+                .foregroundStyle(.secondary)
+        }
+    }
+
