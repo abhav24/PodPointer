@@ -1,23 +1,27 @@
 # PodPointer
 
-Use your AirPods as a hands-free slide clicker and laser pointer for your Mac.
+Point your AirPods case at the screen and tap it. PodPointer turns the case into a presentation remote and air mouse for your Mac.
 
-Turn your head to move a laser dot over your slides. Press an AirPods stem to change slides.
+> **Status: early and not yet proven on real hardware.** The logic has unit tests, but the full experience hasn't been confirmed with AirPods. [Help test it](docs/TESTING.md).
 
-> **Status: early test app.** This release exists to find out whether the idea holds up on real hardware. Motion and stem-press behavior have not been confirmed on AirPods yet, and [you can help test it](docs/TESTING.md).
+## How it works
 
-## What it does
+The AirPods inside the case have motion sensors. When you move the case, they move with it, so PodPointer reads their motion through Apple's public `CMHeadphoneMotionManager` API.
 
-| Your AirPods | Your Mac |
-|---|---|
-| Turn or tilt your head | Moves a laser dot or the mouse cursor |
-| Press the stem once | Next slide (Right Arrow) |
-| Press the stem twice | Recenter the pointer |
-| Press the stem three times | Previous slide (Left Arrow) |
+- **Pointing:** rotating the case moves a pointer, the way moving a mouse moves the cursor.
+- **Tapping:** a short jolt while your hand is steady counts as a tap.
+- **Calibration:** the AirPods can sit at any angle in your hand, so a short setup learns which movement means right and up, and how hard you tap.
 
-The app also shows live motion measurements and can copy a test report to paste into an issue.
+Read more in [how it works](docs/HOW-IT-WORKS.md).
 
-**The AirPods case isn't part of this.** I found no developer access to motion data from the case, so it can't work as a mouse. See [feasibility notes](docs/FEASIBILITY.md).
+## Controls
+
+| Case | Presenter mode | Mouse mode |
+|---|---|---|
+| Rotate | Moves a laser dot | Moves the cursor |
+| Tap | Next slide | Click |
+| Double-tap | Previous slide | Double-click |
+| Triple-tap | Turns the laser dot on or off | Pauses or resumes the cursor |
 
 ## Requirements
 
