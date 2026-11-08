@@ -162,3 +162,65 @@ public struct CaseCheck: Equatable, Sendable {
         results = CaseCheckResults()
     }
 
+    /// Repeats the scored tests with the current calibration, after adjusting settings.
+    public mutating func restartTests(at time: Double) {
+        guard step == .results else { return }
+        lastSampleTime = max(lastSampleTime, time)
+        step = .calibrate
+        calibrationFinished(at: time)
+    }
+
+    public mutating func registerTap(at time: Double, point: PointerPoint, aspectRatio: Double) {
+        switch step {
+        case .tapTest:
+            guard let prompt = tapPromptNumber(at: time) else { return }
+            if promptsHit.insert(prompt).inserted {
+                results.tapsHit += 1
+            } else {
+                results.extraTaps += 1
+            }
+        case .moveTest:
+            results.falseTapsWhileMoving += 1
+        case .pointTest:
+            let target = Self.targets[targetIndex]
+            let horizontal = (point.x - target.x) * aspectRatio
+            let vertical = point.y - target.y
+            guard (horizontal * horizontal + vertical * vertical).squareRoot() <= Self.targetRadius else { return }
+            results.targetsHit += 1
+            advanceTarget(at: time)
+        default:
+            break
+        }
+    }
+
+    public mutating func tick(at time: Double) {
+        switch step {
+        case .watchingCase, .calibrate, .tapTest, .gestureTest, .moveTest, .pointTest:
+            if time - max(lastSampleTime, step == .watchingCase ? stepStart : -Double.infinity) >= Self.motionLostSeconds {
+                step = .motionLost
+                return
+            }
+        default:
+            return
+        }
+
+        switch step {
+        case .tapTest where time >= stepStart + Double(Self.tapPrompts) * Self.tapIntervalSeconds:
+            step = .gestureTest
+            gestureIndex = 0
+            gesturePromptStart = time + Self.getReadySeconds
+            lastGestureAnswer = nil
+        case .gestureTest where time >= gesturePromptStart + Self.gestureTimeoutSeconds:
+            lastGestureAnswer = .nothing
+            advanceGesture(at: time)
+        case .moveTest where time >= stepStart + Self.moveSeconds:
+            step = .pointTest
+            targetIndex = 0
+            targetStart = time
+        case .pointTest where time >= targetStart + Self.targetTimeoutSeconds:
+            advanceTarget(at: time)
+        default:
+            break
+        }
+    }
+
