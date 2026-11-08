@@ -218,3 +218,54 @@ final class AppModel: ObservableObject {
         }
     }
 
+    private func moveCursor(to point: PointerPoint) {
+        let bounds = CGDisplayBounds(selectedDisplayID)
+        CGWarpMouseCursorPosition(CGPoint(
+            x: bounds.minX + point.x * (bounds.width - 1),
+            y: bounds.minY + point.y * (bounds.height - 1)
+        ))
+    }
+
+    private func checkHealth() {
+        hasAccessibility = KeySender.isTrusted
+        permission = motion.authorizationDescription
+
+        // Warping creates no mouse events, so a recent one means someone moved a real mouse.
+        // The grace period allows for the mouse movement that selected this mode.
+        if pointerMode == .cursor,
+           Date().timeIntervalSince(pointerModeChangeDate) > Self.cursorGraceSeconds,
+           CGEventSource.secondsSinceLastEventType(.hidSystemState, eventType: .mouseMoved) < 0.25 {
+            setPointerMode(.off)
+            addLog("Real mouse moved, so head control turned off")
+        }
+
+        guard let lastSampleDate, !isStale else { return }
+        if Date().timeIntervalSince(lastSampleDate) > Self.staleSampleSeconds {
+            isStale = true
+            tracker.reset()
+            rate = .empty
+            addLog("Motion samples stopped")
+            overlay.hide()
+        }
+    }
+
+    private func showOverlayIfNeeded() {
+        guard pointerMode == .laser, !isStale,
+              let screen = NSScreen.screens.first(where: { Self.displayID(of: $0) == selectedDisplayID }) else {
+            overlay.hide()
+            return
+        }
+        overlay.show(on: screen)
+    }
+
+    private func addLog(_ message: String) {
+        log.append("\(Self.timeFormat.string(from: Date())) \(message)")
+        if log.count > Self.maxLogLines {
+            log.removeFirst(log.count - Self.maxLogLines)
+        }
+    }
+
+    private static func displayID(of screen: NSScreen) -> CGDirectDisplayID? {
+        screen.deviceDescription[NSDeviceDescriptionKey("NSScreenNumber")] as? CGDirectDisplayID
+    }
+}
