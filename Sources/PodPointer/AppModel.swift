@@ -327,6 +327,7 @@ final class AppModel: ObservableObject {
             sensorLocations: sensorLocationsSeen,
             isCalibrated: isCalibrated,
             gestureCounts: gestureCounts,
+            checkResults: lastCheckResults,
             events: log
         )
         NSPasteboard.general.clearContents()
@@ -344,6 +345,8 @@ final class AppModel: ObservableObject {
         }
         noteSensor(location)
         publishStats(for: reading)
+        liveCheck?.processMotion(rotationSpeed: reading.rotationRate.magnitude, at: Self.now)
+        recorder.record(reading)
 
         if calibrationSession != nil {
             continueCalibration(with: reading)
@@ -353,7 +356,13 @@ final class AppModel: ObservableObject {
         let output = current.process(reading)
         processor = current
         targetPoint = output.point
+        if output.tapped {
+            recorder.mark("tap", at: reading.timestamp)
+            liveCheck?.registerTap(at: Self.now, point: output.point, aspectRatio: pointerConfiguration.aspectRatio)
+        }
         if let gesture = output.gesture {
+            recorder.mark("gesture:\(gesture.rawValue)", at: reading.timestamp)
+            liveCheck?.registerGesture(gesture, at: Self.now)
             perform(gesture)
         }
     }
@@ -394,6 +403,7 @@ final class AppModel: ObservableObject {
         calibrationStep = session.step
         calibrationProgress = session.progress
         calibrationTaps = session.tapsFound
+        calibrationIsSettling = session.isSettling
 
         switch status {
         case .inProgress:
@@ -404,6 +414,7 @@ final class AppModel: ObservableObject {
             use(result)
             save(result)
             calibrationMessage = "Calibrated. Choose a mode to start."
+            liveCheck?.calibrationFinished(at: Self.now)
             addLog(String(format: "Calibrated on the %@ AirPod, tap threshold %.2f g", result.sensorLocation, result.tapThreshold))
         case let .failed(failure):
             calibrationSession = nil
@@ -415,6 +426,11 @@ final class AppModel: ObservableObject {
 
     private func perform(_ gesture: CaseGesture) {
         gestureCounts[gesture, default: 0] += 1
+        // Taps during the case check are scored, and shouldn't control anything.
+        if let step = liveCheck?.step, step != .results {
+            addLog("Tap: \(gesture.rawValue)")
+            return
+        }
         guard let action = CaseAction(gesture: gesture, mode: mode) else {
             addLog("Tap: \(gesture.rawValue)")
             return
