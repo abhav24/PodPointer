@@ -1,13 +1,14 @@
 import Foundation
 
-/// The results of a test session, formatted for pasting into a GitHub issue.
-/// It holds no device names, because macOS AirPods names often include a person's name.
+/// Test results formatted for a GitHub issue. It leaves out the AirPods' name,
+/// which often includes a person's name.
 public struct SessionReport: Sendable {
     public var appVersion: String
     public var macOSVersion: String
     public var motion: SampleRateSnapshot
     public var sensorLocations: [String]
-    public var pressCounts: [StemPress: Int]
+    public var isCalibrated: Bool
+    public var gestureCounts: [CaseGesture: Int]
     public var events: [String]
 
     public init(
@@ -15,21 +16,23 @@ public struct SessionReport: Sendable {
         macOSVersion: String,
         motion: SampleRateSnapshot,
         sensorLocations: [String],
-        pressCounts: [StemPress: Int],
+        isCalibrated: Bool,
+        gestureCounts: [CaseGesture: Int],
         events: [String]
     ) {
         self.appVersion = appVersion
         self.macOSVersion = macOSVersion
         self.motion = motion
         self.sensorLocations = sensorLocations
-        self.pressCounts = pressCounts
+        self.isCalibrated = isCalibrated
+        self.gestureCounts = gestureCounts
         self.events = events
     }
 
     public var markdown: String {
         let locations = sensorLocations.isEmpty ? "none" : sensorLocations.joined(separator: ", ")
-        let presses = StemPress.allCases
-            .map { "\($0.rawValue): \(pressCounts[$0, default: 0])" }
+        let gestures = CaseGesture.allCases
+            .map { "\($0.rawValue): \(gestureCounts[$0, default: 0])" }
             .joined(separator: ", ")
         return """
         ## PodPointer test report
@@ -41,10 +44,10 @@ public struct SessionReport: Sendable {
 
         ### Measured
         - Motion rate: \(String(format: "%.1f", motion.hertz)) Hz
-        - p95 sample interval: \(String(format: "%.0f", motion.p95IntervalMilliseconds)) ms
-        - Longest gap in the last window: \(String(format: "%.0f", motion.maxGapMilliseconds)) ms
-        - Sensor locations seen: \(locations)
-        - Stem presses received: \(presses)
+        - Longest gap: \(String(format: "%.0f", motion.longestGapMilliseconds)) ms
+        - AirPods sending motion: \(locations)
+        - Calibrated: \(isCalibrated ? "yes" : "no")
+        - Taps detected: \(gestures)
 
         ### Results (fill in)
         - Stem presses work while slides are in front: yes / no
