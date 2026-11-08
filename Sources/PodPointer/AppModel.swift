@@ -151,3 +151,70 @@ final class AppModel: ObservableObject {
         addLog("Copied test report")
     }
 
+    private func handle(_ sample: MotionSample) {
+        tracker.record(sample.timestamp)
+        lastSampleDate = Date()
+        if sample.sensorLocation != sensorLocation {
+            sensorLocation = sample.sensorLocation
+            if !sensorLocations.contains(sample.sensorLocation) {
+                sensorLocations.append(sample.sensorLocation)
+            }
+            addLog("Motion sensor: \(sample.sensorLocation)")
+        }
+
+        let point = mapper.map(yawRadians: sample.yaw, pitchRadians: sample.pitch, at: sample.timestamp)
+        switch pointerMode {
+        case .off:
+            break
+        case .laser:
+            overlay.move(to: point)
+        case .cursor:
+            moveCursor(to: point)
+        }
+        if isStale {
+            isStale = false
+            addLog("Motion samples started")
+            showOverlayIfNeeded()
+        }
+
+        // The pointer updates on every sample, but the window only needs a few updates a second.
+        let now = Date()
+        guard now.timeIntervalSince(lastPublishDate) >= 0.2 else { return }
+        lastPublishDate = now
+        rate = tracker.snapshot
+        attitude = String(
+            format: "yaw %.0f°, pitch %.0f°, roll %.0f°",
+            sample.yaw * 180 / .pi,
+            sample.pitch * 180 / .pi,
+            sample.roll * 180 / .pi
+        )
+    }
+
+    private func handle(_ press: StemPress) {
+        guard debouncer.shouldAccept(press, at: ProcessInfo.processInfo.systemUptime) else { return }
+        pressCounts[press, default: 0] += 1
+        let action = StemAction(press: press)
+        hasAccessibility = KeySender.isTrusted
+
+        switch action {
+        case .recenter:
+            mapper.recenter()
+            addLog("Stem press: double, recentered")
+        case .nextSlide, .previousSlide:
+            guard sendsSlideKeys else {
+                addLog("Stem press: \(press.rawValue), would send \(action.rawValue) (sending is off)")
+                return
+            }
+            guard hasAccessibility else {
+                addLog("Stem press: \(press.rawValue), not sent because Accessibility is off")
+                return
+            }
+            if action == .nextSlide {
+                KeySender.nextSlide()
+            } else {
+                KeySender.previousSlide()
+            }
+            addLog("Stem press: \(press.rawValue), sent \(action.rawValue)")
+        }
+    }
+
