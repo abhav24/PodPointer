@@ -119,6 +119,84 @@ public struct TapDetector: Sendable {
         jolts.append((time, jolt))
         calmSamples.removeAll { time - $0.time > Self.calmWindowSeconds }
 
+        let tap = checkCandidate(
+            jolt: jolt,
+            rotation: rotation,
+            rotationSpeed: rotationSpeed,
+            accelerationSize: accelerationSize,
+            elapsed: elapsed,
+            at: time
+        )
+
+        if candidate == nil, joltCouldBeTap(jolt, at: time) {
+            candidate = Candidate(
+                time: time,
+                turn: rotation * elapsed,
+                peakRotation: rotationSpeed,
+                peakAcceleration: accelerationSize,
+                peakJolt: jolt
+            )
+        }
+        shake = max(shake, jolt)
+
+        let hasSettled = candidate == nil && time - lastTapTime >= Self.afterTapSettleSeconds
+        if hasSettled || tapsInGroup >= Self.longestTapGroup {
+            calmSamples.append(CalmSample(time: time, jolt: jolt, acceleration: accelerationSize, rotation: rotationSpeed))
+        }
+        return tap
+    }
+
+    /// False if the case kept jolting since `time`, which means it's being shaken.
+    public func hasSettled(since time: Double) -> Bool {
+        let recent = jolts.filter { $0.time >= time }
+        guard !recent.isEmpty else { return true }
+        let average = recent.reduce(0) { $0 + $1.jolt } / Double(recent.count)
+        return average <= threshold * Self.calmJoltRatio
+    }
+
+    private mutating func checkCandidate(
+        jolt: Double,
+        rotation: Vector3,
+        rotationSpeed: Double,
+        accelerationSize: Double,
+        elapsed: Double,
+        at time: Double
+    ) -> DetectedTap? {
+        guard var current = candidate else { return nil }
+        current.turn = current.turn + rotation * elapsed
+        current.peakRotation = max(current.peakRotation, rotationSpeed)
+        current.peakAcceleration = max(current.peakAcceleration, accelerationSize)
+        if time - current.time <= Self.peakJoltSeconds {
+            current.peakJolt = max(current.peakJolt, jolt)
+        }
+
+        // Most movement fails within a few samples, so the pointer barely waits.
+        guard current.peakRotation <= Self.tapRotationLimit,
+              current.peakAcceleration <= Self.tapAccelerationLimit,
+              current.turn.magnitude <= Self.tapTurnLimitRadians else {
+            candidate = nil
+            return nil
+        }
+        guard time - current.time >= Self.confirmSeconds else {
+            candidate = current
+            return nil
+        }
+
+        candidate = nil
+        guard current.peakJolt >= current.peakAcceleration * Self.minimumSharpness else { return nil }
+        let isBounce = current.time - lastTapTime < Self.bounceSeconds
+            && current.peakJolt < lastTapStrength * Self.bounceStrengthRatio
+        guard !isBounce else { return nil }
+        tapsInGroup = current.time - lastTapTime < Self.tapGroupSeconds ? tapsInGroup + 1 : 1
+        lastTapTime = current.time
+        lastTapStrength = current.peakJolt
+        return DetectedTap(time: current.time, strength: current.peakJolt)
+    }
+
+    private func joltCouldBeTap(_ jolt: Double, at time: Double) -> Bool {
+        guard jolt >= threshold,
+              time - lastTapTime >= Self.minimumTapSpacing,
+              jolt >= shake * Self.aboveShakeRatio else { return false }
         // Triple is the longest gesture, so a fourth tap gets the normal checks.
         // Otherwise, one false tap while moving could set off a chain of them.
         let isInTapGroup = time - lastTapTime < Self.tapGroupSeconds && tapsInGroup < Self.longestTapGroup
