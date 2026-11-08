@@ -48,13 +48,36 @@ public struct TapDetector: Sendable {
     private static let bounceStrengthRatio = 0.4
     /// Motion right after a tap is shake from the tap, not the hand moving.
     private static let afterTapSettleSeconds = 0.25
-    /// Fast rotation means the hand is moving, so a jolt probably isn't a tap.
-    private static let movingRotationLimit = 1.5
-    private static let rotationWindowSeconds = 0.25
+    private static let calmWindowSeconds = 0.25
+    /// Too little history can't show that the case was calm.
+    private static let minimumCalmSeconds = 0.2
+    /// The first samples of a tap can come before the jolt crosses the threshold.
+    private static let onsetSeconds = 0.04
+    private static let calmRotationLimit = 2.0
+    private static let calmAccelerationLimit = 0.15
+    /// As a share of the threshold. Any repeating motion strong enough to reach
+    /// the threshold averages about 0.64 of it, so it fails this check.
+    private static let calmJoltRatio = 0.5
     /// Within a tap group, the shake from earlier taps is expected.
     private static let tapGroupSeconds = 0.7
     private static let longestTapGroup = 3
     private static let resetGapSeconds = 0.5
+    private static let joltHistorySeconds = 0.5
+
+    private struct Candidate {
+        let time: Double
+        var turn: Vector3
+        var peakRotation: Double
+        var peakAcceleration: Double
+        var peakJolt: Double
+    }
+
+    private struct CalmSample {
+        let time: Double
+        let jolt: Double
+        let acceleration: Double
+        let rotation: Double
+    }
 
     private var previousAcceleration: Vector3?
     private var previousTime = -Double.infinity
