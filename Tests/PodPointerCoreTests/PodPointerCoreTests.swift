@@ -694,12 +694,12 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
 
     @Test func sensitivityChangesWhatCountsAsATap() {
         func gestureCount(sensitivity: Double) -> Int {
-            var processor = CaseInputProcessor(calibration: calibration(tapThreshold: 0.6))
+            var processor = CaseInputProcessor(calibration: calibration(tapThreshold: 0.12))
             processor.tapSensitivity = sensitivity
             var count = 0
             for index in 0..<80 {
                 let output = processor.process(reading(
-                    acceleration: Vector3(x: index == 20 ? 0.4 : 0, y: 0, z: 0),
+                    acceleration: Vector3(x: index == 20 ? 0.12 : 0, y: 0, z: 0),
                     at: Double(index) * sampleInterval
                 ))
                 if output.gesture != nil { count += 1 }
@@ -708,6 +708,19 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
         }
         #expect(gestureCount(sensitivity: 1) == 0)
         #expect(gestureCount(sensitivity: 2) == 1)
+    }
+
+    @Test func hardCalibrationTapsDontBlockEverydayTaps() {
+        var processor = CaseInputProcessor(calibration: calibration(tapThreshold: 0.6))
+        var gestures = 0
+        for index in 0..<80 {
+            let output = processor.process(reading(
+                acceleration: Vector3(x: index == 20 ? 0.2 : 0, y: 0, z: 0),
+                at: Double(index) * sampleInterval
+            ))
+            if output.gesture != nil { gestures += 1 }
+        }
+        #expect(gestures == 1)
     }
 }
 
