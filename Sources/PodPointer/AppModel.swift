@@ -150,7 +150,7 @@ final class AppModel: ObservableObject {
     }
 
     func requestAccessibility() {
-        KeySender.requestTrust()
+        InputSender.requestTrust()
     }
 
     func refreshDisplays() {
@@ -160,6 +160,7 @@ final class AppModel: ObservableObject {
         if !displays.contains(where: { $0.id == selectedDisplayID }), let first = displays.first {
             selectedDisplayID = first.id
         }
+        applyDisplayShape()
     }
 
     func copyReport() {
@@ -168,8 +169,9 @@ final class AppModel: ObservableObject {
             appVersion: Self.version,
             macOSVersion: "\(system.majorVersion).\(system.minorVersion).\(system.patchVersion)",
             motion: rate,
-            sensorLocations: sensorLocations,
-            pressCounts: pressCounts,
+            sensorLocations: sensorLocationsSeen,
+            isCalibrated: isCalibrated,
+            gestureCounts: gestureCounts,
             events: log
         )
         NSPasteboard.general.clearContents()
@@ -177,16 +179,16 @@ final class AppModel: ObservableObject {
         addLog("Copied test report")
     }
 
-    private func handle(_ sample: MotionSample) {
-        tracker.record(sample.timestamp)
+    private func handle(_ reading: MotionReading, sensorLocation location: String) {
+        tracker.record(reading.timestamp)
         lastSampleDate = Date()
-        if sample.sensorLocation != sensorLocation {
-            sensorLocation = sample.sensorLocation
-            if !sensorLocations.contains(sample.sensorLocation) {
-                sensorLocations.append(sample.sensorLocation)
-            }
-            addLog("Motion sensor: \(sample.sensorLocation)")
+        if !isReceivingMotion {
+            isReceivingMotion = true
+            addLog("Motion started")
+            updateOverlay()
         }
+        noteSensor(location)
+        publishStats(for: reading)
 
         let point = mapper.map(yawRadians: sample.yaw, pitchRadians: sample.pitch, at: sample.timestamp)
         switch pointerMode {
