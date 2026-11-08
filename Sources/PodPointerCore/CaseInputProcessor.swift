@@ -57,3 +57,20 @@ public struct CaseInputProcessor: Sendable {
         }
         gesture = gesture ?? sequence.poll(at: time)
 
+        let point: PointerPoint
+        if isHolding {
+            point = engine.hold(at: time)
+        } else {
+            point = engine.advance(
+                horizontalRate: rotation.dot(calibration.horizontalAxis) * Self.degreesPerRadian,
+                verticalRate: rotation.dot(calibration.verticalAxis) * Self.degreesPerRadian,
+                at: time
+            )
+        }
+        return CaseOutput(point: point, gesture: gesture)
+    }
+
+    public mutating func setPosition(_ point: PointerPoint) {
+        engine.set(position: point)
+    }
+}
