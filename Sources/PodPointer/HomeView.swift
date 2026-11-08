@@ -133,6 +133,7 @@ struct HomeView: View {
             Text("Calibration")
         } footer: {
             Text("Calibrate again if you change how you hold the case.")
+                .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
 
@@ -155,6 +156,13 @@ struct HomeView: View {
                 Toggle("Flip left and right", isOn: $model.pointerConfiguration.invertHorizontal)
                 Toggle("Send keys and clicks", isOn: $model.sendsActions)
                 Toggle("Keep audio connection active", isOn: $model.keepsAudioActive)
+            }
+        }
+    }
+
+    private var diagnosticsSection: some View {
+        Section {
+            DisclosureGroup("Diagnostics", isExpanded: $model.showsDiagnostics) {
                 LabeledContent("AirPods", value: model.isConnected ? "Connected" : "Not connected")
                 LabeledContent("Motion", value: model.isReceivingMotion ? "Arriving" : "Not arriving")
                 LabeledContent("Rate", value: String(format: "%.0f Hz", model.rate.hertz))
@@ -169,7 +177,6 @@ struct HomeView: View {
                 HStack {
                     Button("Copy Test Report") { model.copyReport() }
                     Button("Show Motion Recording") { model.showRecordingInFinder() }
-                    Button("Run Setup Again") { model.startOver() }
                 }
             }
         }
@@ -195,8 +202,12 @@ struct HomeView: View {
         }
     }
 
-    private func control(_ gesture: String, _ action: String) -> some View {
-        LabeledContent(gesture, value: action)
+    private func control(_ symbol: String, _ gesture: String, _ action: String) -> some View {
+        LabeledContent {
+            Text(action)
+        } label: {
+            Label(gesture, systemImage: symbol)
+        }
     }
 
     private func calibrationInstruction(for step: CalibrationStep) -> String {
