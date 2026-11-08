@@ -413,3 +413,58 @@ struct CaseCheckPage: View {
         }
     }
 
+    private func results(_ results: CaseCheckResults) -> some View {
+        SetupPage(
+            progress: "Your results",
+            symbol: results.passed ? "checkmark.seal.fill" : "slider.horizontal.3",
+            title: results.passed ? "Your case works!" : "Your case needs some tuning",
+            detail: results.passed ? "Next, try it with real slides." : "Adjust the settings below and run the tests again, or continue anyway.",
+            onStartOver: { model.startOver() }
+        ) {
+            VStack(spacing: 10) {
+                resultRow("Taps detected", value: "\(results.tapsHit) of \(results.tapsAsked)", passed: results.tapsPassed)
+                resultRow("Single, double, triple", value: "\(results.gesturesHit) of \(results.gesturesAsked)", passed: results.gesturesPassed)
+                resultRow("Mistaken taps", value: "\(results.falseTapsWhileMoving + results.extraTaps)", passed: results.movingPassed && results.extraTaps <= 1)
+                resultRow("Rings hit", value: "\(results.targetsHit) of \(results.targetsAsked)", passed: results.pointingPassed)
+            }
+            if !results.tapsPassed {
+                slider(
+                    "Tap sensitivity: \(String(format: "%.1f", model.tapSensitivity))×",
+                    tip: results.tapsHit < 8 ? "Too few taps counted, so try moving this right." : "Too many taps counted, so try moving this left.",
+                    value: $model.tapSensitivity,
+                    range: 0.5...2
+                )
+            } else if !results.movingPassed {
+                slider(
+                    "Tap sensitivity: \(String(format: "%.1f", model.tapSensitivity))×",
+                    tip: "Movement counted as tapping, so try moving this left.",
+                    value: $model.tapSensitivity,
+                    range: 0.5...2
+                )
+            }
+            if !results.gesturesPassed {
+                slider(
+                    "Time between taps: \(String(format: "%.2f", model.multiTapWindow)) seconds",
+                    tip: "If double taps count as single taps, move this right. A single tap waits this long before acting.",
+                    value: $model.multiTapWindow,
+                    range: 0.25...0.7
+                )
+            }
+            if !results.pointingPassed {
+                slider(
+                    "Pointer range: \(Int(model.pointerConfiguration.rangeDegrees))°",
+                    tip: "Move this right for finer aim, or left to cover the screen with less movement.",
+                    value: $model.pointerConfiguration.rangeDegrees,
+                    range: 15...90
+                )
+            }
+            HStack {
+                if !results.passed {
+                    Button("Run Tests Again") { model.runTestsAgain() }
+                        .controlSize(.large)
+                }
+                PrimaryButton(results.passed ? "Try It with Slides" : "Continue") { model.continueToSlides() }
+            }
+        }
+    }
+
