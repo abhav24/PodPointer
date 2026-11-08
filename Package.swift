@@ -10,6 +10,10 @@ let package = Package(
     targets: [
         .target(name: "PodPointerCore"),
         .executableTarget(name: "PodPointer", dependencies: ["PodPointerCore"]),
-        .testTarget(name: "PodPointerCoreTests", dependencies: ["PodPointerCore"])
+        .testTarget(
+            name: "PodPointerCoreTests",
+            dependencies: ["PodPointerCore"],
+            resources: [.copy("Fixtures")]
+        )
     ]
 )
