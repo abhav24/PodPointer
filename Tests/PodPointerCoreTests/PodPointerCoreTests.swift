@@ -93,14 +93,11 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
         while session.step == .holdStill, status == .inProgress {
             feed(reading(rotation: bias, at: time))
         }
-        for step in [(CalibrationStep.sweepSideways, horizontal), (.sweepVertically, vertical)] {
-            let start = time
-            while session.step == step.0, status == .inProgress {
-                // Starts in the positive direction, then sweeps back and forth.
-                let wave = sin((time - start) * 2 * .pi * 0.75)
-                feed(reading(rotation: bias + step.1 * (wave * 1.5), at: time))
-            }
-        }
+        sweep(.sweepSideways, around: horizontal)
+        turn(.turnRight, around: horizontal)
+        sweep(.sweepVertically, around: vertical)
+        turn(.turnUp, around: vertical)
+        settle()
         var tapClock = 0
         while status == .inProgress, time < 60 {
             let jolt = tapClock % 25 == 0 ? Vector3(x: tapStrength, y: 0, z: 0) : .zero
@@ -123,6 +120,59 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
         #expect(result.verticalAxis.dot(raw) > 0.9)
         #expect(abs(result.horizontalAxis.dot(result.verticalAxis)) < 0.01)
         #expect(result.sensorLocation == "right")
+    }
+
+    @Test func directionComesFromTheDeliberateTurn() {
+        // The real-world bug: sideways motion carrying over into "sweep up".
+        let horizontal = Vector3(x: 0, y: 0, z: 1)
+        let vertical = Vector3(x: 1, y: 0, z: 0)
+        let status = run(horizontal: horizontal, vertical: vertical, leftover: vertical * -3)
+        guard case let .finished(result) = status else {
+            Issue.record("Expected calibration to finish, got \(status)")
+            return
+        }
+        #expect(result.horizontalAxis.dot(horizontal) > 0.99)
+        #expect(result.verticalAxis.dot(vertical) > 0.99)
+    }
+
+    @Test func turningTheOtherWayReversesTheAxis() {
+        var session = CalibrationSession(sensorLocation: "left")
+        var time = 0.0
+        func feed(_ rotation: Vector3) {
+            _ = session.process(reading(rotation: rotation, at: time))
+            time += sampleInterval
+        }
+        let axis = Vector3(x: 0, y: 0, z: 1)
+        while session.step == .holdStill { feed(.zero) }
+        while session.isSettling { feed(.zero) }
+        let start = time
+        while session.step == .sweepSideways {
+            feed(axis * sin((time - start) * 2 * .pi * 0.75) * 1.5)
+        }
+        while session.isSettling { feed(.zero) }
+        #expect(session.step == .turnRight)
+        for _ in 0..<30 { feed(axis * -1.5) }
+        feed(.zero)
+        #expect(session.step == .sweepVertically)
+    }
+
+    @Test func notTurningFarEnoughFails() {
+        var session = CalibrationSession(sensorLocation: "left")
+        var time = 0.0
+        var status = CalibrationStatus.inProgress
+        let axis = Vector3(x: 0, y: 0, z: 1)
+        func feed(_ rotation: Vector3) {
+            status = session.process(reading(rotation: rotation, at: time))
+            time += sampleInterval
+        }
+        while session.step == .holdStill { feed(.zero) }
+        while session.isSettling { feed(.zero) }
+        let start = time
+        while session.step == .sweepSideways {
+            feed(axis * sin((time - start) * 2 * .pi * 0.75) * 1.5)
+        }
+        while status == .inProgress, time < 60 { feed(.zero) }
+        #expect(status == .failed(.noDirection))
     }
 
     @Test func measuresGyroBiasAndTapThreshold() {
