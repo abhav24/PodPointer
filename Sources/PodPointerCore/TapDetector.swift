@@ -55,3 +55,52 @@ public struct TapDetector: Sendable {
             return .none
         }
 
+        guard time >= ignoreUntil else { return .none }
+        if impulse >= threshold, isHandStill(at: time) {
+            impulseStart = time
+            return .impulseStarted
+        }
+        // A tap jolts the gyroscope too, so samples during and after a tap
+        // aren't recorded. Otherwise the second tap of a double tap would fail.
+        recentRotation.append((time, rotationSpeed))
+        return .none
+    }
+
+    private mutating func isHandStill(at time: Double) -> Bool {
+        recentRotation.removeAll { time - $0.time > Self.stillWindowSeconds }
+        return recentRotation.allSatisfy { $0.speed < Self.stillRotationLimit }
+    }
+}
+
+public enum CaseGesture: String, CaseIterable, Sendable {
+    case single
+    case double
+    case triple
+}
+
+/// Groups taps into single, double, and triple taps.
+public struct TapSequence: Sendable {
+    public let windowSeconds: Double
+    private var count = 0
+    private var lastTap = -Double.infinity
+
+    public init(windowSeconds: Double = 0.35) {
+        self.windowSeconds = windowSeconds
+    }
+
+    /// Returns a gesture right away on the third tap, since no longer gesture exists.
+    public mutating func registerTap(at time: Double) -> CaseGesture? {
+        count += 1
+        lastTap = time
+        guard count >= 3 else { return nil }
+        count = 0
+        return .triple
+    }
+
+    /// Returns a gesture once enough time has passed with no further tap.
+    public mutating func poll(at time: Double) -> CaseGesture? {
+        guard count > 0, time - lastTap >= windowSeconds else { return nil }
+        defer { count = 0 }
+        return count == 1 ? .single : .double
+    }
+}
