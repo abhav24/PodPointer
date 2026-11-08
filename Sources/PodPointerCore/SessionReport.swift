@@ -9,6 +9,7 @@ public struct SessionReport: Sendable {
     public var sensorLocations: [String]
     public var isCalibrated: Bool
     public var gestureCounts: [CaseGesture: Int]
+    public var checkResults: CaseCheckResults?
     public var events: [String]
 
     public init(
@@ -18,6 +19,7 @@ public struct SessionReport: Sendable {
         sensorLocations: [String],
         isCalibrated: Bool,
         gestureCounts: [CaseGesture: Int],
+        checkResults: CaseCheckResults? = nil,
         events: [String]
     ) {
         self.appVersion = appVersion
@@ -26,6 +28,7 @@ public struct SessionReport: Sendable {
         self.sensorLocations = sensorLocations
         self.isCalibrated = isCalibrated
         self.gestureCounts = gestureCounts
+        self.checkResults = checkResults
         self.events = events
     }
 
@@ -34,6 +37,15 @@ public struct SessionReport: Sendable {
         let gestures = CaseGesture.allCases
             .map { "\($0.rawValue): \(gestureCounts[$0, default: 0])" }
             .joined(separator: ", ")
+        let check = checkResults.map { results in
+            """
+            - Taps detected: \(results.tapsHit) of \(results.tapsAsked), with \(results.extraTaps) extra
+            - Single, double, and triple taps recognized: \(results.gesturesHit) of \(results.gesturesAsked)
+            - False taps while moving: \(results.falseTapsWhileMoving)
+            - Targets hit: \(results.targetsHit) of \(results.targetsAsked)
+            - Overall: \(results.passed ? "passed" : "needs work")
+            """
+        } ?? "Not run"
         return """
         ## PodPointer test report
 
@@ -49,12 +61,11 @@ public struct SessionReport: Sendable {
         - Calibrated: \(isCalibrated ? "yes" : "no")
         - Taps detected: \(gestures)
 
-        ### Results (fill in)
-        - Motion arrives from the open case: yes / no
-        - Calibration finishes: yes / no
-        - Taps out of 20 detected: __ / 20
-        - False taps while pointing for 1 minute: __
-        - Pointer feels usable: yes / no
+        ### Case check
+        \(check)
+
+        ### With slides (fill in)
+        - Slides change with taps: yes / no
         - Laser dot appears over a full-screen slideshow: yes / no
 
         ### Event log
