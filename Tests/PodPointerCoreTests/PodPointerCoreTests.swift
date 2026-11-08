@@ -470,7 +470,7 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
 @Suite struct TapSequenceTests {
     @Test func singleWaitsForTheWindow() {
         var sequence = TapSequence(windowSeconds: 0.35)
-        #expect(sequence.registerTap(at: 1) == nil)
+        sequence.registerTap(at: 1)
         #expect(sequence.poll(at: 1.2) == nil)
         #expect(sequence.poll(at: 1.4) == .single)
         #expect(sequence.poll(at: 2) == nil)
@@ -478,13 +478,15 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
 
     @Test func doubleAndTriple() {
         var sequence = TapSequence(windowSeconds: 0.35)
-        _ = sequence.registerTap(at: 1)
-        _ = sequence.registerTap(at: 1.2)
+        sequence.registerTap(at: 1)
+        sequence.registerTap(at: 1.2)
         #expect(sequence.poll(at: 1.6) == .double)
 
-        _ = sequence.registerTap(at: 3)
-        _ = sequence.registerTap(at: 3.2)
-        #expect(sequence.registerTap(at: 3.4) == .triple)
+        sequence.registerTap(at: 3)
+        sequence.registerTap(at: 3.2)
+        sequence.registerTap(at: 3.4)
+        #expect(sequence.poll(at: 3.6) == nil)
+        #expect(sequence.poll(at: 3.7) == .triple)
     }
 }
 
@@ -581,7 +583,7 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
         for index in 0..<80 {
             let isTap = index == 20
             let output = processor.process(reading(
-                rotation: isTap ? Vector3(x: 5, y: 0, z: 5) : .zero,
+                rotation: isTap ? Vector3(x: 1.5, y: 0, z: 1.5) : .zero,
                 acceleration: Vector3(x: isTap ? 1 : 0, y: 0, z: 0),
                 at: Double(index) * sampleInterval
             ))
@@ -590,6 +592,80 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
         }
         #expect(gestures == [.single])
         #expect(points.allSatisfy(isAtCenter))
+    }
+
+    /// Shaking in a straight line barely turns the case, so only acceleration shows it.
+    @Test func shakingAtAnySpeedMakesNoGesture() {
+        for frequency in [1.0, 2, 3, 4, 5, 6, 8, 10, 12] {
+            for strength in [0.1, 0.2, 0.3, 0.5, 0.8, 1.2, 2, 4] {
+                for turning in [0.0, 0.5, 3] {
+                    var processor = CaseInputProcessor(calibration: calibration(tapThreshold: 0.11))
+                    var gestures = 0
+                    for index in 0..<400 {
+                        let time = Double(index) * sampleInterval
+                        // Eases in from a steady hold after one second.
+                        let amount = min(max((time - 1) / 0.15, 0), 1)
+                        let wave = sin(2 * .pi * frequency * (time - 1))
+                        let turn = cos(2 * .pi * frequency * (time - 1))
+                        let output = processor.process(reading(
+                            rotation: Vector3(x: turning * amount * turn, y: 0, z: 0),
+                            acceleration: Vector3(x: strength * amount * wave, y: strength * amount * wave * 0.5, z: 0),
+                            at: time
+                        ))
+                        if output.gesture != nil { gestures += 1 }
+                    }
+                    #expect(gestures == 0, "\(frequency) Hz, \(strength) g, turning \(turning)")
+                }
+            }
+        }
+    }
+
+    @Test func aTapThenShakingMakesNoGesture() {
+        var processor = CaseInputProcessor(calibration: calibration())
+        var gestures = 0
+        for index in 0..<200 {
+            let time = Double(index) * sampleInterval
+            var acceleration = index == 50 ? 1.0 : 0.0
+            if index > 65 {
+                acceleration = 0.8 * sin(2 * .pi * 6 * time)
+            }
+            let output = processor.process(reading(acceleration: Vector3(x: acceleration, y: 0, z: 0), at: time))
+            if output.gesture != nil { gestures += 1 }
+        }
+        #expect(gestures == 0)
+    }
+
+    @Test func aRejectedJoltLosesNoPointerMovement() {
+        func finalPoint(withJolt: Bool) -> PointerPoint {
+            var processor = CaseInputProcessor(calibration: calibration())
+            var point = PointerPoint.center
+            for index in 0..<100 {
+                let isMoving = index >= 40
+                point = processor.process(reading(
+                    rotation: Vector3(x: 0, y: 0, z: isMoving ? 1.5 : 0),
+                    acceleration: Vector3(x: withJolt && index == 40 ? 1 : 0, y: 0, z: 0),
+                    at: Double(index) * sampleInterval
+                )).point
+            }
+            return point
+        }
+        let plain = finalPoint(withJolt: false)
+        let jolted = finalPoint(withJolt: true)
+        #expect(plain.x > 0.6)
+        #expect(abs(plain.x - jolted.x) < 1e-9)
+    }
+
+    @Test func gestureAgeReportsTheLastTap() {
+        var processor = CaseInputProcessor(calibration: calibration())
+        var age: Double?
+        for index in 0..<80 {
+            let output = processor.process(reading(
+                acceleration: Vector3(x: index == 20 ? 1 : 0, y: 0, z: 0),
+                at: Double(index) * sampleInterval
+            ))
+            if output.gesture != nil { age = output.gestureAge }
+        }
+        #expect(abs((age ?? 0) - 0.4) < 0.03)
     }
 
     @Test func rotationUsesTheCalibratedAxes() {
