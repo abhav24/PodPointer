@@ -63,6 +63,7 @@ struct HomeView: View {
                 ForEach(ControlMode.allCases) { Text($0.rawValue).tag($0) }
             }
             .pickerStyle(.segmented)
+            .labelsHidden()
             .disabled(!model.canUsePointer)
 
             switch model.mode {
@@ -70,15 +71,15 @@ struct HomeView: View {
                 Text("Choose Presenter to control slides, or Mouse to control your Mac.")
                     .foregroundStyle(.secondary)
             case .presenter:
-                control("Rotate", "Moves the laser dot")
-                control("Tap", "Next slide")
-                control("Double-tap", "Previous slide")
-                control("Triple-tap", "Turns the dot on or off")
+                control("rotate.3d", "Rotate", "Moves the laser dot")
+                control("hand.tap", "Tap", "Next slide")
+                control("hand.tap", "Double-tap", "Previous slide")
+                control("hand.tap", "Triple-tap", "Turns the dot on or off")
             case .mouse:
-                control("Rotate", "Moves the cursor")
-                control("Tap", "Click")
-                control("Double-tap", "Double-click")
-                control("Triple-tap", "Pauses or resumes the cursor")
+                control("rotate.3d", "Rotate", "Moves the cursor")
+                control("hand.tap", "Tap", "Click")
+                control("hand.tap", "Double-tap", "Double-click")
+                control("hand.tap", "Triple-tap", "Pauses or resumes the cursor")
                 Text("Moving a real mouse or trackpad pauses the case until you stop.")
                     .foregroundStyle(.secondary)
             }
@@ -93,6 +94,7 @@ struct HomeView: View {
             Text("Control")
         } footer: {
             Text("Keep the case lid open and Automatic Ear Detection off while you use PodPointer.")
+                .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
 
@@ -118,7 +120,10 @@ struct HomeView: View {
                 ProgressView(value: model.calibrationProgress)
                 Button("Cancel") { model.cancelCalibration() }
             } else {
-                Button("Calibrate Again") { model.startCalibration() }
+                HStack {
+                    Button("Calibrate Again") { model.startCalibration() }
+                    Button("Run Setup Again") { model.startOver() }
+                }
             }
             if let message = model.calibrationMessage {
                 Text(message)
