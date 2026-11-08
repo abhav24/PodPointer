@@ -2,10 +2,9 @@ import Foundation
 
 public struct SampleRateSnapshot: Equatable, Sendable {
     public var hertz: Double
-    public var p95IntervalMilliseconds: Double
-    public var maxGapMilliseconds: Double
+    public var longestGapMilliseconds: Double
 
-    public static let empty = SampleRateSnapshot(hertz: 0, p95IntervalMilliseconds: 0, maxGapMilliseconds: 0)
+    public static let empty = SampleRateSnapshot(hertz: 0, longestGapMilliseconds: 0)
 }
 
 /// Measures motion sample timing over a sliding window.
@@ -19,10 +18,7 @@ public struct SampleRateTracker: Sendable {
 
     public mutating func record(_ time: Double) {
         timestamps.append(time)
-        let oldestAllowed = time - windowSeconds
-        if let firstKept = timestamps.firstIndex(where: { $0 >= oldestAllowed }), firstKept > 0 {
-            timestamps.removeFirst(firstKept)
-        }
+        timestamps.removeAll { time - $0 > windowSeconds }
     }
 
     public mutating func reset() {
@@ -33,12 +29,10 @@ public struct SampleRateTracker: Sendable {
         guard timestamps.count >= 2, let first = timestamps.first, let last = timestamps.last, last > first else {
             return .empty
         }
-        let intervals = zip(timestamps.dropFirst(), timestamps).map { $0 - $1 }.sorted()
-        let p95Index = min(intervals.count - 1, Int((Double(intervals.count) * 0.95).rounded(.down)))
+        let longestGap = zip(timestamps.dropFirst(), timestamps).map { $0 - $1 }.max() ?? 0
         return SampleRateSnapshot(
-            hertz: Double(intervals.count) / (last - first),
-            p95IntervalMilliseconds: intervals[p95Index] * 1000,
-            maxGapMilliseconds: (intervals.last ?? 0) * 1000
+            hertz: Double(timestamps.count - 1) / (last - first),
+            longestGapMilliseconds: longestGap * 1000
         )
     }
 }
