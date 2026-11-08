@@ -46,3 +46,49 @@ final class AppModel: ObservableObject {
     @Published private(set) var hasAccessibility = KeySender.isTrusted
     @Published private(set) var pressCounts: [StemPress: Int] = [:]
 
+    @Published private(set) var log: [String] = []
+
+    private let motion = MotionController()
+    private let stem = StemController()
+    private let overlay = LaserOverlay()
+    private var mapper = PointerMapper()
+    private var tracker = SampleRateTracker()
+    private var debouncer = StemPressDebouncer()
+    private var sensorLocations: [String] = []
+    private var lastSampleDate: Date?
+    private var lastPublishDate = Date.distantPast
+    private var pointerModeChangeDate = Date.distantPast
+    private var healthTimer: Timer?
+    private var started = false
+
+    private static let timeFormat: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm:ss.SSS"
+        return formatter
+    }()
+
+    func start() {
+        guard !started else { return }
+        started = true
+        refreshDisplays()
+
+        motion.onSample = { [weak self] in self?.handle($0) }
+        motion.onConnectionChange = { [weak self] connected in
+            self?.isConnected = connected
+            self?.addLog(connected ? "AirPods motion connected" : "AirPods motion disconnected")
+        }
+        motion.onError = { [weak self] in self?.addLog("Motion error: \($0)") }
+        stem.onPress = { [weak self] in self?.handle($0) }
+
+        if motion.isAvailable {
+            motion.start()
+            addLog("Waiting for AirPods motion")
+        } else {
+            addLog("Headphone motion isn't available on this Mac")
+        }
+
+        healthTimer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: true) { [weak self] _ in
+            MainActor.assumeIsolated { self?.checkHealth() }
+        }
+    }
+
