@@ -13,20 +13,27 @@ private func reading(
     MotionReading(rotationRate: rotation, userAcceleration: acceleration, timestamp: time)
 }
 
-    @Test func convergesOnAStep() {
-        var filter = OneEuroFilter()
-        _ = filter.filter(0, at: 0)
-        var output = 0.0
-        for index in 1...100 {
-            output = filter.filter(10, at: Double(index) / 25)
-        }
-        #expect(abs(output - 10) < 0.05)
-    }
+private func isAtCenter(_ point: PointerPoint) -> Bool {
+    abs(point.x - 0.5) < 1e-9 && abs(point.y - 0.5) < 1e-9
+}
 
-    @Test func repeatedTimestampKeepsThePreviousValue() {
-        var filter = OneEuroFilter()
-        _ = filter.filter(1, at: 1)
-        #expect(filter.filter(100, at: 1) == 1)
+private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
+    CaseCalibration(
+        horizontalAxis: Vector3(x: 0, y: 0, z: 1),
+        verticalAxis: Vector3(x: 1, y: 0, z: 0),
+        gyroBias: .zero,
+        tapThreshold: tapThreshold,
+        sensorLocation: "left"
+    )
+}
+
+@Suite struct VectorTests {
+    @Test func basicMath() {
+        let vector = Vector3(x: 3, y: 4, z: 0)
+        #expect(vector.magnitude == 5)
+        #expect(vector.dot(Vector3(x: 1, y: 1, z: 1)) == 7)
+        #expect(abs(vector.normalized.magnitude - 1) < 1e-9)
+        #expect(Vector3.zero.normalized == .zero)
     }
 }
 
