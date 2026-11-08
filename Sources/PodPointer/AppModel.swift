@@ -2,14 +2,6 @@ import AppKit
 import PodPointerCore
 import SwiftUI
 
-enum PointerMode: String, CaseIterable, Identifiable {
-    case off = "Off"
-    case laser = "Laser dot"
-    case cursor = "Mouse cursor"
-
-    var id: String { rawValue }
-}
-
 struct DisplayOption: Identifiable, Hashable {
     let id: CGDirectDisplayID
     let name: String
@@ -18,13 +10,17 @@ struct DisplayOption: Identifiable, Hashable {
 @MainActor
 final class AppModel: ObservableObject {
     static let version = "0.1.0"
+
+    private static let calibrationKey = "caseCalibration"
     private static let staleSampleSeconds = 0.5
+    private static let realMousePauseSeconds = 1.0
+    private static let pointerTimeConstant = 0.035
     private static let maxLogLines = 200
-    private static let cursorGraceSeconds = 2.0
 
     // Motion
     @Published private(set) var permission = "Not asked yet"
     @Published private(set) var isConnected = false
+    @Published private(set) var isReceivingMotion = false
     @Published private(set) var rate = SampleRateSnapshot.empty
     @Published private(set) var sensorLocation = "-"
     @Published private(set) var attitude = "-"
