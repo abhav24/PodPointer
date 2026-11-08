@@ -136,3 +136,45 @@ struct HomeView: View {
         }
     }
 
+    private var logView: some View {
+        ScrollViewReader { proxy in
+            ScrollView {
+                VStack(alignment: .leading, spacing: 2) {
+                    ForEach(Array(model.log.enumerated()), id: \.offset) { index, line in
+                        Text(line)
+                            .font(.caption.monospaced())
+                            .textSelection(.enabled)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .id(index)
+                    }
+                }
+            }
+            .frame(height: 120)
+            .onChange(of: model.log.count) { _, count in
+                proxy.scrollTo(count - 1, anchor: .bottom)
+            }
+        }
+    }
+
+    private func control(_ gesture: String, _ action: String) -> some View {
+        LabeledContent(gesture, value: action)
+    }
+
+    private func calibrationInstruction(for step: CalibrationStep) -> String {
+        if model.calibrationIsSettling { return "Hold still for a moment." }
+        switch step {
+        case .holdStill:
+            return "Hold the case still."
+        case .sweepSideways:
+            return "Sweep smoothly side to side."
+        case .turnRight:
+            return "Turn the case right, then stop."
+        case .sweepVertically:
+            return "Sweep smoothly up and down."
+        case .turnUp:
+            return "Tilt the case up, then stop."
+        case .tap:
+            return "Hold still and tap \(CalibrationSession.requiredTaps) times (\(model.calibrationTaps) so far)."
+        }
+    }
+}
