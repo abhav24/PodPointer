@@ -228,12 +228,12 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
         var detector = TapDetector(threshold: threshold)
         var taps = 0
         for (index, value) in acceleration.enumerated() {
-            let tapped = detector.process(
+            let tap = detector.process(
                 acceleration: Vector3(x: value, y: 0, z: 0),
-                rotationSpeed: rotation,
+                rotation: Vector3(x: rotation, y: 0, z: 0),
                 at: Double(index) * sampleInterval
             )
-            if tapped { taps += 1 }
+            if tap != nil { taps += 1 }
         }
         return taps
     }
@@ -259,6 +259,12 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
         #expect(tapCount(signal(tapsAt: [30, 42, 54])) == 3)
     }
 
+    @Test func aMuchWeakerBounceIsTheSameTap() {
+        let strong = signal(tapsAt: [30])
+        let bounce = signal(tapsAt: [39], strength: 0.3)
+        #expect(tapCount(zip(strong, bounce).map(+), threshold: 0.2) == 1)
+    }
+
     @Test func aFastTripleTapCounts() {
         // Taps 160 ms apart, which is faster than most people tap.
         #expect(tapCount(signal(tapsAt: [30, 38, 46])) == 3)
@@ -268,6 +274,31 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
         let strong = signal(tapsAt: [30])
         let weak = signal(tapsAt: [45], strength: 0.5)
         #expect(tapCount(zip(strong, weak).map(+)) == 2)
+    }
+
+    @Test func aJoltThatStartsATurnIsNotATap() {
+        // Calm at the jolt, but the case keeps turning after it.
+        var detector = TapDetector(threshold: 0.3)
+        var taps = 0
+        let values = signal(tapsAt: [30])
+        for (index, value) in values.enumerated() {
+            let tap = detector.process(
+                acceleration: Vector3(x: value, y: 0, z: 0),
+                rotation: Vector3(x: index >= 30 ? 1.5 : 0, y: 0, z: 0),
+                at: Double(index) * sampleInterval
+            )
+            if tap != nil { taps += 1 }
+        }
+        #expect(taps == 0)
+    }
+
+    @Test func accelerationThatBuildsUpIsNotATap() {
+        // A smooth push: over 1 g, but with no sharp jolt.
+        let push = (0..<120).map { index -> Double in
+            let phase = (Double(index) - 30) / 15
+            return (0...1).contains(phase) ? 1.2 * sin(phase * .pi) : 0
+        }
+        #expect(tapCount(push) == 0)
     }
 
     @Test func falseTapsCannotChainWhileMoving() {
