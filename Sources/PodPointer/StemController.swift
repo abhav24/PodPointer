@@ -56,3 +56,18 @@ final class StemController {
         targets.append((command, target))
     }
 
+    private func startSilentAudio() throws {
+        let node = AVAudioSourceNode { _, _, _, bufferList in
+            for buffer in UnsafeMutableAudioBufferListPointer(bufferList) {
+                if let data = buffer.mData {
+                    memset(data, 0, Int(buffer.mDataByteSize))
+                }
+            }
+            return noErr
+        }
+        sourceNode = node
+        engine.attach(node)
+        engine.connect(node, to: engine.mainMixerNode, format: nil)
+        try engine.start()
+    }
+}
