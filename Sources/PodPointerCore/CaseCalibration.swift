@@ -35,7 +35,9 @@ public struct CaseCalibration: Codable, Equatable, Sendable {
 public enum CalibrationStep: Equatable, Sendable {
     case holdStill
     case sweepSideways
+    case turnRight
     case sweepVertically
+    case turnUp
     case tap
 }
 
@@ -44,6 +46,7 @@ public enum CalibrationFailure: String, Error, Equatable, Sendable {
     case tooLittleMovement = "There wasn't enough movement. Sweep the case further and try again."
     case unclearMovement = "The movement was hard to read. Keep each sweep in one direction and try again."
     case axesTooSimilar = "The two sweeps looked the same. Sweep sideways, then up and down, and try again."
+    case noDirection = "The case didn't turn far enough. Turn it further, then stop, and try again."
     case tooFewTaps = "Too few taps were detected. Tap the case more firmly and try again."
     case tapsTooWeak = "The taps were hard to tell apart from noise. Tap more firmly and try again."
 }
@@ -59,8 +62,10 @@ public struct CalibrationSession: Sendable {
     public static let requiredTaps = 5
 
     private static let holdSeconds = 2.0
-    private static let sweepSeconds = 4.0
+    private static let sweepSeconds = 3.0
+    private static let turnTimeoutSeconds = 8.0
     private static let tapTimeoutSeconds = 10.0
+    private static let settleSeconds = 0.4
     private static let minimumHoldSamples = 20
     private static let minimumSweepSamples = 12
     private static let minimumTaps = 3
@@ -68,16 +73,23 @@ public struct CalibrationSession: Sendable {
     private static let sweepMotionFloor = 0.35
     private static let minimumAxisEnergy = 0.6
     private static let minimumAxisSeparation = 0.5
+    private static let requiredTurnRadians = 15 * Double.pi / 180
+    private static let maximumTurnStep = 0.1
     private static let tapPeakSeconds = 0.15
     private static let tapSpacingSeconds = 0.25
 
     public private(set) var step = CalibrationStep.holdStill
     public private(set) var progress = 0.0
     public private(set) var tapsFound = 0
+    /// True while waiting for the hand to stop before a step begins. Motion left
+    /// over from the previous step is ignored, so it can't affect this one.
+    public private(set) var isSettling = false
 
     private let sensorLocation: String
     private var stepStart: Double?
+    private var stillSince: Double?
     private var previousAcceleration: Vector3?
+    private var previousTime: Double?
 
     private var restingSum = Vector3.zero
     private var restingCount = 0
@@ -85,6 +97,8 @@ public struct CalibrationSession: Sendable {
     private var gyroBias = Vector3.zero
 
     private var sweepSamples: [Vector3] = []
+    private var pendingAxis = Vector3.zero
+    private var turnedRadians = 0.0
     private var horizontalAxis = Vector3.zero
     private var verticalAxis = Vector3.zero
 
