@@ -45,7 +45,11 @@ Following the shake as it fades lets quick double and triple taps through, while
 
 Tapping also shakes the case, so the pointer jumps back to where it was just before the tap and stays there briefly.
 
-A single tap waits 0.35 seconds in case a second tap follows. That's the delay you'll notice before the next slide appears.
+A single tap waits 0.4 seconds in case another tap follows. That's the delay you'll notice before the next slide appears, and you can adjust it with **Time between taps**.
+
+The AirPods bounce inside the case, so one real tap can show up as two jolts up to about 100 ms apart. Jolts closer than 140 ms count as one tap.
+
+These values were tuned on one recording from one person using AirPods Pro, which is saved as a test in `Tests/PodPointerCoreTests/Fixtures`. Setup records raw motion locally so they can be tuned against more real taps.
 
 ## Open questions
 
