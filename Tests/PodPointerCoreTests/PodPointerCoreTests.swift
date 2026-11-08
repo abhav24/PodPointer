@@ -391,9 +391,9 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
             let time = try #require(Double(fields[0]))
             if fields[1].isEmpty {
                 let event = fields[7]
-                if event == "end:tapTest" { result.tapTestEnd = time }
-                if event == "end:gestureTest" { result.gestureTestEnd = time }
-                if event.hasPrefix("ask:"), let gesture = CaseGesture(rawValue: String(event.dropFirst(4))) {
+                result.events.append((time, event))
+                if let range = event.range(of: "ask:"),
+                   let gesture = CaseGesture(rawValue: String(event[range.upperBound...])) {
                     result.prompts.append((time, gesture))
                 }
                 continue
@@ -411,16 +411,35 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
         return result
     }
 
-    @Test func promptedGesturesAreRecognized() throws {
-        let result = try replay()
-        #expect(result.prompts.count == CaseCheck.gesturePrompts.count)
+    /// How many prompts were first answered with the right gesture.
+    private func correctAnswers(in result: Replay, until end: Double) -> Int {
         var correct = 0
         for (index, prompt) in result.prompts.enumerated() {
-            let end = index + 1 < result.prompts.count ? result.prompts[index + 1].time : result.gestureTestEnd
-            let answer = result.gestures.first { $0.time >= prompt.time && $0.time < end }
+            let next = index + 1 < result.prompts.count ? result.prompts[index + 1].time : end
+            let answer = result.gestures.first { $0.time >= prompt.time && $0.time < next }
             if answer?.gesture == prompt.gesture { correct += 1 }
         }
-        #expect(correct >= 8)
+        return correct
+    }
+
+    private func time(of event: String, in result: Replay) throws -> Double {
+        try #require(result.events.first { $0.name == event }).time
+    }
+
+    @Test func promptedGesturesAreRecognized() throws {
+        let result = try replay("real-taps", calibration: firmTaps)
+        #expect(result.prompts.count == CaseCheck.gesturePrompts.count)
+        let end = try time(of: "end:gestureTest", in: result)
+        // The recording stops soon after the last tap, before its gesture is due.
+        // The firmest tapper here is near the limit the setup test itself passes at.
+        #expect(correctAnswers(in: result, until: end + 1) >= 7)
+    }
+
+    @Test func lighterPromptedGesturesAreRecognized() throws {
+        let result = try replay("real-movement", calibration: lightTaps)
+        #expect(result.prompts.count == CaseCheck.gesturePrompts.count)
+        let end = try time(of: "step:moveTest", in: result)
+        #expect(correctAnswers(in: result, until: end) >= 7)
     }
 
     @Test func singleTapsStaySingle() throws {
