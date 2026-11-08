@@ -96,3 +96,50 @@ public struct CalibrationSession: Sendable {
         self.sensorLocation = sensorLocation
     }
 
+    public mutating func process(_ reading: MotionReading) -> CalibrationStatus {
+        let start = stepStart ?? reading.timestamp
+        stepStart = start
+        let elapsed = reading.timestamp - start
+        let impulse = previousAcceleration.map { (reading.userAcceleration - $0).magnitude } ?? 0
+        previousAcceleration = reading.userAcceleration
+
+        switch step {
+        case .holdStill:
+            return processHold(reading, impulse: impulse, elapsed: elapsed)
+        case .sweepSideways, .sweepVertically:
+            return processSweep(reading, elapsed: elapsed)
+        case .tap:
+            return processTap(impulse: impulse, time: reading.timestamp, elapsed: elapsed)
+        }
+    }
+
+    private mutating func processHold(_ reading: MotionReading, impulse: Double, elapsed: Double) -> CalibrationStatus {
+        if reading.rotationRate.magnitude > Self.holdMotionLimit {
+            // The case moved, so measure the resting values again.
+            restingSum = .zero
+            restingCount = 0
+            noiseFloor = 0
+            stepStart = reading.timestamp
+            progress = 0
+            return .inProgress
+        }
+        restingSum = restingSum + reading.rotationRate
+        restingCount += 1
+        noiseFloor = max(noiseFloor, impulse)
+        progress = min(elapsed / Self.holdSeconds, 1)
+
+        guard elapsed >= Self.holdSeconds else { return .inProgress }
+        guard restingCount >= Self.minimumHoldSamples else { return .failed(.tooFewSamples) }
+        gyroBias = restingSum * (1 / Double(restingCount))
+        advance(to: .sweepSideways)
+        return .inProgress
+    }
+
+    private mutating func processSweep(_ reading: MotionReading, elapsed: Double) -> CalibrationStatus {
+        let rate = reading.rotationRate - gyroBias
+        if rate.magnitude > Self.sweepMotionFloor {
+            sweepSamples.append(rate)
+        }
+        progress = min(elapsed / Self.sweepSeconds, 1)
+        guard elapsed >= Self.sweepSeconds else { return .inProgress }
+
