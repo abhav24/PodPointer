@@ -258,12 +258,70 @@ final class AppModel: ObservableObject {
         }
     }
 
-    private func moveCursor(to point: PointerPoint) {
-        let bounds = CGDisplayBounds(selectedDisplayID)
-        CGWarpMouseCursorPosition(CGPoint(
-            x: bounds.minX + point.x * (bounds.width - 1),
-            y: bounds.minY + point.y * (bounds.height - 1)
-        ))
+    private func perform(_ gesture: CaseGesture) {
+        gestureCounts[gesture, default: 0] += 1
+        guard let action = CaseAction(gesture: gesture, mode: mode) else {
+            addLog("Tap: \(gesture.rawValue)")
+            return
+        }
+        if action == .togglePointer {
+            isPointerOn.toggle()
+            addLog("Tap: \(gesture.rawValue), pointer \(isPointerOn ? "on" : "off")")
+            if isPointerOn {
+                mode == .mouse ? syncToCursor() : place(at: .center)
+            }
+            updateOverlay()
+            return
+        }
+        guard sendsActions else {
+            addLog("Tap: \(gesture.rawValue), would send \(action.rawValue) (sending is off)")
+            return
+        }
+        hasAccessibility = InputSender.isTrusted
+        guard hasAccessibility else {
+            addLog("Tap: \(gesture.rawValue), not sent because Accessibility is off")
+            return
+        }
+        switch action {
+        case .nextSlide: InputSender.nextSlide()
+        case .previousSlide: InputSender.previousSlide()
+        case .click: InputSender.click(count: 1)
+        case .doubleClick: InputSender.click(count: 2)
+        case .togglePointer: break
+        }
+        addLog("Tap: \(gesture.rawValue), sent \(action.rawValue)")
+    }
+
+    private func drawPointer() {
+        let now = Date()
+        let elapsed = now.timeIntervalSince(lastFrameDate)
+        lastFrameDate = now
+        guard mode != .off, isPointerOn, canUsePointer, isReceivingMotion else { return }
+
+        // Motion samples arrive far less often than the display refreshes, so
+        // easing toward each sample keeps the pointer from looking jumpy.
+        if mode == .mouse {
+            let idle = CGEventSource.secondsSinceLastEventType(.hidSystemState, eventType: .mouseMoved)
+            if idle < Self.realMousePauseSeconds {
+                isPausedForRealMouse = true
+                return
+            }
+            if isPausedForRealMouse {
+                isPausedForRealMouse = false
+                syncToCursor()
+                return
+            }
+        }
+        shownPoint = shownPoint.eased(toward: targetPoint, elapsed: elapsed, timeConstant: Self.pointerTimeConstant)
+        if mode == .presenter {
+            overlay.move(to: shownPoint)
+        } else {
+            let bounds = CGDisplayBounds(selectedDisplayID)
+            CGWarpMouseCursorPosition(CGPoint(
+                x: bounds.minX + shownPoint.x * (bounds.width - 1),
+                y: bounds.minY + shownPoint.y * (bounds.height - 1)
+            ))
+        }
     }
 
     private func checkHealth() {
