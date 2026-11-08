@@ -4,7 +4,7 @@ Testing is built into the app's setup, so you don't need to count anything or ju
 
 ## 1. Follow setup
 
-Build and open the app by following the [README](../README.md). Setup starts by itself the first time. To run it again, open **Advanced** and select **Run Setup Again**.
+Install and open the app by following the [README](../README.md). Setup starts by itself the first time. To run it again, select **Run Setup Again** on the home screen.
 
 It tests these in order:
 
@@ -14,7 +14,7 @@ It tests these in order:
 | Calibration | Hold still, sweep the case, and tap | Calibration finishes |
 | Tapping | Tap once at each of 10 prompts | At least 8 taps counted, and no more than 1 extra |
 | Tap groups | Do 9 single, double, and triple taps in a mixed order | At least 7 recognized correctly |
-| False taps | Wave the case for 15 seconds without tapping | No more than 1 false tap |
+| False taps | Move and shake the case for 15 seconds without tapping | No more than 1 false tap |
 | Pointing | Aim at 5 rings and tap on each | At least 4 rings hit |
 
 If motion stops, the app explains what to try and continues by itself once motion returns.
@@ -31,4 +31,4 @@ This passes if clicks land where you aim.
 
 ## Share your results
 
-On the home screen, open **Advanced** and select **Copy Test Report**, then paste it into a [test report issue](https://github.com/abhav24/PodPointer/issues/new?template=test-report.md).
+On the home screen, open **Diagnostics** and select **Copy Test Report**, then paste it into a [test report issue](https://github.com/abhav24/PodPointer/issues/new?template=test-report.md).
