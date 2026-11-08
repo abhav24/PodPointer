@@ -133,6 +133,20 @@ final class AppModel: ObservableObject {
             calibrationMessage = "Motion isn't arriving yet. Check the setup steps."
             return
         }
+        setMode(.off)
+        calibrationSession = CalibrationSession(sensorLocation: sensorLocation)
+        calibrationStep = .holdStill
+        calibrationProgress = 0
+        calibrationTaps = 0
+        calibrationMessage = nil
+        addLog("Calibration started")
+    }
+
+    func cancelCalibration() {
+        calibrationSession = nil
+        calibrationStep = nil
+        calibrationMessage = "Calibration canceled."
+        addLog("Calibration canceled")
     }
 
     func requestAccessibility() {
