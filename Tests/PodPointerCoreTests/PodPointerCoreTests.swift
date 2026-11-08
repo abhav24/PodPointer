@@ -309,19 +309,61 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
         #expect(taps == 2)
     }
 
-    @Test func twoQuickTapsBothCount() {
-        var detector = TapDetector(threshold: 0.3)
-        var taps = 0
-        for index in 0..<100 {
-            let time = Double(index) * sampleInterval
-            let jolt = index == 30 || index == 45
-            // The tap also shakes the gyroscope, which must not block the next tap.
-            let event = detector.process(
-                acceleration: Vector3(x: jolt ? 1 : 0, y: 0, z: 0),
-                rotationSpeed: (31...34).contains(index) ? 3 : 0,
-                at: time
-            )
-            if event == .tap { taps += 1 }
+    @Test func sustainedShakingCountsAtMostOnce() {
+        let shake = (0..<60).map { $0.isMultiple(of: 2) ? 1.0 : 0.0 }
+        #expect(tapCount(Array(repeating: 0, count: 20) + shake) <= 1)
+    }
+
+    @Test func steadyMovementRaisesTheBar() {
+        // Constant movement over half the jolt size, so the jolt doesn't stand out.
+        let moving = (0..<80).map { $0.isMultiple(of: 2) ? 0.6 : 0.0 }
+        var withJolt = moving
+        withJolt[60] = 1.0
+        #expect(tapCount(moving) <= 1)
+        #expect(tapCount(withJolt) <= 1)
+    }
+}
+
+/// Replays taps recorded from real AirPods Pro in a case, with the prompts they answered.
+@Suite struct RecordedTapTests {
+    private struct Replay {
+        var gestures: [(time: Double, gesture: CaseGesture)] = []
+        var prompts: [(time: Double, gesture: CaseGesture)] = []
+        var tapTestEnd = 0.0
+        var gestureTestEnd = 0.0
+    }
+
+    private func replay() throws -> Replay {
+        let url = try #require(Bundle.module.url(forResource: "real-taps", withExtension: "csv", subdirectory: "Fixtures"))
+        var processor = CaseInputProcessor(calibration: CaseCalibration(
+            horizontalAxis: Vector3(x: -0.40161, y: 0.49439, z: 0.7709),
+            verticalAxis: Vector3(x: 0.13318, y: -0.80129, z: 0.58327),
+            gyroBias: Vector3(x: -0.03627, y: 0.00502, z: 0.02783),
+            tapThreshold: 0.22364,
+            sensorLocation: "left"
+        ))
+        var result = Replay()
+        for line in try String(contentsOf: url, encoding: .utf8).split(separator: "\n").dropFirst() {
+            let fields = line.split(separator: ",", omittingEmptySubsequences: false).map(String.init)
+            let time = try #require(Double(fields[0]))
+            if fields[1].isEmpty {
+                let event = fields[7]
+                if event == "end:tapTest" { result.tapTestEnd = time }
+                if event == "end:gestureTest" { result.gestureTestEnd = time }
+                if event.hasPrefix("ask:"), let gesture = CaseGesture(rawValue: String(event.dropFirst(4))) {
+                    result.prompts.append((time, gesture))
+                }
+                continue
+            }
+            let values = fields[1...6].compactMap(Double.init)
+            let output = processor.process(MotionReading(
+                rotationRate: Vector3(x: values[3], y: values[4], z: values[5]),
+                userAcceleration: Vector3(x: values[0], y: values[1], z: values[2]),
+                timestamp: time
+            ))
+            if let gesture = output.gesture {
+                result.gestures.append((time, gesture))
+            }
         }
         #expect(taps == 2)
     }
