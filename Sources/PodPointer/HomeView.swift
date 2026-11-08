@@ -1,3 +1,4 @@
+import AppKit
 import PodPointerCore
 import SwiftUI
 
@@ -7,6 +8,7 @@ struct HomeView: View {
 
     var body: some View {
         Form {
+            statusSection
             controlSection
             if !model.hasAccessibility {
                 accessSection
@@ -16,8 +18,40 @@ struct HomeView: View {
             }
             calibrationSection
             advancedSection
+            diagnosticsSection
         }
         .formStyle(.grouped)
+    }
+
+    private var statusSection: some View {
+        Section {
+            HStack(spacing: 14) {
+                Image(nsImage: NSImage(named: "AppIcon") ?? NSApp.applicationIconImage)
+                    .resizable()
+                    .frame(width: 52, height: 52)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("PodPointer")
+                        .font(.title2.bold())
+                    HStack(spacing: 6) {
+                        Circle()
+                            .fill(status.color)
+                            .frame(width: 8, height: 8)
+                        Text(status.text)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+            }
+            .padding(.vertical, 4)
+        }
+    }
+
+    private var status: (text: String, color: Color) {
+        guard model.isReceivingMotion else { return ("Waiting for your AirPods", .orange) }
+        switch model.mode {
+        case .off: return ("Ready. Choose a mode to start.", .green)
+        case .presenter: return ("Presenter mode is on", .green)
+        case .mouse: return ("Mouse mode is on", .green)
+        }
     }
 
     private var controlSection: some View {
