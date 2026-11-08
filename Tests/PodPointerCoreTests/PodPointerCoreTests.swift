@@ -302,17 +302,17 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
     }
 
     @Test func falseTapsCannotChainWhileMoving() {
-        // One tap while steady, then fast movement with repeated jolts.
+        // One tap while steady, then jolts that never let the shake fade.
         var detector = TapDetector(threshold: 0.3)
         var taps = 0
         let values = signal(tapsAt: Array(stride(from: 30, to: 150, by: 10)), length: 170)
         for (index, value) in values.enumerated() {
-            let tapped = detector.process(
+            let tap = detector.process(
                 acceleration: Vector3(x: value, y: 0, z: 0),
-                rotationSpeed: index > 30 ? 3 : 0,
+                rotation: .zero,
                 at: Double(index) * sampleInterval
             )
-            if tapped { taps += 1 }
+            if tap != nil { taps += 1 }
         }
         #expect(taps == 3)
     }
@@ -330,12 +330,14 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
         var taps = 0
         let values = signal(tapsAt: [30, 42])
         for (index, value) in values.enumerated() {
-            let tapped = detector.process(
+            // Fast but back and forth, so the case doesn't actually turn.
+            let shake = (31...41).contains(index) ? (index.isMultiple(of: 2) ? 2.5 : -2.5) : 0.0
+            let tap = detector.process(
                 acceleration: Vector3(x: value, y: 0, z: 0),
-                rotationSpeed: (31...41).contains(index) ? 3 : 0,
+                rotation: Vector3(x: shake, y: 0, z: 0),
                 at: Double(index) * sampleInterval
             )
-            if tapped { taps += 1 }
+            if tap != nil { taps += 1 }
         }
         #expect(taps == 2)
     }
@@ -355,24 +357,34 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
     }
 }
 
-/// Replays taps recorded from real AirPods Pro in a case, with the prompts they answered.
+/// Replays motion recorded from real AirPods in a case, with the prompts it answered.
 @Suite struct RecordedTapTests {
     private struct Replay {
         var gestures: [(time: Double, gesture: CaseGesture)] = []
         var prompts: [(time: Double, gesture: CaseGesture)] = []
-        var tapTestEnd = 0.0
-        var gestureTestEnd = 0.0
+        var events: [(time: Double, name: String)] = []
     }
 
-    private func replay() throws -> Replay {
-        let url = try #require(Bundle.module.url(forResource: "real-taps", withExtension: "csv", subdirectory: "Fixtures"))
-        var processor = CaseInputProcessor(calibration: CaseCalibration(
-            horizontalAxis: Vector3(x: -0.40161, y: 0.49439, z: 0.7709),
-            verticalAxis: Vector3(x: 0.13318, y: -0.80129, z: 0.58327),
-            gyroBias: Vector3(x: -0.03627, y: 0.00502, z: 0.02783),
-            tapThreshold: 0.22364,
-            sensorLocation: "left"
-        ))
+    /// Recorded with a firm tapping style, from the tap test through the gesture test.
+    private let firmTaps = CaseCalibration(
+        horizontalAxis: Vector3(x: -0.40161, y: 0.49439, z: 0.7709),
+        verticalAxis: Vector3(x: 0.13318, y: -0.80129, z: 0.58327),
+        gyroBias: Vector3(x: -0.03627, y: 0.00502, z: 0.02783),
+        tapThreshold: 0.22364,
+        sensorLocation: "left"
+    )
+    /// Recorded with a lighter tapping style, from calibration through the movement test.
+    private let lightTaps = CaseCalibration(
+        horizontalAxis: Vector3(x: -0.40438, y: 0.44057, z: 0.80148),
+        verticalAxis: Vector3(x: -0.16617, y: 0.82635, z: -0.53808),
+        gyroBias: Vector3(x: -0.07101, y: 0.0518, z: 0.10237),
+        tapThreshold: 0.10693,
+        sensorLocation: "left"
+    )
+
+    private func replay(_ file: String, calibration: CaseCalibration) throws -> Replay {
+        let url = try #require(Bundle.module.url(forResource: file, withExtension: "csv", subdirectory: "Fixtures"))
+        var processor = CaseInputProcessor(calibration: calibration)
         var result = Replay()
         for line in try String(contentsOf: url, encoding: .utf8).split(separator: "\n").dropFirst() {
             let fields = line.split(separator: ",", omittingEmptySubsequences: false).map(String.init)
