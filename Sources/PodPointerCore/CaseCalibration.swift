@@ -132,8 +132,20 @@ public struct CalibrationSession: Sendable {
         case .turnRight, .turnUp:
             return processTurn(reading, sampleStep: sampleStep, elapsed: elapsed)
         case .tap:
-            return processTap(impulse: impulse, time: reading.timestamp, elapsed: elapsed)
+            return processTap(impulse: impulse, time: time, elapsed: elapsed)
         }
+    }
+
+    private mutating func finishSettling(_ reading: MotionReading, at time: Double) -> Bool {
+        guard (reading.rotationRate - gyroBias).magnitude < Self.holdMotionLimit else {
+            stillSince = nil
+            return false
+        }
+        let since = stillSince ?? time
+        stillSince = since
+        guard time - since >= Self.settleSeconds else { return false }
+        isSettling = false
+        return true
     }
 
     private mutating func processHold(_ reading: MotionReading, impulse: Double, elapsed: Double) -> CalibrationStatus {
@@ -171,8 +183,8 @@ public struct CalibrationSession: Sendable {
         sweepSamples.removeAll()
 
         if step == .sweepSideways {
-            horizontalAxis = axis
-            advance(to: .sweepVertically)
+            pendingAxis = axis
+            advance(to: .turnRight)
             return .inProgress
         }
 
