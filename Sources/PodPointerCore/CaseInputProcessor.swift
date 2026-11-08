@@ -101,6 +101,25 @@ public struct CaseInputProcessor: Sendable {
     }
 
     public mutating func setPosition(_ point: PointerPoint) {
+        heldMotion.removeAll()
         engine.set(position: point)
+    }
+
+    /// While a jolt is being checked, the pointer waits. If the jolt was the hand
+    /// moving, the pointer catches up, so no movement is lost.
+    private mutating func advancePointer(horizontalRate: Double, verticalRate: Double, at time: Double) -> PointerPoint {
+        if time < holdUntil {
+            heldMotion.removeAll()
+            return engine.hold(at: time)
+        }
+        if detector.isChecking {
+            heldMotion.append(HeldMotion(horizontalRate: horizontalRate, verticalRate: verticalRate, time: time))
+            return engine.position
+        }
+        for motion in heldMotion {
+            _ = engine.advance(horizontalRate: motion.horizontalRate, verticalRate: motion.verticalRate, at: motion.time)
+        }
+        heldMotion.removeAll()
+        return engine.advance(horizontalRate: horizontalRate, verticalRate: verticalRate, at: time)
     }
 }
