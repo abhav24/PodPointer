@@ -3,6 +3,8 @@ import Foundation
 public struct CaseOutput: Equatable, Sendable {
     public var point: PointerPoint
     public var gesture: CaseGesture?
+    /// True on the sample where a tap began.
+    public var tapped: Bool
 }
 
 /// Combines calibration, tap detection, and pointer movement into one input.
@@ -16,17 +18,25 @@ public struct CaseInputProcessor: Sendable {
 
     /// Above 1 makes lighter taps count. Below 1 needs firmer taps.
     public var tapSensitivity = 1.0 {
-        didSet { detector.threshold = calibration.tapThreshold / tapSensitivity }
+        didSet { detector.threshold = Self.detectionThreshold(for: calibration) / tapSensitivity }
     }
 
-    private static let settleSeconds = 0.08
+    /// How long to wait for another tap before acting on a tap group.
+    public var multiTapWindow: Double {
+        get { sequence.windowSeconds }
+        set { sequence.windowSeconds = newValue }
+    }
+
+    /// Asks for slightly firmer taps than calibration measured, which removes
+    /// weak false taps without losing real ones.
+    private static let thresholdMargin = 1.1
+    private static let holdAfterTapSeconds = 0.15
     private static let degreesPerRadian = 180 / Double.pi
 
     private var engine: PointerEngine
     private var detector: TapDetector
     private var sequence = TapSequence()
-    private var isHolding = false
-    private var holdUntil = Double.infinity
+    private var holdUntil = -Double.infinity
 
     public init(calibration: CaseCalibration, pointerConfiguration: PointerConfiguration = PointerConfiguration()) {
         self.calibration = calibration
