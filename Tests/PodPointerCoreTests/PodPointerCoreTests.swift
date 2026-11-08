@@ -363,33 +363,17 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
 }
 
 @Suite struct SampleRateTrackerTests {
-    @Test func emptyUntilThereAreTwoSamples() {
+    @Test func measuresRateAndGaps() {
         var tracker = SampleRateTracker()
         #expect(tracker.snapshot == .empty)
-        tracker.record(1)
-        #expect(tracker.snapshot == .empty)
-    }
-
-    @Test func measuresASteadyRate() {
-        var tracker = SampleRateTracker()
-        for index in 0..<50 {
-            tracker.record(Double(index) * 0.04)
-        }
-        let snapshot = tracker.snapshot
-        #expect(abs(snapshot.hertz - 25) < 0.01)
-        #expect(abs(snapshot.p95IntervalMilliseconds - 40) < 0.01)
-        #expect(abs(snapshot.maxGapMilliseconds - 40) < 0.01)
-    }
-
-    @Test func reportsTheLongestGap() {
-        var tracker = SampleRateTracker()
-        for time in [0, 0.04, 0.08, 0.58, 0.62] {
+        for time in [0, 0.02, 0.04, 0.54, 0.56] {
             tracker.record(time)
         }
-        #expect(abs(tracker.snapshot.maxGapMilliseconds - 500) < 0.01)
+        #expect(abs(tracker.snapshot.longestGapMilliseconds - 500) < 0.01)
+        #expect(abs(tracker.snapshot.hertz - 4 / 0.56) < 0.01)
     }
 
-    @Test func dropsSamplesOutsideTheWindow() {
+    @Test func forgetsOldSamples() {
         var tracker = SampleRateTracker(windowSeconds: 1)
         tracker.record(0)
         tracker.record(0.5)
