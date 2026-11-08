@@ -27,6 +27,8 @@ public struct PointerConfiguration: Equatable, Sendable {
     public var deadZoneDegreesPerSecond = 2.0
     /// How much fast movements are sped up. 1 means no speed-up.
     public var maximumAcceleration = 1.6
+    public var invertHorizontal = false
+    public var invertVertical = false
     /// Lower values are steadier but lag more.
     public var minCutoff = 1.5
     public var beta = 0.02
@@ -64,8 +66,8 @@ public struct PointerEngine: Sendable {
         let elapsed = time - last
         guard elapsed > 0, elapsed <= Self.maximumStepSeconds else { return position }
 
-        let horizontal = applyDeadZone(horizontalRate)
-        let vertical = applyDeadZone(verticalRate)
+        let horizontal = applyDeadZone(horizontalRate) * (configuration.invertHorizontal ? -1 : 1)
+        let vertical = applyDeadZone(verticalRate) * (configuration.invertVertical ? -1 : 1)
         let speed = (horizontal * horizontal + vertical * vertical).squareRoot()
         let boost = 1 + (configuration.maximumAcceleration - 1) * min(speed / 90, 1)
 
