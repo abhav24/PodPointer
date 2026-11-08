@@ -21,6 +21,19 @@ public struct DetectedTap: Equatable, Sendable {
 public struct TapDetector: Sendable {
     public var threshold: Double
 
+    /// How long to watch a jolt before calling it a tap. No longer than
+    /// `minimumTapSpacing`, so the next tap in a group is never missed.
+    private static let confirmSeconds = 0.14
+    /// A tap barely turns the case. Moving it turns it much faster and further.
+    private static let tapRotationLimit = 3.3
+    private static let tapTurnLimitRadians = 9 * Double.pi / 180
+    /// In g. Above this, the case is being swung, not tapped.
+    private static let tapAccelerationLimit = 2.0
+    /// A tap's jolt is about as large as its acceleration. When the hand moves
+    /// the case, acceleration builds up over many samples instead.
+    private static let minimumSharpness = 0.55
+    private static let peakJoltSeconds = 0.1
+
     /// How fast the shake from a tap is assumed to fade, in seconds.
     private static let shakeFadeSeconds = 0.06
     /// How far a jolt must stand out from the remaining shake.
@@ -30,8 +43,10 @@ public struct TapDetector: Sendable {
     /// The AirPods bounce inside the case, so one tap can show up as two jolts
     /// up to about 100 ms apart. Closer jolts than this are the same tap.
     private static let minimumTapSpacing = 0.14
-    private static let movementWindowSeconds = 0.3
-    /// Movement right after a tap is shake from the tap, not the hand moving.
+    /// A jolt soon after a tap and much weaker than it is the same tap bouncing.
+    private static let bounceSeconds = 0.25
+    private static let bounceStrengthRatio = 0.4
+    /// Motion right after a tap is shake from the tap, not the hand moving.
     private static let afterTapSettleSeconds = 0.25
     /// Fast rotation means the hand is moving, so a jolt probably isn't a tap.
     private static let movingRotationLimit = 1.5
