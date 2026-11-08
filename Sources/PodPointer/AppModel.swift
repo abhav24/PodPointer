@@ -40,24 +40,28 @@ final class AppModel: ObservableObject {
     @Published private(set) var isPointerOn = true
     @Published private(set) var displays: [DisplayOption] = []
     @Published var selectedDisplayID: CGDirectDisplayID = CGMainDisplayID() {
-        didSet { showOverlayIfNeeded() }
+        didSet {
+            applyDisplayShape()
+            updateOverlay()
+        }
     }
-    @Published var configuration = PointerConfiguration() {
-        didSet { mapper.configuration = configuration }
+    @Published var pointerConfiguration = PointerConfiguration() {
+        didSet { processor?.pointerConfiguration = pointerConfiguration }
     }
-
-    // Stem presses
-    @Published private(set) var isListeningForStem = false
-    @Published var sendsSlideKeys = false
-    @Published private(set) var hasAccessibility = KeySender.isTrusted
-    @Published private(set) var pressCounts: [StemPress: Int] = [:]
+    @Published var tapSensitivity = 1.0 {
+        didSet { processor?.tapSensitivity = tapSensitivity }
+    }
+    @Published var sendsActions = false
+    @Published private(set) var hasAccessibility = InputSender.isTrusted
+    @Published private(set) var gestureCounts: [CaseGesture: Int] = [:]
 
     @Published private(set) var log: [String] = []
 
     private let motion = MotionController()
-    private let stem = StemController()
     private let overlay = LaserOverlay()
-    private var mapper = PointerMapper()
+    private let silentAudio = SilentAudio()
+    private var processor: CaseInputProcessor?
+    private var calibrationSession: CalibrationSession?
     private var tracker = SampleRateTracker()
     private var debouncer = StemPressDebouncer()
     private var sensorLocations: [String] = []
