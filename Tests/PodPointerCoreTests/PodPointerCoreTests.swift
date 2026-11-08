@@ -98,3 +98,60 @@ import Testing
     }
 }
 
+@Suite struct SampleRateTrackerTests {
+    @Test func emptyUntilThereAreTwoSamples() {
+        var tracker = SampleRateTracker()
+        #expect(tracker.snapshot == .empty)
+        tracker.record(1)
+        #expect(tracker.snapshot == .empty)
+    }
+
+    @Test func measuresASteadyRate() {
+        var tracker = SampleRateTracker()
+        for index in 0..<50 {
+            tracker.record(Double(index) * 0.04)
+        }
+        let snapshot = tracker.snapshot
+        #expect(abs(snapshot.hertz - 25) < 0.01)
+        #expect(abs(snapshot.p95IntervalMilliseconds - 40) < 0.01)
+        #expect(abs(snapshot.maxGapMilliseconds - 40) < 0.01)
+    }
+
+    @Test func reportsTheLongestGap() {
+        var tracker = SampleRateTracker()
+        for time in [0, 0.04, 0.08, 0.58, 0.62] {
+            tracker.record(time)
+        }
+        #expect(abs(tracker.snapshot.maxGapMilliseconds - 500) < 0.01)
+    }
+
+    @Test func dropsSamplesOutsideTheWindow() {
+        var tracker = SampleRateTracker(windowSeconds: 1)
+        tracker.record(0)
+        tracker.record(0.5)
+        tracker.record(10)
+        tracker.record(10.1)
+        #expect(tracker.snapshot.maxGapMilliseconds < 101)
+    }
+}
+
+@Suite struct StemPressTests {
+    @Test func pressesMapToSlideActions() {
+        #expect(StemAction(press: .single) == .nextSlide)
+        #expect(StemAction(press: .double) == .recenter)
+        #expect(StemAction(press: .triple) == .previousSlide)
+    }
+
+    @Test func debouncerCollapsesRepeatsOnly() {
+        var debouncer = StemPressDebouncer(windowSeconds: 0.15)
+        let accepted = [
+            debouncer.shouldAccept(.single, at: 1),
+            debouncer.shouldAccept(.single, at: 1.1),
+            debouncer.shouldAccept(.double, at: 1.12),
+            debouncer.shouldAccept(.single, at: 1.14),
+            debouncer.shouldAccept(.single, at: 1.5)
+        ]
+        #expect(accepted == [true, false, true, true, true])
+    }
+}
+
