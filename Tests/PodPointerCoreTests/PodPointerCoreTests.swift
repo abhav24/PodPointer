@@ -230,28 +230,26 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
         return point
     }
 
-    @Test func firstSampleIsTheCenter() {
-        var mapper = PointerMapper()
-        #expect(mapper.map(yawRadians: 1.2, pitchRadians: -0.4, at: 0) == PointerPoint(x: 0.5, y: 0.5))
-    }
-
-    @Test func turningLeftMovesLeftAndLookingUpMovesUp() {
-        var mapper = PointerMapper()
-        _ = mapper.map(yawRadians: 0, pitchRadians: 0, at: 0)
-        let point = settle(&mapper, yaw: 7.5 * degree, pitch: 5 * degree)
-        #expect(abs(point.x - 0.25) < 0.01)
-        #expect(abs(point.y - 0.25) < 0.01)
-    }
-
-    @Test func invertFlipsDirection() {
+    private func engine() -> PointerEngine {
         var configuration = PointerConfiguration()
-        configuration.invertX = true
-        configuration.invertY = true
-        var mapper = PointerMapper(configuration: configuration)
-        _ = mapper.map(yawRadians: 0, pitchRadians: 0, at: 0)
-        let point = settle(&mapper, yaw: 7.5 * degree, pitch: 5 * degree)
-        #expect(abs(point.x - 0.75) < 0.01)
-        #expect(abs(point.y - 0.75) < 0.01)
+        configuration.maximumAcceleration = 1
+        configuration.deadZoneDegreesPerSecond = 0
+        return PointerEngine(configuration: configuration)
+    }
+
+    @Test func rotatingRightAndUpMovesRightAndUp() {
+        var pointer = engine()
+        let point = sweep(&pointer, horizontal: 10, vertical: 5, seconds: 1)
+        #expect(point.x > 0.6)
+        #expect(point.y < 0.45)
+    }
+
+    @Test func fullRangeCrossesTheDisplay() {
+        var pointer = engine()
+        pointer.set(position: PointerPoint(x: 0, y: 0.5))
+        _ = sweep(&pointer, horizontal: 40, seconds: 1)
+        _ = sweep(&pointer, seconds: 1, from: 1.02)
+        #expect(abs(pointer.position.x - 1) < 0.03)
     }
 
     @Test func outputIsClampedToTheDisplay() {
