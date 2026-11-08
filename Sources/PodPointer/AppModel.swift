@@ -343,13 +343,83 @@ final class AppModel: ObservableObject {
         updateOverlay()
     }
 
-    private func showOverlayIfNeeded() {
-        guard pointerMode == .laser, !isStale,
+    private func updateOverlay() {
+        guard mode == .presenter, isPointerOn, canUsePointer, isReceivingMotion,
               let screen = NSScreen.screens.first(where: { Self.displayID(of: $0) == selectedDisplayID }) else {
             overlay.hide()
             return
         }
         overlay.show(on: screen)
+        overlay.move(to: shownPoint)
+    }
+
+    private func place(at point: PointerPoint) {
+        processor?.setPosition(point)
+        targetPoint = point
+        shownPoint = point
+    }
+
+    private func syncToCursor() {
+        let bounds = CGDisplayBounds(selectedDisplayID)
+        guard let cursor = CGEvent(source: nil)?.location, bounds.width > 0, bounds.height > 0 else { return }
+        place(at: PointerPoint(
+            x: (cursor.x - bounds.minX) / bounds.width,
+            y: (cursor.y - bounds.minY) / bounds.height
+        ))
+    }
+
+    private func applyDisplayShape() {
+        let bounds = CGDisplayBounds(selectedDisplayID)
+        guard bounds.height > 0 else { return }
+        pointerConfiguration.aspectRatio = bounds.width / bounds.height
+    }
+
+    private func updateSilentAudio() {
+        guard keepsAudioActive else {
+            silentAudio.stop()
+            addLog("Silent audio off")
+            return
+        }
+        do {
+            try silentAudio.start()
+            addLog("Silent audio on")
+        } catch {
+            keepsAudioActive = false
+            addLog("Couldn't start silent audio: \(error.localizedDescription)")
+        }
+    }
+
+    private func use(_ calibration: CaseCalibration) {
+        var next = CaseInputProcessor(calibration: calibration, pointerConfiguration: pointerConfiguration)
+        next.tapSensitivity = tapSensitivity
+        processor = next
+        isCalibrated = true
+        hasWarnedAboutSensor = false
+        targetPoint = .center
+        shownPoint = .center
+    }
+
+    private func save(_ calibration: CaseCalibration) {
+        if let data = try? JSONEncoder().encode(calibration) {
+            UserDefaults.standard.set(data, forKey: Self.calibrationKey)
+        }
+    }
+
+    private func loadCalibration() {
+        guard let data = UserDefaults.standard.data(forKey: Self.calibrationKey),
+              let saved = try? JSONDecoder().decode(CaseCalibration.self, from: data) else { return }
+        use(saved)
+        addLog("Loaded saved calibration")
+    }
+
+    private func addTimer(interval: TimeInterval, _ action: @escaping @MainActor (AppModel) -> Void) {
+        let timer = Timer(timeInterval: interval, repeats: true) { [weak self] _ in
+            MainActor.assumeIsolated {
+                if let self { action(self) }
+            }
+        }
+        RunLoop.main.add(timer, forMode: .common)
+        timers.append(timer)
     }
 
     private func addLog(_ message: String) {
