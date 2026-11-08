@@ -48,3 +48,51 @@ public enum CalibrationFailure: String, Error, Equatable, Sendable {
     case tapsTooWeak = "The taps were hard to tell apart from noise. Tap more firmly and try again."
 }
 
+public enum CalibrationStatus: Equatable, Sendable {
+    case inProgress
+    case finished(CaseCalibration)
+    case failed(CalibrationFailure)
+}
+
+/// Runs calibration from motion samples alone, so it can be tested without hardware.
+public struct CalibrationSession: Sendable {
+    public static let requiredTaps = 5
+
+    private static let holdSeconds = 2.0
+    private static let sweepSeconds = 4.0
+    private static let tapTimeoutSeconds = 10.0
+    private static let minimumHoldSamples = 20
+    private static let minimumSweepSamples = 12
+    private static let minimumTaps = 3
+    private static let holdMotionLimit = 0.5
+    private static let sweepMotionFloor = 0.35
+    private static let minimumAxisEnergy = 0.6
+    private static let minimumAxisSeparation = 0.5
+    private static let tapPeakSeconds = 0.15
+    private static let tapSpacingSeconds = 0.25
+
+    public private(set) var step = CalibrationStep.holdStill
+    public private(set) var progress = 0.0
+    public private(set) var tapsFound = 0
+
+    private let sensorLocation: String
+    private var stepStart: Double?
+    private var previousAcceleration: Vector3?
+
+    private var restingSum = Vector3.zero
+    private var restingCount = 0
+    private var noiseFloor = 0.0
+    private var gyroBias = Vector3.zero
+
+    private var sweepSamples: [Vector3] = []
+    private var horizontalAxis = Vector3.zero
+    private var verticalAxis = Vector3.zero
+
+    private var tapPeaks: [Double] = []
+    private var currentPeak: Double?
+    private var currentPeakStart = -Double.infinity
+
+    public init(sensorLocation: String) {
+        self.sensorLocation = sensorLocation
+    }
+
