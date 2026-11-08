@@ -97,3 +97,28 @@ public struct PointerEngine: Sendable {
         set(position: earlier.point)
     }
 
+    public mutating func set(position point: PointerPoint) {
+        rawPosition = PointerPoint(x: Self.clamped(point.x), y: Self.clamped(point.y))
+        position = rawPosition
+        xFilter.reset()
+        yFilter.reset()
+        history.removeAll()
+    }
+
+    private func applyDeadZone(_ rate: Double) -> Double {
+        let zone = configuration.deadZoneDegreesPerSecond
+        guard abs(rate) > zone else { return 0 }
+        return rate > 0 ? rate - zone : rate + zone
+    }
+
+    private mutating func applyFilterSettings() {
+        xFilter.minCutoff = configuration.minCutoff
+        xFilter.beta = configuration.beta
+        yFilter.minCutoff = configuration.minCutoff
+        yFilter.beta = configuration.beta
+    }
+
+    private static func clamped(_ value: Double) -> Double {
+        min(max(value, 0), 1)
+    }
+}
