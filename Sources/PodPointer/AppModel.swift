@@ -190,19 +190,16 @@ final class AppModel: ObservableObject {
         noteSensor(location)
         publishStats(for: reading)
 
-        let point = mapper.map(yawRadians: sample.yaw, pitchRadians: sample.pitch, at: sample.timestamp)
-        switch pointerMode {
-        case .off:
-            break
-        case .laser:
-            overlay.move(to: point)
-        case .cursor:
-            moveCursor(to: point)
+        if calibrationSession != nil {
+            continueCalibration(with: reading)
+            return
         }
-        if isStale {
-            isStale = false
-            addLog("Motion samples started")
-            showOverlayIfNeeded()
+        guard var current = processor else { return }
+        let output = current.process(reading)
+        processor = current
+        targetPoint = output.point
+        if let gesture = output.gesture {
+            perform(gesture)
         }
 
         // The pointer updates on every sample, but the window only needs a few updates a second.
