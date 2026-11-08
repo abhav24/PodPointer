@@ -23,7 +23,7 @@
     <key>NSHighResolutionCapable</key>
     <true/>
     <key>NSMotionUsageDescription</key>
-    <string>PodPointer uses head motion from your AirPods to move the on-screen pointer.</string>
+    <string>PodPointer uses motion from the AirPods in your case to move the pointer and detect taps.</string>
     <key>NSPrincipalClass</key>
     <string>NSApplication</string>
 </dict>
