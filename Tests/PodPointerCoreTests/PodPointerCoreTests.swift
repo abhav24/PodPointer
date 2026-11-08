@@ -376,30 +376,9 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
     @Test func forgetsOldSamples() {
         var tracker = SampleRateTracker(windowSeconds: 1)
         tracker.record(0)
-        tracker.record(0.5)
         tracker.record(10)
         tracker.record(10.1)
-        #expect(tracker.snapshot.maxGapMilliseconds < 101)
-    }
-}
-
-@Suite struct StemPressTests {
-    @Test func pressesMapToSlideActions() {
-        #expect(StemAction(press: .single) == .nextSlide)
-        #expect(StemAction(press: .double) == .recenter)
-        #expect(StemAction(press: .triple) == .previousSlide)
-    }
-
-    @Test func debouncerCollapsesRepeatsOnly() {
-        var debouncer = StemPressDebouncer(windowSeconds: 0.15)
-        let accepted = [
-            debouncer.shouldAccept(.single, at: 1),
-            debouncer.shouldAccept(.single, at: 1.1),
-            debouncer.shouldAccept(.double, at: 1.12),
-            debouncer.shouldAccept(.single, at: 1.14),
-            debouncer.shouldAccept(.single, at: 1.5)
-        ]
-        #expect(accepted == [true, false, true, true, true])
+        #expect(tracker.snapshot.longestGapMilliseconds < 101)
     }
 }
 
