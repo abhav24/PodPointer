@@ -55,13 +55,45 @@ struct ContentView: View {
         }
     }
 
-    private var stemSection: some View {
+    private var calibrationSection: some View {
         Section {
-            Toggle("Listen for stem presses", isOn: Binding(
-                get: { model.isListeningForStem },
-                set: { model.setListeningForStem($0) }
-            ))
-            Toggle("Send arrow keys to the front app", isOn: $model.sendsSlideKeys)
+            if let step = model.calibrationStep {
+                Text(instruction(for: step))
+                    .font(.headline)
+                ProgressView(value: model.calibrationProgress)
+                Button("Cancel") { model.cancelCalibration() }
+            } else {
+                LabeledContent("Status", value: model.isCalibrated ? "Calibrated" : "Not calibrated")
+                Button(model.isCalibrated ? "Calibrate Again" : "Calibrate") { model.startCalibration() }
+            }
+            if let message = model.calibrationMessage {
+                Text(message)
+                    .foregroundStyle(.secondary)
+            }
+        } header: {
+            Text("2. Calibrate")
+        } footer: {
+            Text("Hold the case the way you'll use it. Calibrate again if you change your grip.")
+        }
+    }
+
+    private var controlSection: some View {
+        Section {
+            Picker("Mode", selection: Binding(
+                get: { model.mode },
+                set: { model.setMode($0) }
+            )) {
+                ForEach(ControlMode.allCases) { Text($0.rawValue).tag($0) }
+            }
+            .pickerStyle(.segmented)
+            .disabled(!model.canUsePointer)
+
+            Picker("Display", selection: $model.selectedDisplayID) {
+                ForEach(model.displays) { Text($0.name).tag($0.id) }
+            }
+            Button("Recenter") { model.recenter() }
+                .disabled(!model.canUsePointer)
+            Toggle("Send keys and clicks", isOn: $model.sendsActions)
             if !model.hasAccessibility {
                 LabeledContent("Sending keys needs Accessibility access") {
                     Button("Open Prompt") { model.requestAccessibility() }
