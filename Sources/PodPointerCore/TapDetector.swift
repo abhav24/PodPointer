@@ -70,15 +70,25 @@ public struct TapDetector: Sendable {
             tapsInGroup = time - lastTapTime < Self.tapGroupSeconds ? tapsInGroup + 1 : 1
             lastTapTime = time
         }
-        // A tap jolts the gyroscope too, so samples during and after a tap
-        // aren't recorded. Otherwise the second tap of a double tap would fail.
-        recentRotation.append((time, rotationSpeed))
-        return .none
+        shake = max(shake, jolt)
+
+        let hasSettled = time - lastTapTime >= Self.afterTapSettleSeconds
+        if hasSettled {
+            recentJolts.append((time, jolt))
+        }
+        if hasSettled || tapsInGroup >= Self.longestTapGroup {
+            recentRotation.append((time, rotationSpeed))
+        }
+        return isTap
     }
 
-    private mutating func isHandStill(at time: Double) -> Bool {
-        recentRotation.removeAll { time - $0.time > Self.stillWindowSeconds }
-        return recentRotation.allSatisfy { $0.speed < Self.stillRotationLimit }
+    private var recentMovement: Double {
+        guard !recentJolts.isEmpty else { return 0 }
+        return recentJolts.reduce(0) { $0 + $1.jolt } / Double(recentJolts.count)
+    }
+
+    private var isSteady: Bool {
+        recentRotation.allSatisfy { $0.speed < Self.movingRotationLimit }
     }
 }
 
@@ -90,11 +100,12 @@ public enum CaseGesture: String, CaseIterable, Sendable {
 
 /// Groups taps into single, double, and triple taps.
 public struct TapSequence: Sendable {
-    public let windowSeconds: Double
+    /// How long to wait for another tap. A single tap acts after this delay.
+    public var windowSeconds: Double
     private var count = 0
     private var lastTap = -Double.infinity
 
-    public init(windowSeconds: Double = 0.35) {
+    public init(windowSeconds: Double = 0.4) {
         self.windowSeconds = windowSeconds
     }
 
