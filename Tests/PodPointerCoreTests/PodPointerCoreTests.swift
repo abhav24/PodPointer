@@ -387,14 +387,15 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
         let report = SessionReport(
             appVersion: "0.1.0",
             macOSVersion: "27.0",
-            motion: SampleRateSnapshot(hertz: 25, p95IntervalMilliseconds: 41, maxGapMilliseconds: 80),
+            motion: SampleRateSnapshot(hertz: 50, longestGapMilliseconds: 80),
             sensorLocations: ["left"],
-            pressCounts: [.single: 3],
-            events: ["12:00:00 Connected"]
+            isCalibrated: true,
+            gestureCounts: [.single: 3],
+            events: ["12:00:00 Tap"]
         ).markdown
-        #expect(report.contains("Motion rate: 25.0 Hz"))
-        #expect(report.contains("Sensor locations seen: left"))
+        #expect(report.contains("Motion rate: 50.0 Hz"))
+        #expect(report.contains("AirPods sending motion: left"))
         #expect(report.contains("single: 3, double: 0, triple: 0"))
-        #expect(report.contains("12:00:00 Connected"))
+        #expect(report.contains("12:00:00 Tap"))
     }
 }
