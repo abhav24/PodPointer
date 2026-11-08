@@ -104,3 +104,28 @@ struct ContentView: View {
         }
     }
 
+    private var logSection: some View {
+        Section {
+            ScrollViewReader { proxy in
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 2) {
+                        ForEach(Array(model.log.enumerated()), id: \.offset) { index, line in
+                            Text(line)
+                                .font(.caption.monospaced())
+                                .textSelection(.enabled)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .id(index)
+                        }
+                    }
+                }
+                .frame(height: 140)
+                .onChange(of: model.log.count) { _, count in
+                    proxy.scrollTo(count - 1, anchor: .bottom)
+                }
+            }
+            Button("Copy Test Report") { model.copyReport() }
+        } header: {
+            Text("Log")
+        }
+    }
+}
