@@ -468,3 +468,49 @@ struct CaseCheckPage: View {
         }
     }
 
+    private func resultRow(_ title: String, value: String, passed: Bool) -> some View {
+        HStack {
+            Text(title)
+            Spacer()
+            Label(value, systemImage: passed ? "checkmark.circle.fill" : "exclamationmark.triangle.fill")
+                .foregroundStyle(passed ? .green : .orange)
+        }
+    }
+
+    private func slider(_ title: String, tip: String, value: Binding<Double>, range: ClosedRange<Double>) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(title)
+                .font(.headline)
+            Slider(value: value, in: range)
+            Text(tip)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+}
+
+struct AllowControlPage: View {
+    @ObservedObject var model: AppModel
+
+    var body: some View {
+        SetupPage(
+            progress: "Step 9 of 9",
+            symbol: "lock.open",
+            title: "Let PodPointer control your slides",
+            detail: "To change slides and click, PodPointer needs Accessibility access. It only sends the arrow keys and clicks you tap for.",
+            onStartOver: { model.startOver() }
+        ) {
+            InstructionList(items: [
+                "Select Allow Access below.",
+                "In the message that appears, select Open System Settings.",
+                "Turn on PodPointer in the list.",
+                "Come back to this window."
+            ])
+            PrimaryButton("Allow Access") { model.requestAccessibility() }
+            WaitingLabel(text: "Waiting for access")
+            Button("Skip for Now") { model.finishSetup() }
+                .buttonStyle(.link)
+        }
+    }
+}
+
