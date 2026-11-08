@@ -1,21 +1,17 @@
 # Hardware test plan
 
-This test answers four questions that unit tests can't. Allow about 15 minutes.
+These tests answer what unit tests can't. Allow about 15 minutes. Follow the order, because each test depends on the one before it.
 
-**Setup**
-- Build and open the app by following the [README](../README.md).
-- Connect your AirPods to the Mac, not your phone, and put them in.
-- Pause any music.
+**Setup:** build and open the app, then follow the setup steps in the [README](../README.md).
 
-## 1. Do stem presses reach the app?
+## 1. Does motion arrive from the open case?
 
-1. Turn on **Listen for stem presses**, and leave **Send arrow keys** off.
-2. With PodPointer in front, press a stem once, twice, and three times. Check **Presses received**.
-3. Open a slide deck in PowerPoint or Keynote and start the slideshow.
-4. Press a stem 10 times, then return to PodPointer and check the count.
-5. Turn on **Send arrow keys**, allow Accessibility access, and repeat with the slideshow in front.
+Check that **Motion** says **Arriving**, then move the case and watch **Jolt** change.
 
-**Passes if** all 10 presses arrive and the slides change.
+If motion doesn't arrive, try these one at a time:
+- Select the AirPods as the sound output again.
+- Turn on **Keep audio connection active**.
+- Close the lid, open it again, and wait a few seconds.
 
 Try again with Spotify or Apple Music open, because another media app may take the presses.
 
