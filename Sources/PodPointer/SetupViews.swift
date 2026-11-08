@@ -203,3 +203,60 @@ struct CaseCheckPage: View {
         }
     }
 
+    private func page<Content: View>(
+        _ number: Int,
+        symbol: String,
+        title: String,
+        detail: String? = nil,
+        @ViewBuilder content: () -> Content
+    ) -> some View {
+        SetupPage(
+            progress: "Step \(number) of 9",
+            symbol: symbol,
+            title: title,
+            detail: detail,
+            onStartOver: { model.startOver() },
+            content: content
+        )
+    }
+
+    private var connect: some View {
+        page(1, symbol: "airpodspro", title: "Connect your AirPods") {
+            if model.permission == "Denied" || model.permission == "Restricted" {
+                InstructionList(items: [
+                    "Select the button below to open Privacy & Security.",
+                    "Open Motion & Fitness and turn on PodPointer.",
+                    "Quit and reopen PodPointer."
+                ])
+                PrimaryButton("Open Privacy & Security") { model.openPrivacySettings() }
+            } else {
+                InstructionList(items: [
+                    "Put both AirPods in your ears.",
+                    "Connect them to this Mac, using Bluetooth settings if they don't connect by themselves.",
+                    "If a message asks about motion access, select Allow."
+                ])
+                WaitingLabel(text: "Waiting for motion from your AirPods")
+                Button("Open Bluetooth Settings") { model.openBluetoothSettings() }
+                    .controlSize(.large)
+            }
+        }
+    }
+
+    private var earDetection: some View {
+        page(2, symbol: "ear", title: "Turn off Automatic Ear Detection", detail: "With this on, AirPods stop sending motion when they leave your ears. macOS doesn't let apps change it, so you'll need to do this yourself.") {
+            InstructionList(items: [
+                "Keep your AirPods in your ears.",
+                "Select Open Bluetooth Settings below.",
+                "Click ⓘ next to your AirPods.",
+                "Turn off Automatic Ear Detection, then select Done.",
+                "Come back to this window."
+            ])
+            Button("Open Bluetooth Settings") { model.openBluetoothSettings() }
+                .controlSize(.large)
+            PrimaryButton("It's Off") { model.confirmEarDetectionOff() }
+            Text("You can turn it back on when you finish using PodPointer.")
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+        }
+    }
+
