@@ -41,7 +41,11 @@ public struct CaseInputProcessor: Sendable {
     public init(calibration: CaseCalibration, pointerConfiguration: PointerConfiguration = PointerConfiguration()) {
         self.calibration = calibration
         engine = PointerEngine(configuration: pointerConfiguration)
-        detector = TapDetector(threshold: calibration.tapThreshold)
+        detector = TapDetector(threshold: Self.detectionThreshold(for: calibration))
+    }
+
+    private static func detectionThreshold(for calibration: CaseCalibration) -> Double {
+        calibration.tapThreshold * thresholdMargin
     }
 
     public mutating func process(_ reading: MotionReading) -> CaseOutput {
@@ -49,15 +53,15 @@ public struct CaseInputProcessor: Sendable {
         let rotation = reading.rotationRate - calibration.gyroBias
         var gesture: CaseGesture?
 
-        switch detector.process(acceleration: reading.userAcceleration, rotationSpeed: rotation.magnitude, at: time) {
-        case .none:
-            break
-        case .impulseStarted:
+        let tapped = detector.process(
+            acceleration: reading.userAcceleration,
+            rotationSpeed: rotation.magnitude,
+            at: time
+        )
+        if tapped {
+            // A tap also shakes the pointer, so undo that and hold it in place.
             engine.rollBack(from: time)
-            isHolding = true
-            holdUntil = .infinity
-        case .tap:
-            holdUntil = time + Self.settleSeconds
+            holdUntil = time + Self.holdAfterTapSeconds
             gesture = sequence.registerTap(at: time)
         case .rejected:
             isHolding = false
