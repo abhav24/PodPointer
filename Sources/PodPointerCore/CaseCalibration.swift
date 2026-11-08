@@ -111,17 +111,26 @@ public struct CalibrationSession: Sendable {
     }
 
     public mutating func process(_ reading: MotionReading) -> CalibrationStatus {
-        let start = stepStart ?? reading.timestamp
-        stepStart = start
-        let elapsed = reading.timestamp - start
+        let time = reading.timestamp
         let impulse = previousAcceleration.map { (reading.userAcceleration - $0).magnitude } ?? 0
+        let sampleStep = previousTime.map { min(max(time - $0, 0), Self.maximumTurnStep) } ?? 0
         previousAcceleration = reading.userAcceleration
+        previousTime = time
+
+        if isSettling {
+            guard finishSettling(reading, at: time) else { return .inProgress }
+        }
+        let start = stepStart ?? time
+        stepStart = start
+        let elapsed = time - start
 
         switch step {
         case .holdStill:
             return processHold(reading, impulse: impulse, elapsed: elapsed)
         case .sweepSideways, .sweepVertically:
             return processSweep(reading, elapsed: elapsed)
+        case .turnRight, .turnUp:
+            return processTurn(reading, sampleStep: sampleStep, elapsed: elapsed)
         case .tap:
             return processTap(impulse: impulse, time: reading.timestamp, elapsed: elapsed)
         }
