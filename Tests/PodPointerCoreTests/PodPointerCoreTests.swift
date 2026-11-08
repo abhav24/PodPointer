@@ -252,29 +252,113 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
         #expect(abs(pointer.position.x - 1) < 0.03)
     }
 
-    @Test func outputIsClampedToTheDisplay() {
-        var mapper = PointerMapper()
-        _ = mapper.map(yawRadians: 0, pitchRadians: 0, at: 0)
-        let point = settle(&mapper, yaw: 90 * degree, pitch: -80 * degree)
-        #expect(point.x == 0)
-        #expect(point.y == 1)
+    @Test func tremorInsideTheDeadZoneDoesNothing() {
+        var pointer = PointerEngine()
+        #expect(isAtCenter(sweep(&pointer, horizontal: 1.5, vertical: -1.5, seconds: 2)))
     }
 
-    @Test func crossingTheYawSeamIsASmallMove() {
-        var mapper = PointerMapper()
-        _ = mapper.map(yawRadians: 179 * degree, pitchRadians: 0, at: 0)
-        // 179 to -179 degrees is a 2 degree left turn, not a 358 degree turn.
-        let point = settle(&mapper, yaw: -179 * degree, pitch: 0)
-        #expect(abs(point.x - (0.5 - 2.0 / 30)) < 0.01)
+    @Test func staysOnTheDisplay() {
+        var pointer = engine()
+        let point = sweep(&pointer, horizontal: 300, vertical: -300, seconds: 3)
+        #expect(abs(point.x - 1) < 1e-9)
+        #expect(abs(point.y - 1) < 1e-9)
     }
 
-    @Test func recenterMakesTheNextSampleTheCenter() {
-        var mapper = PointerMapper()
-        _ = mapper.map(yawRadians: 0, pitchRadians: 0, at: 0)
-        _ = settle(&mapper, yaw: 40 * degree, pitch: 10 * degree)
-        mapper.recenter()
-        let point = mapper.map(yawRadians: 40 * degree, pitchRadians: 10 * degree, at: 20)
-        #expect(point == PointerPoint(x: 0.5, y: 0.5))
+    @Test func aLongGapDoesNotJump() {
+        var pointer = engine()
+        _ = pointer.advance(horizontalRate: 100, verticalRate: 0, at: 0)
+        #expect(pointer.advance(horizontalRate: 100, verticalRate: 0, at: 5) == .center)
+    }
+
+    @Test func rollBackUndoesTheLastMovement() {
+        var pointer = engine()
+        _ = sweep(&pointer, seconds: 0.1)
+        _ = sweep(&pointer, horizontal: 200, seconds: 0.1, from: 0.12)
+        let moved = pointer.position.x
+        pointer.rollBack(from: 0.24)
+        #expect(pointer.position.x < moved)
+    }
+
+    @Test func easingMovesPartWayAndSettles() {
+        let start = PointerPoint(x: 0, y: 0)
+        let target = PointerPoint(x: 1, y: 1)
+        let step = start.eased(toward: target, elapsed: 0.01, timeConstant: 0.035)
+        #expect(step.x > 0 && step.x < 1)
+        #expect(start.eased(toward: target, elapsed: 1, timeConstant: 0.035).x > 0.999)
+    }
+}
+
+@Suite struct CaseInputProcessorTests {
+    @Test func aTapMakesAGestureAndKeepsThePointerStill() {
+        var processor = CaseInputProcessor(calibration: calibration())
+        var gestures: [CaseGesture] = []
+        var points: [PointerPoint] = []
+        for index in 0..<80 {
+            let isTap = index == 20
+            let output = processor.process(reading(
+                rotation: isTap ? Vector3(x: 5, y: 0, z: 5) : .zero,
+                acceleration: Vector3(x: isTap ? 1 : 0, y: 0, z: 0),
+                at: Double(index) * sampleInterval
+            ))
+            points.append(output.point)
+            if let gesture = output.gesture { gestures.append(gesture) }
+        }
+        #expect(gestures == [.single])
+        #expect(points.allSatisfy(isAtCenter))
+    }
+
+    @Test func rotationUsesTheCalibratedAxes() {
+        var processor = CaseInputProcessor(calibration: calibration())
+        var point = PointerPoint.center
+        for index in 0..<50 {
+            point = processor.process(reading(
+                rotation: Vector3(x: 0, y: 0, z: 20 * degree),
+                at: Double(index) * sampleInterval
+            )).point
+        }
+        #expect(point.x > 0.6)
+        #expect(abs(point.y - 0.5) < 0.001)
+    }
+
+    @Test func gyroBiasIsRemoved() {
+        var base = calibration()
+        base.gyroBias = Vector3(x: 0, y: 0, z: 20 * degree)
+        var processor = CaseInputProcessor(calibration: base)
+        var point = PointerPoint.center
+        for index in 0..<50 {
+            point = processor.process(reading(rotation: base.gyroBias, at: Double(index) * sampleInterval)).point
+        }
+        #expect(isAtCenter(point))
+    }
+
+    @Test func sensitivityChangesWhatCountsAsATap() {
+        func gestureCount(sensitivity: Double) -> Int {
+            var processor = CaseInputProcessor(calibration: calibration(tapThreshold: 0.6))
+            processor.tapSensitivity = sensitivity
+            var count = 0
+            for index in 0..<80 {
+                let output = processor.process(reading(
+                    acceleration: Vector3(x: index == 20 ? 0.4 : 0, y: 0, z: 0),
+                    at: Double(index) * sampleInterval
+                ))
+                if output.gesture != nil { count += 1 }
+            }
+            return count
+        }
+        #expect(gestureCount(sensitivity: 1) == 0)
+        #expect(gestureCount(sensitivity: 2) == 1)
+    }
+}
+
+@Suite struct ControlModeTests {
+    @Test func gesturesMapToActions() {
+        #expect(CaseAction(gesture: .single, mode: .presenter) == .nextSlide)
+        #expect(CaseAction(gesture: .double, mode: .presenter) == .previousSlide)
+        #expect(CaseAction(gesture: .single, mode: .mouse) == .click)
+        #expect(CaseAction(gesture: .double, mode: .mouse) == .doubleClick)
+        #expect(CaseAction(gesture: .triple, mode: .presenter) == .togglePointer)
+        #expect(CaseAction(gesture: .triple, mode: .mouse) == .togglePointer)
+        #expect(CaseAction(gesture: .single, mode: .off) == nil)
     }
 }
 
