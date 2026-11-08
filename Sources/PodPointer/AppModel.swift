@@ -124,25 +124,14 @@ final class AppModel: ObservableObject {
     }
 
     func recenter() {
-        mapper.recenter()
+        place(at: .center)
         addLog("Recentered")
     }
 
-    func setListeningForStem(_ enabled: Bool) {
-        guard enabled != isListeningForStem else { return }
-        if enabled {
-            do {
-                try stem.start()
-                isListeningForStem = true
-                addLog("Listening for stem presses")
-            } catch {
-                stem.stop()
-                addLog("Couldn't start stem listening: \(error.localizedDescription)")
-            }
-        } else {
-            stem.stop()
-            isListeningForStem = false
-            addLog("Stopped listening for stem presses")
+    func startCalibration() {
+        guard isReceivingMotion else {
+            calibrationMessage = "Motion isn't arriving yet. Check the setup steps."
+            return
         }
     }
 
