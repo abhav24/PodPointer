@@ -92,3 +92,62 @@ final class AppModel: ObservableObject {
         }
     }
 
+    func setPointerMode(_ mode: PointerMode) {
+        pointerMode = mode
+        pointerModeChangeDate = Date()
+        addLog("Pointer mode: \(mode.rawValue)")
+        mapper.recenter()
+        showOverlayIfNeeded()
+    }
+
+    func recenter() {
+        mapper.recenter()
+        addLog("Recentered")
+    }
+
+    func setListeningForStem(_ enabled: Bool) {
+        guard enabled != isListeningForStem else { return }
+        if enabled {
+            do {
+                try stem.start()
+                isListeningForStem = true
+                addLog("Listening for stem presses")
+            } catch {
+                stem.stop()
+                addLog("Couldn't start stem listening: \(error.localizedDescription)")
+            }
+        } else {
+            stem.stop()
+            isListeningForStem = false
+            addLog("Stopped listening for stem presses")
+        }
+    }
+
+    func requestAccessibility() {
+        KeySender.requestTrust()
+    }
+
+    func refreshDisplays() {
+        displays = NSScreen.screens.compactMap { screen in
+            Self.displayID(of: screen).map { DisplayOption(id: $0, name: screen.localizedName) }
+        }
+        if !displays.contains(where: { $0.id == selectedDisplayID }), let first = displays.first {
+            selectedDisplayID = first.id
+        }
+    }
+
+    func copyReport() {
+        let system = ProcessInfo.processInfo.operatingSystemVersion
+        let report = SessionReport(
+            appVersion: Self.version,
+            macOSVersion: "\(system.majorVersion).\(system.minorVersion).\(system.patchVersion)",
+            motion: rate,
+            sensorLocations: sensorLocations,
+            pressCounts: pressCounts,
+            events: log
+        )
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(report.markdown, forType: .string)
+        addLog("Copied test report")
+    }
+
