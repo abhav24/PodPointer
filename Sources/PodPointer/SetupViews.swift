@@ -164,11 +164,9 @@ struct WelcomePage: View {
                     .fixedSize(horizontal: false, vertical: true)
                 PrimaryButton("Get Started") { model.beginSetup() }
             }
-            Text("You'll need your AirPods and their case. PodPointer will ask to use motion data from your AirPods. That data stays on this Mac.")
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
-                .fixedSize(horizontal: false, vertical: true)
-            PrimaryButton("Get Started") { model.beginSetup() }
+            .frame(maxWidth: 460)
+            .frame(maxWidth: .infinity)
+            .padding(32)
         }
     }
 
@@ -222,7 +220,7 @@ struct CaseCheckPage: View {
         case .gestureTest:
             gestureTest(check)
         case .moveTest:
-            page(7, symbol: "hand.wave", title: "Wave the case. Don't tap it.", detail: "This checks that normal movement isn't mistaken for a tap.") {
+            page(7, symbol: "hand.wave", title: "Move and shake the case. Don't tap it.", detail: "Move it up and down and side to side, then shake it. This checks that movement isn't mistaken for a tap.") {
                 countdown(Int(check.moveSecondsLeft(at: model.checkClock).rounded(.up)), label: "seconds left")
                 Text("Mistaken taps so far: \(check.results.falseTapsWhileMoving)")
                     .foregroundStyle(.secondary)
@@ -258,7 +256,7 @@ struct CaseCheckPage: View {
         @ViewBuilder content: () -> Content
     ) -> some View {
         SetupPage(
-            progress: "Step \(number) of 9",
+            step: number,
             symbol: symbol,
             title: title,
             detail: detail,
@@ -385,14 +383,14 @@ struct CaseCheckPage: View {
             return "Tilt your wrist upward and hold it there. This shows which way is up."
         case .tap:
             return
-            "Hold still and tap the case with a finger. Leave a short pause between taps. Taps so far: \(model.calibrationTaps)"
+            "Hold the case steady and tap it lightly with one finger, with a short pause between taps. Hitting it hard enough to swing the case won't count. Taps so far: \(model.calibrationTaps)"
         }
     }
 
     @ViewBuilder
     private func tapTest(_ check: CaseCheck) -> some View {
         if let prompt = check.tapPromptNumber(at: model.checkClock) {
-            page(5, symbol: "hand.tap", title: "Tap once now", detail: "Tap once each time the number changes, holding still in between.") {
+            page(5, symbol: "hand.tap", title: "Tap once now", detail: "Tap lightly once each time the number changes, holding the case steady.") {
                 Text("\(prompt)")
                     .font(.system(size: 72, weight: .bold, design: .rounded))
                     .monospacedDigit()
@@ -401,7 +399,7 @@ struct CaseCheckPage: View {
                     .foregroundStyle(.secondary)
             }
         } else {
-            page(5, symbol: "hand.tap", title: "Get ready to tap", detail: "A number will appear \(CaseCheck.tapPrompts) times. Tap the case once for each number, holding still in between.") {
+            page(5, symbol: "hand.tap", title: "Get ready to tap", detail: "A number will appear \(CaseCheck.tapPrompts) times. Tap the case lightly once for each number, holding it steady the whole time.") {
                 countdown(Int(check.secondsUntilTapsStart(at: model.checkClock).rounded(.up)), label: "starting in")
             }
         }
@@ -411,7 +409,7 @@ struct CaseCheckPage: View {
     private func gestureTest(_ check: CaseCheck) -> some View {
         let number = "\(check.gestureIndex + 1) of \(CaseCheck.gesturePrompts.count)"
         if let prompt = check.gesturePrompt(at: model.checkClock) {
-            page(6, symbol: "hand.tap", title: gestureTitle(for: prompt), detail: "Keep the taps quick and even, then hold still.") {
+            page(6, symbol: "hand.tap", title: gestureTitle(for: prompt), detail: "Keep the taps light, quick, and even, then hold still.") {
                 gestureAnswer(check.lastGestureAnswer)
                 Text("Prompt \(number) · Correct: \(check.results.gesturesHit)")
                     .foregroundStyle(.secondary)
@@ -462,17 +460,19 @@ struct CaseCheckPage: View {
 
     private func results(_ results: CaseCheckResults) -> some View {
         SetupPage(
-            progress: "Your results",
+            heading: "Your results",
             symbol: results.passed ? "checkmark.seal.fill" : "slider.horizontal.3",
             title: results.passed ? "Your case works!" : "Your case needs some tuning",
             detail: results.passed ? "Next, try it with real slides." : "Adjust the settings below and run the tests again, or continue anyway.",
             onStartOver: { model.startOver() }
         ) {
-            VStack(spacing: 10) {
+            Card {
+                VStack(spacing: 10) {
                 resultRow("Taps detected", value: "\(results.tapsHit) of \(results.tapsAsked)", passed: results.tapsPassed)
                 resultRow("Single, double, triple", value: "\(results.gesturesHit) of \(results.gesturesAsked)", passed: results.gesturesPassed)
                 resultRow("Mistaken taps", value: "\(results.falseTapsWhileMoving + results.extraTaps)", passed: results.movingPassed && results.extraTaps <= 1)
                 resultRow("Rings hit", value: "\(results.targetsHit) of \(results.targetsAsked)", passed: results.pointingPassed)
+                }
             }
             if !results.tapsPassed {
                 slider(
@@ -541,7 +541,7 @@ struct AllowControlPage: View {
 
     var body: some View {
         SetupPage(
-            progress: "Step 9 of 9",
+            step: 9,
             symbol: "lock.open",
             title: "Let PodPointer control your slides",
             detail: "To change slides and click, PodPointer needs Accessibility access. It only sends the arrow keys and clicks you tap for.",
@@ -566,7 +566,7 @@ struct TrySlidesPage: View {
 
     var body: some View {
         SetupPage(
-            progress: "Step 9 of 9",
+            step: 10,
             symbol: "play.rectangle",
             title: "Try it with real slides",
             detail: "Your case is live. The red dot follows it everywhere.",
