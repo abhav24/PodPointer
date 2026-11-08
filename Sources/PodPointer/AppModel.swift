@@ -460,6 +460,7 @@ final class AppModel: ObservableObject {
         case .doubleClick: InputSender.click(count: 2)
         case .togglePointer: break
         }
+        lastAction = action.rawValue
         addLog("Tap: \(gesture.rawValue), sent \(action.rawValue)")
     }
 
@@ -493,6 +494,66 @@ final class AppModel: ObservableObject {
                 y: bounds.minY + shownPoint.y * (bounds.height - 1)
             ))
         }
+    }
+
+    /// Publishes the check a few times a second, and reacts when its step changes.
+    private func updateCheck() {
+        guard var current = liveCheck else { return }
+        let now = Self.now
+        current.tick(at: now)
+        liveCheck = current
+
+        let clock = (now * 4).rounded() / 4
+        if clock != checkClock {
+            checkClock = clock
+        }
+        if check != current {
+            check = current
+        }
+        overlay.showTarget(at: current.currentTarget, radius: CaseCheck.targetRadius)
+
+        let prompt = "step:\(current.step)"
+            + (current.tapPromptNumber(at: now).map { " tap:\($0)" } ?? "")
+            + (current.gesturePrompt(at: now).map { " ask:\($0.rawValue)" } ?? "")
+        if prompt != lastMarkedPrompt {
+            lastMarkedPrompt = prompt
+            recorder.mark(prompt, at: now)
+        }
+
+        guard current.step != lastCheckStep else { return }
+        lastCheckStep = current.step
+        enterCheckStep(current.step, results: current.results)
+    }
+
+    private func enterCheckStep(_ step: CaseCheckStep, results: CaseCheckResults) {
+        switch step {
+        case .calibrate:
+            startCalibration()
+        case .tapTest:
+            setMode(.off)
+        case .pointTest:
+            setMode(.presenter)
+        case .motionLost:
+            cancelCalibrationQuietly()
+            setMode(.off)
+            addLog("Case check: motion stopped")
+        case .results:
+            setMode(.off)
+            lastCheckResults = results
+            addLog("Case check finished: \(results.passed ? "passed" : "needs work")")
+        default:
+            break
+        }
+    }
+
+    private func cancelCalibrationQuietly() {
+        calibrationSession = nil
+        calibrationStep = nil
+    }
+
+    private func refreshSoundOutput() {
+        airPodsAudioFound = AudioOutput.airPodsDevice != nil
+        soundUsesAirPods = AudioOutput.isUsingAirPods
     }
 
     private func checkHealth() {
