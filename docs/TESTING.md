@@ -13,24 +13,21 @@ If motion doesn't arrive, try these one at a time:
 - Turn on **Keep audio connection active**.
 - Close the lid, open it again, and wait a few seconds.
 
-Try again with Spotify or Apple Music open, because another media app may take the presses.
+**Passes if** motion keeps arriving for 2 minutes. Note the **Rate** and **Longest gap**, and whether **Sending AirPod** changes.
 
-## 2. Is the pointer good enough to present with?
+## 2. Does calibration finish?
 
-1. Set **Pointer** to **Laser dot**.
-2. Look at the middle of your display and select **Recenter**.
-3. Point at titles, bullets, and chart labels on a real slide.
-4. Adjust **Turn range**, **Tilt range**, and **Filter cutoff**.
-5. Keep using it for 5 minutes, and notice how far the center drifts.
-6. Record the **Rate**, **p95 interval**, and **Longest gap**.
+Select **Calibrate** and follow the steps.
 
-**Passes if** you can hold the dot on a line of slide text, and drift is fixed by an occasional recenter.
+**Passes if** it finishes within two tries.
 
-If the dot moves the wrong way, turn on an invert option and tell us in your report.
+## 3. Are taps reliable?
 
-## 3. Does the laser dot appear over a slideshow?
+Leave **Mode** on **Off** and **Send keys and clicks** off.
 
-Start a full-screen slideshow in PowerPoint and in Keynote, with the laser dot on. If you can, also try an external display, using **Display** to select it.
+1. Hold the case still and tap it 20 times, pausing between taps. Check **Taps detected**.
+2. Try double-taps and triple-taps.
+3. Move the case around for 1 minute without tapping, and count any false taps in the log.
 
 **Passes if** the dot stays visible over the slides.
 
