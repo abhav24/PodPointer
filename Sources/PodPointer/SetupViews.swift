@@ -3,7 +3,10 @@ import SwiftUI
 
 /// The shared layout for each page of setup.
 struct SetupPage<Content: View>: View {
-    var progress: String?
+    static var stepCount: Int { 10 }
+
+    var step: Int?
+    var heading: String?
     let symbol: String
     let title: String
     var detail: String?
@@ -13,8 +16,16 @@ struct SetupPage<Content: View>: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
-                if let progress {
-                    Text(progress)
+                if let step {
+                    VStack(spacing: 8) {
+                        Text("Step \(step) of \(Self.stepCount)")
+                            .font(.subheadline.weight(.medium))
+                            .foregroundStyle(.secondary)
+                        ProgressView(value: Double(step), total: Double(Self.stepCount))
+                            .frame(maxWidth: 220)
+                    }
+                } else if let heading {
+                    Text(heading)
                         .font(.subheadline.weight(.medium))
                         .foregroundStyle(.secondary)
                 }
