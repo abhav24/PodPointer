@@ -88,33 +88,39 @@ final class AppModel: ObservableObject {
         guard !hasStarted else { return }
         hasStarted = true
         refreshDisplays()
+        loadCalibration()
 
-        motion.onSample = { [weak self] in self?.handle($0) }
+        motion.onReading = { [weak self] reading, location in
+            self?.handle(reading, sensorLocation: location)
+        }
         motion.onConnectionChange = { [weak self] connected in
             self?.isConnected = connected
-            self?.addLog(connected ? "AirPods motion connected" : "AirPods motion disconnected")
+            self?.addLog(connected ? "AirPods connected" : "AirPods disconnected")
         }
         motion.onError = { [weak self] in self?.addLog("Motion error: \($0)") }
-        stem.onPress = { [weak self] in self?.handle($0) }
 
         if motion.isAvailable {
             motion.start()
-            addLog("Waiting for AirPods motion")
+            addLog("Waiting for motion from the AirPods")
         } else {
-            addLog("Headphone motion isn't available on this Mac")
+            addLog("Motion from AirPods isn't available right now")
         }
 
-        healthTimer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: true) { [weak self] _ in
-            MainActor.assumeIsolated { self?.checkHealth() }
-        }
+        addTimer(interval: 1.0 / 120) { $0.drawPointer() }
+        addTimer(interval: 0.25) { $0.checkHealth() }
     }
 
-    func setPointerMode(_ mode: PointerMode) {
-        pointerMode = mode
-        pointerModeChangeDate = Date()
-        addLog("Pointer mode: \(mode.rawValue)")
-        mapper.recenter()
-        showOverlayIfNeeded()
+    func setMode(_ newMode: ControlMode) {
+        mode = newMode
+        isPointerOn = true
+        isPausedForRealMouse = false
+        addLog("Mode: \(newMode.rawValue)")
+        if newMode == .mouse {
+            syncToCursor()
+        } else {
+            place(at: .center)
+        }
+        updateOverlay()
     }
 
     func recenter() {
