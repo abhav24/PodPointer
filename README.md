@@ -23,13 +23,67 @@ PodPointer turns your AirPods case into a presentation remote and an air mouse. 
 | Double-tap | Previous slide | Double-click |
 | Triple-tap | Turns the laser dot on or off | Pauses or resumes the cursor |
 
-## Requirements
+## What you need
 
-- macOS 14 or later
-- AirPods that support head tracking, such as AirPods Pro
-- Swift 5.10 or later, from Xcode or the Command Line Tools
+- A Mac with macOS 14 or later
+- AirPods that support head tracking, such as AirPods Pro, with their case
 
-## Build and run
+## Install
+
+1. Download [PodPointer-v0.dmg](https://github.com/abhav24/PodPointer/releases/download/v0/PodPointer-v0.dmg).
+2. Open it and drag PodPointer to Applications.
+3. Open PodPointer from Applications.
+
+PodPointer isn't notarized by Apple, so macOS blocks it the first time. To open it, go to **System Settings > Privacy & Security** and select **Open Anyway**.
+
+## Set up
+
+PodPointer walks you through setup when you first open it. It takes about 6 minutes:
+
+1. Connect your AirPods.
+2. Turn off **Automatic Ear Detection** in Bluetooth settings. macOS doesn't let apps change this, so you'll do it yourself.
+3. Put the AirPods in the case and leave the **lid open**.
+4. Calibrate for the way you hold the case.
+5. Take short scored tests of tapping, moving, and aiming.
+6. Allow Accessibility access, then try it on real slides.
+
+You can run setup again from the home screen.
+
+## Tips
+
+- **Tap lightly with one finger** while holding the case steady. Hard knocks that swing the case look like movement, so they don't count.
+- **Too sensitive, or missing taps?** Adjust **Tap sensitivity** under **Advanced**.
+- **Pointer moving the wrong way?** Use the flip switches under **Advanced**.
+- **Changed your grip?** Select **Calibrate Again**.
+- **Slideshow not changing?** Taps go to whichever app is in front, so keep your slideshow in front.
+
+## Known limits
+
+- The lid has to stay open, because closing it disconnects the AirPods. In one test of an unofficial Bluetooth method on AirPods Pro 2, motion lasted 13 seconds after the lid closed. Keeping it going would use up analytics stored on the case, so PodPointer doesn't do this.
+- Automatic Ear Detection has to stay off while you use PodPointer. You can turn it back on afterward.
+- Calibration applies to one AirPod and one grip. If motion moves to the other AirPod, calibrate again.
+- A single tap waits about 0.4 seconds in case another tap follows. You can change this with **Time between taps** under **Advanced**.
+- Open-lid battery use hasn't been measured.
+- Intel Macs and other AirPods models are untested.
+
+## Permissions and privacy
+
+| Permission | Why it's needed | When |
+|---|---|---|
+| Motion & Fitness | Reads motion from your AirPods | At launch |
+| Accessibility | Sends arrow keys and clicks | When you allow it during setup |
+
+PodPointer has no network code, and your calibration and settings stay on your Mac.
+
+During setup, it records raw motion to `~/Library/Application Support/PodPointer/last-setup-motion.csv` so you can share it to help tune tap detection. Each setup run replaces that file, and it stays on your Mac unless you share it. Test reports are copied to your clipboard only when you ask, and they leave out your AirPods' name.
+
+## How it works
+
+PodPointer reads motion through Apple's public `CMHeadphoneMotionManager` API. Rotating the case moves the pointer, the way moving a mouse moves the cursor. A tap is a short, sharp jolt while the case is otherwise still, so moving or shaking it doesn't count. Read more in [how it works](docs/HOW-IT-WORKS.md).
+
+## Build from source
+
+You'll need Swift 5.10 or later, from Xcode or the Command Line Tools.
 
 ```bash
 git clone https://github.com/abhav24/PodPointer.git
