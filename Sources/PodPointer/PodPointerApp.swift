@@ -25,9 +25,10 @@ struct ContentView: View {
 
     var body: some View {
         Form {
-            motionSection
-            stemSection
-            pointerSection
+            setupSection
+            calibrationSection
+            controlSection
+            tuningSection
             logSection
         }
         .formStyle(.grouped)
@@ -37,16 +38,20 @@ struct ContentView: View {
         }
     }
 
-    private var motionSection: some View {
-        Section("1. Motion") {
+    private var setupSection: some View {
+        Section {
             LabeledContent("Motion permission", value: model.permission)
             LabeledContent("AirPods", value: model.isConnected ? "Connected" : "Not connected")
-            LabeledContent("Samples", value: model.isStale ? "Not arriving" : "Arriving")
-            LabeledContent("Rate", value: String(format: "%.1f Hz", model.rate.hertz))
-            LabeledContent("p95 interval", value: String(format: "%.0f ms", model.rate.p95IntervalMilliseconds))
-            LabeledContent("Longest gap", value: String(format: "%.0f ms", model.rate.maxGapMilliseconds))
-            LabeledContent("Sensor", value: model.sensorLocation)
-            LabeledContent("Orientation", value: model.attitude)
+            LabeledContent("Motion", value: model.isReceivingMotion ? "Arriving" : "Not arriving")
+            LabeledContent("Rate", value: String(format: "%.0f Hz", model.rate.hertz))
+            LabeledContent("Longest gap", value: String(format: "%.0f ms", model.rate.longestGapMilliseconds))
+            LabeledContent("Sending AirPod", value: model.sensorLocation)
+            LabeledContent("Jolt", value: String(format: "%.2f g", model.strongestJolt))
+            Toggle("Keep audio connection active", isOn: $model.keepsAudioActive)
+        } header: {
+            Text("1. Set up the case")
+        } footer: {
+            Text("Connect your AirPods and select them as the sound output. Turn off Automatic Ear Detection in System Settings, put the AirPods in the case, and keep the lid open. If motion doesn't arrive, try keeping the audio connection active.")
         }
     }
 
