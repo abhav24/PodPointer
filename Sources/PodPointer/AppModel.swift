@@ -201,8 +201,29 @@ final class AppModel: ObservableObject {
         if let gesture = output.gesture {
             perform(gesture)
         }
+    }
 
-        // The pointer updates on every sample, but the window only needs a few updates a second.
+    private func noteSensor(_ location: String) {
+        guard location != sensorLocation else { return }
+        sensorLocation = location
+        if !sensorLocationsSeen.contains(location) {
+            sensorLocationsSeen.append(location)
+        }
+        addLog("Motion is coming from: \(location)")
+        if let processor, processor.calibration.sensorLocation != location, !hasWarnedAboutSensor {
+            hasWarnedAboutSensor = true
+            calibrationMessage = "Motion moved to the other AirPod, so please calibrate again."
+            addLog("Calibration doesn't match this AirPod")
+        }
+    }
+
+    private func publishStats(for reading: MotionReading) {
+        if let previous = previousAcceleration {
+            joltSinceLastPublish = max(joltSinceLastPublish, (reading.userAcceleration - previous).magnitude)
+        }
+        previousAcceleration = reading.userAcceleration
+
+        // The window only needs a few updates a second.
         let now = Date()
         guard now.timeIntervalSince(lastPublishDate) >= 0.2 else { return }
         lastPublishDate = now
