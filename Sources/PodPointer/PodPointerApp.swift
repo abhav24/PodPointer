@@ -125,7 +125,7 @@ struct ContentView: View {
     }
 
     private var logSection: some View {
-        Section {
+        Section("Log") {
             ScrollViewReader { proxy in
                 ScrollView {
                     VStack(alignment: .leading, spacing: 2) {
@@ -144,8 +144,19 @@ struct ContentView: View {
                 }
             }
             Button("Copy Test Report") { model.copyReport() }
-        } header: {
-            Text("Log")
+        }
+    }
+
+    private func instruction(for step: CalibrationStep) -> String {
+        switch step {
+        case .holdStill:
+            "Hold the case still."
+        case .sweepSideways:
+            "Sweep it right first, then left and right."
+        case .sweepVertically:
+            "Sweep it up first, then down and up."
+        case .tap:
+            "Hold still and tap the case \(CalibrationSession.requiredTaps) times (\(model.calibrationTaps) so far)."
         }
     }
 }
