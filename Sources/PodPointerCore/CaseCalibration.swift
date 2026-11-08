@@ -192,3 +192,31 @@ public struct CalibrationSession: Sendable {
         ))
     }
 
+    private mutating func advance(to next: CalibrationStep) {
+        step = next
+        stepStart = nil
+        progress = 0
+    }
+
+    /// Finds the axis most of the rotation happened around, using power iteration.
+    /// Its sign follows the first movement, so "start by moving right" defines right.
+    private static func principalAxis(of samples: [Vector3]) -> Vector3? {
+        guard let largest = samples.max(by: { $0.magnitude < $1.magnitude }) else { return nil }
+
+        var axis = largest.normalized
+        for _ in 0..<25 {
+            var next = Vector3.zero
+            for sample in samples {
+                next = next + sample * sample.dot(axis)
+            }
+            axis = next.normalized
+        }
+
+        let total = samples.reduce(0) { $0 + $1.dot($1) }
+        let alongAxis = samples.reduce(0) { $0 + pow($1.dot(axis), 2) }
+        guard total > 0, alongAxis / total >= minimumAxisEnergy else { return nil }
+
+        let firstMovement = samples.prefix(5).reduce(0) { $0 + $1.dot(axis) }
+        return firstMovement >= 0 ? axis : axis * -1
+    }
+}
