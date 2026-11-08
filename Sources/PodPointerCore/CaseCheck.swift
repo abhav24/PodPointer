@@ -63,3 +63,55 @@ public struct CaseCheck: Equatable, Sendable {
     /// As a fraction of the display height.
     public static let targetRadius = 0.1
 
+    private static let motionLostSeconds = 3.0
+    private static let movingRotationSpeed = 1.0
+    private static let requiredMovingSeconds = 0.5
+    private static let maximumMovingStep = 0.1
+
+    public private(set) var step = CaseCheckStep.connect
+    public private(set) var results = CaseCheckResults()
+    public private(set) var targetIndex = 0
+    public private(set) var gestureIndex = 0
+    /// What the last prompt recognized. Nil before the first answer.
+    public private(set) var lastGestureAnswer: GestureAnswer?
+
+    private var gesturePromptStart = 0.0
+    private var lastSampleTime = -Double.infinity
+    private var stepStart = 0.0
+    private var movingSeconds = 0.0
+    private var promptsHit: Set<Int> = []
+    private var targetStart = 0.0
+
+    public init() {}
+
+    public var currentTarget: PointerPoint? {
+        step == .pointTest ? Self.targets[targetIndex] : nil
+    }
+
+    /// The prompt on screen, from 1. Nil while getting ready or outside the tap test.
+    public func tapPromptNumber(at time: Double) -> Int? {
+        guard step == .tapTest, time >= stepStart else { return nil }
+        return min(Int((time - stepStart) / Self.tapIntervalSeconds), Self.tapPrompts - 1) + 1
+    }
+
+    public func secondsUntilTapsStart(at time: Double) -> Double {
+        max(stepStart - time, 0)
+    }
+
+    /// The gesture to do now. Nil between prompts or outside the gesture test.
+    public func gesturePrompt(at time: Double) -> CaseGesture? {
+        guard step == .gestureTest, time >= gesturePromptStart else { return nil }
+        return Self.gesturePrompts[gestureIndex]
+    }
+
+    public mutating func registerGesture(_ gesture: CaseGesture, at time: Double) {
+        guard let expected = gesturePrompt(at: time) else { return }
+        if gesture == expected {
+            results.gesturesHit += 1
+            lastGestureAnswer = .correct
+        } else {
+            lastGestureAnswer = .recognized(gesture)
+        }
+        advanceGesture(at: time)
+    }
+
