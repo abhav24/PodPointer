@@ -39,11 +39,13 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
 
 @Suite struct CalibrationTests {
     /// Feeds a full calibration, with the case held at an arbitrary angle.
+    /// `leftover` is motion that keeps going when each new step begins.
     private func run(
         horizontal: Vector3,
         vertical: Vector3,
         bias: Vector3 = .zero,
-        tapStrength: Double = 0.8
+        tapStrength: Double = 0.8,
+        leftover: Vector3 = .zero
     ) -> CalibrationStatus {
         var session = CalibrationSession(sensorLocation: "right")
         var time = 0.0
@@ -54,6 +56,38 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
                 status = session.process(next)
             }
             time += sampleInterval
+        }
+
+        func settle() {
+            for _ in 0..<15 where session.isSettling {
+                feed(reading(rotation: bias + leftover, at: time))
+            }
+            while session.isSettling, status == .inProgress {
+                feed(reading(rotation: bias, at: time))
+            }
+        }
+
+        func sweep(_ step: CalibrationStep, around axis: Vector3) {
+            settle()
+            let start = time
+            while session.step == step, status == .inProgress {
+                let wave = sin((time - start) * 2 * .pi * 0.75)
+                feed(reading(rotation: bias + axis * (wave * 1.5), at: time))
+            }
+        }
+
+        func turn(_ step: CalibrationStep, around axis: Vector3) {
+            settle()
+            // A small wind-up the wrong way, then the real turn, then stopping.
+            for _ in 0..<5 where session.step == step {
+                feed(reading(rotation: bias + axis * -0.5, at: time))
+            }
+            for _ in 0..<30 where session.step == step {
+                feed(reading(rotation: bias + axis * 1.5, at: time))
+            }
+            while session.step == step, status == .inProgress {
+                feed(reading(rotation: bias, at: time))
+            }
         }
 
         while session.step == .holdStill, status == .inProgress {
