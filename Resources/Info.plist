@@ -4,8 +4,12 @@
 <dict>
     <key>CFBundleDevelopmentRegion</key>
     <string>en</string>
+    <key>CFBundleDisplayName</key>
+    <string>PodPointer</string>
     <key>CFBundleExecutable</key>
     <string>PodPointer</string>
+    <key>CFBundleIconFile</key>
+    <string>AppIcon</string>
     <key>CFBundleIdentifier</key>
     <string>io.github.abhav24.PodPointer</string>
     <key>CFBundleInfoDictionaryVersion</key>
@@ -15,15 +19,19 @@
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleShortVersionString</key>
-    <string>0.1.0</string>
+    <string>0</string>
     <key>CFBundleVersion</key>
     <string>1</string>
+    <key>LSApplicationCategoryType</key>
+    <string>public.app-category.productivity</string>
     <key>LSMinimumSystemVersion</key>
     <string>14.0</string>
     <key>NSHighResolutionCapable</key>
     <true/>
     <key>NSMotionUsageDescription</key>
     <string>PodPointer uses motion from the AirPods in your case to move the pointer and detect taps.</string>
+    <key>NSHumanReadableCopyright</key>
+    <string>MIT License. Not affiliated with Apple Inc.</string>
     <key>NSPrincipalClass</key>
     <string>NSApplication</string>
 </dict>
