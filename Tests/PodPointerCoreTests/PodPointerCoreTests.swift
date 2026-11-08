@@ -48,3 +48,53 @@ import Testing
         return point
     }
 
+    @Test func firstSampleIsTheCenter() {
+        var mapper = PointerMapper()
+        #expect(mapper.map(yawRadians: 1.2, pitchRadians: -0.4, at: 0) == PointerPoint(x: 0.5, y: 0.5))
+    }
+
+    @Test func turningLeftMovesLeftAndLookingUpMovesUp() {
+        var mapper = PointerMapper()
+        _ = mapper.map(yawRadians: 0, pitchRadians: 0, at: 0)
+        let point = settle(&mapper, yaw: 7.5 * degree, pitch: 5 * degree)
+        #expect(abs(point.x - 0.25) < 0.01)
+        #expect(abs(point.y - 0.25) < 0.01)
+    }
+
+    @Test func invertFlipsDirection() {
+        var configuration = PointerConfiguration()
+        configuration.invertX = true
+        configuration.invertY = true
+        var mapper = PointerMapper(configuration: configuration)
+        _ = mapper.map(yawRadians: 0, pitchRadians: 0, at: 0)
+        let point = settle(&mapper, yaw: 7.5 * degree, pitch: 5 * degree)
+        #expect(abs(point.x - 0.75) < 0.01)
+        #expect(abs(point.y - 0.75) < 0.01)
+    }
+
+    @Test func outputIsClampedToTheDisplay() {
+        var mapper = PointerMapper()
+        _ = mapper.map(yawRadians: 0, pitchRadians: 0, at: 0)
+        let point = settle(&mapper, yaw: 90 * degree, pitch: -80 * degree)
+        #expect(point.x == 0)
+        #expect(point.y == 1)
+    }
+
+    @Test func crossingTheYawSeamIsASmallMove() {
+        var mapper = PointerMapper()
+        _ = mapper.map(yawRadians: 179 * degree, pitchRadians: 0, at: 0)
+        // 179 to -179 degrees is a 2 degree left turn, not a 358 degree turn.
+        let point = settle(&mapper, yaw: -179 * degree, pitch: 0)
+        #expect(abs(point.x - (0.5 - 2.0 / 30)) < 0.01)
+    }
+
+    @Test func recenterMakesTheNextSampleTheCenter() {
+        var mapper = PointerMapper()
+        _ = mapper.map(yawRadians: 0, pitchRadians: 0, at: 0)
+        _ = settle(&mapper, yaw: 40 * degree, pitch: 10 * degree)
+        mapper.recenter()
+        let point = mapper.map(yawRadians: 40 * degree, pitchRadians: 10 * degree, at: 20)
+        #expect(point == PointerPoint(x: 0.5, y: 0.5))
+    }
+}
+
