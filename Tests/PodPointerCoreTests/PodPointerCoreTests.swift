@@ -224,21 +224,66 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
 }
 
 @Suite struct TapDetectorTests {
-    private func events(_ acceleration: [Double], rotation: Double = 0, threshold: Double = 0.3) -> [TapDetector.Event] {
+    private func tapCount(_ acceleration: [Double], rotation: Double = 0, threshold: Double = 0.3) -> Int {
         var detector = TapDetector(threshold: threshold)
-        return acceleration.enumerated().map { index, value in
-            detector.process(
+        var taps = 0
+        for (index, value) in acceleration.enumerated() {
+            let tapped = detector.process(
                 acceleration: Vector3(x: value, y: 0, z: 0),
                 rotationSpeed: rotation,
                 at: Double(index) * sampleInterval
             )
+            if tapped { taps += 1 }
         }
+        return taps
     }
 
-    @Test func aShortJoltIsATap() {
-        let result = events(Array(repeating: 0, count: 20) + [1, 1] + Array(repeating: 1, count: 5))
-        #expect(result.contains(.impulseStarted))
-        #expect(result.contains(.tap))
+    /// A tap: a jolt, then shaking that fades over about 100 ms.
+    private func signal(tapsAt tapSamples: [Int], length: Int = 120, strength: Double = 1) -> [Double] {
+        var values = Array(repeating: 0.0, count: length)
+        let ringing = [1.0, -0.8, 0.5, -0.3, 0.15, -0.08]
+        for tap in tapSamples {
+            for (offset, amount) in ringing.enumerated() where tap + offset < length {
+                values[tap + offset] += amount * strength
+            }
+        }
+        return values
+    }
+
+    @Test func oneTapWithRingingCountsOnce() {
+        #expect(tapCount(signal(tapsAt: [30])) == 1)
+    }
+
+    @Test func tapsInAGroupAllCount() {
+        #expect(tapCount(signal(tapsAt: [30, 42])) == 2)
+        #expect(tapCount(signal(tapsAt: [30, 42, 54])) == 3)
+    }
+
+    @Test func aFastTripleTapCounts() {
+        // Taps 160 ms apart, which is faster than most people tap.
+        #expect(tapCount(signal(tapsAt: [30, 38, 46])) == 3)
+    }
+
+    @Test func aWeakerSecondTapStillCounts() {
+        let strong = signal(tapsAt: [30])
+        let weak = signal(tapsAt: [45], strength: 0.5)
+        #expect(tapCount(zip(strong, weak).map(+)) == 2)
+    }
+
+    @Test func falseTapsCannotChainWhileMoving() {
+        // One tap while steady, then fast movement with repeated jolts.
+        var detector = TapDetector(threshold: 0.3)
+        var taps = 0
+        let values = signal(tapsAt: Array(stride(from: 30, to: 150, by: 10)), length: 170)
+        for (index, value) in values.enumerated() {
+            let tapped = detector.process(
+                acceleration: Vector3(x: value, y: 0, z: 0),
+                rotationSpeed: index > 30 ? 3 : 0,
+                at: Double(index) * sampleInterval
+            )
+            if tapped { taps += 1 }
+        }
+        #expect(taps == 3)
     }
 
     @Test func smallChangesAreIgnored() {
