@@ -2,8 +2,12 @@ import Foundation
 
 public struct CaseOutput: Equatable, Sendable {
     public var point: PointerPoint
+    /// Set once a tap group ends and the case has settled.
     public var gesture: CaseGesture?
-    /// True on the sample where a tap began.
+    /// How long ago the gesture's last tap happened.
+    public var gestureAge: Double
+    /// True on the sample where a tap is confirmed. A gesture can still be
+    /// dropped later if the case keeps shaking.
     public var tapped: Bool
 }
 
@@ -30,7 +34,15 @@ public struct CaseInputProcessor: Sendable {
     /// Asks for slightly firmer taps than calibration measured, which removes
     /// weak false taps without losing real ones.
     private static let thresholdMargin = 1.1
-    private static let holdAfterTapSeconds = 0.15
+    /// Below this, tiny movements of the hand look like taps.
+    private static let minimumThreshold = 0.12
+    /// Hard taps during calibration shouldn't make everyday taps stop counting.
+    /// Movement is rejected by a tap's shape, so a high threshold isn't needed.
+    private static let maximumThreshold = 0.17
+    /// How long the pointer stays put after a tap begins.
+    private static let holdAfterTapSeconds = 0.2
+    /// The first part of a tap's own shake doesn't count as still shaking.
+    private static let settleCheckDelay = 0.2
     private static let degreesPerRadian = 180 / Double.pi
 
     private var engine: PointerEngine
