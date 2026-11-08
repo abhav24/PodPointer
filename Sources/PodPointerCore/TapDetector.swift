@@ -30,38 +30,27 @@ public struct TapDetector: Sendable {
 
     private var previousAcceleration: Vector3?
     private var previousTime = -Double.infinity
-    private var impulseStart: Double?
-    private var ignoreUntil = -Double.infinity
+    private var shake = 0.0
+    private var lastTapTime = -Double.infinity
+    private var tapsInGroup = 0
+    private var recentJolts: [(time: Double, jolt: Double)] = []
     private var recentRotation: [(time: Double, speed: Double)] = []
 
     public init(threshold: Double) {
         self.threshold = threshold
     }
 
-    public mutating func process(acceleration: Vector3, rotationSpeed: Double, at time: Double) -> Event {
+    /// Returns true on the sample where a tap begins.
+    public mutating func process(acceleration: Vector3, rotationSpeed: Double, at time: Double) -> Bool {
         defer {
             previousAcceleration = acceleration
             previousTime = time
         }
         guard let previous = previousAcceleration, time - previousTime < Self.resetGapSeconds else {
-            impulseStart = nil
+            shake = 0
+            recentJolts.removeAll()
             recentRotation.removeAll()
-            return .none
-        }
-        let impulse = (acceleration - previous).magnitude
-
-        if let start = impulseStart {
-            if impulse < threshold * 0.5 {
-                impulseStart = nil
-                ignoreUntil = time + Self.afterTapSeconds
-                return .tap
-            }
-            if time - start > Self.maximumImpulseSeconds {
-                impulseStart = nil
-                ignoreUntil = time + Self.afterRejectSeconds
-                return .rejected
-            }
-            return .none
+            return false
         }
 
         guard time >= ignoreUntil else { return .none }
