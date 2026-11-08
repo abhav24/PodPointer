@@ -17,7 +17,7 @@ enum AppStage: Equatable {
 
 @MainActor
 final class AppModel: ObservableObject {
-    static let version = "0.1.0"
+    static let version = "0"
 
     private static let calibrationKey = "caseCalibration"
     private static let finishedSetupKey = "hasFinishedSetup"
@@ -35,6 +35,7 @@ final class AppModel: ObservableObject {
     @Published private(set) var stage = AppStage.welcome
     @Published private(set) var lastAction: String?
     @Published var showsAdvanced = false
+    @Published var showsDiagnostics = false
 
     // Motion
     @Published private(set) var permission = "Not asked yet"
@@ -358,10 +359,16 @@ final class AppModel: ObservableObject {
         targetPoint = output.point
         if output.tapped {
             recorder.mark("tap", at: reading.timestamp)
-            liveCheck?.registerTap(at: Self.now, point: output.point, aspectRatio: pointerConfiguration.aspectRatio)
         }
         if let gesture = output.gesture {
             recorder.mark("gesture:\(gesture.rawValue)", at: reading.timestamp)
+            for _ in 0..<gesture.tapCount {
+                liveCheck?.registerTap(
+                    at: Self.now - output.gestureAge,
+                    point: output.point,
+                    aspectRatio: pointerConfiguration.aspectRatio
+                )
+            }
             liveCheck?.registerGesture(gesture, at: Self.now)
             perform(gesture)
         }
