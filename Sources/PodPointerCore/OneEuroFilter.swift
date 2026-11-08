@@ -1,40 +1,37 @@
 import Foundation
 
-/// One Euro filter (Casiez et al., CHI 2012): smooths heavily when the input is
-/// slow, which removes jitter, and lightly when it is fast, which reduces lag.
+/// One Euro filter (Casiez et al., CHI 2012). It smooths heavily at low speed to
+/// remove hand tremor, and lightly at high speed to keep lag low.
 public struct OneEuroFilter: Sendable {
     public var minCutoff: Double
     public var beta: Double
     public var derivativeCutoff: Double
 
-    private var lastFiltered: Double?
+    private var lastValue: Double?
     private var lastDerivative = 0.0
-    private var lastTime: Double?
+    private var lastTime = 0.0
 
-    public init(minCutoff: Double = 1.0, beta: Double = 0.05, derivativeCutoff: Double = 1.0) {
+    public init(minCutoff: Double, beta: Double, derivativeCutoff: Double = 1) {
         self.minCutoff = minCutoff
         self.beta = beta
         self.derivativeCutoff = derivativeCutoff
     }
 
     public mutating func filter(_ value: Double, at time: Double) -> Double {
-        guard let previous = lastFiltered, let previousTime = lastTime else {
-            lastFiltered = value
+        guard let previous = lastValue else {
+            lastValue = value
             lastTime = time
             return value
         }
-        let elapsed = time - previousTime
+        let elapsed = time - lastTime
         guard elapsed > 0 else { return previous }
 
         let derivative = (value - previous) / elapsed
-        let derivativeAlpha = Self.alpha(cutoff: derivativeCutoff, elapsed: elapsed)
-        let smoothedDerivative = derivativeAlpha * derivative + (1 - derivativeAlpha) * lastDerivative
-
+        let smoothedDerivative = Self.blend(derivative, lastDerivative, cutoff: derivativeCutoff, elapsed: elapsed)
         let cutoff = minCutoff + beta * abs(smoothedDerivative)
-        let valueAlpha = Self.alpha(cutoff: cutoff, elapsed: elapsed)
-        let filtered = valueAlpha * value + (1 - valueAlpha) * previous
+        let filtered = Self.blend(value, previous, cutoff: cutoff, elapsed: elapsed)
 
-        lastFiltered = filtered
+        lastValue = filtered
         lastDerivative = smoothedDerivative
         lastTime = time
         return filtered
