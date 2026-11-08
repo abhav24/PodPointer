@@ -4,16 +4,22 @@
 
 The case has no motion data that apps can read, but the AirPods inside it do. PodPointer reads them through Apple's public [`CMHeadphoneMotionManager`](https://developer.apple.com/documentation/coremotion/cmheadphonemotionmanager.md) API, available on macOS 14 and later.
 
-According to [PodMouse's README](https://github.com/0xCodez/PodMouse), this works with the lid open and Automatic Ear Detection off. With ear detection on, AirPods stop sending motion when they leave your ears, and closing the lid disconnects them. PodPointer hasn't confirmed this on hardware yet, which is why it's the first item in the [test plan](TESTING.md).
+According to [PodMouse's README](https://github.com/0xCodez/PodMouse), this works with the lid open and Automatic Ear Detection off. With ear detection on, AirPods stop sending motion when they leave your ears, and closing the lid disconnects them. PodPointer hasn't confirmed this on hardware yet, which is why it's the first thing [setup](TESTING.md) tests.
+
+No Shortcut, AppleScript command, or public API was found that changes Automatic Ear Detection, so you have to turn it off yourself. The app can't read the setting either, so it checks the result instead: if motion stops once the AirPods are in the case, the setting is probably still on.
 
 ## Calibration
 
-The AirPods sit at an unknown angle in your hand, so the sensor's axes don't match the screen. Calibration has four steps:
+The AirPods sit at an unknown angle in your hand, so the sensor's axes don't match the screen. Calibration has these steps:
 
 1. **Hold still:** measures the gyroscope's resting error and the normal sensor noise.
-2. **Sweep sideways:** finds the axis most of the rotation happened around. Your first movement is to the right, which sets the direction.
-3. **Sweep up and down:** does the same for vertical movement, then removes any overlap with the sideways axis.
-4. **Tap five times:** sets the tap threshold at 60% of your typical tap strength, and above the noise.
+2. **Sweep side to side:** finds the axis most of the rotation happened around.
+3. **Turn right and stop:** sets which way along that axis is right, using the total angle turned.
+4. **Sweep up and down:** does the same for vertical movement, then removes any overlap with the sideways axis.
+5. **Tilt up and stop:** sets which way is up.
+6. **Tap five times:** sets the tap threshold at 60% of your typical tap strength, and above the noise.
+
+Each step waits for your hand to stop first, so motion left over from the previous step can't affect it. If a direction still comes out reversed, there are flip switches during the aiming test and under **Advanced**.
 
 ## Pointing
 
@@ -31,8 +37,11 @@ This doesn't depend on an absolute direction, so drift doesn't build up the way 
 A tap is a sudden change in acceleration between two samples that:
 
 - is above your calibrated threshold
-- starts while the hand has been steady for the last quarter of a second
-- ends within 0.16 seconds, because longer jolts are usually hand movements
+- stands out from recent movement
+- isn't explained by the fading shake from an earlier tap
+- doesn't happen during fast rotation, unless it's part of a tap group
+
+Following the shake as it fades lets quick double and triple taps through, while the shake itself doesn't count as extra taps.
 
 Tapping also shakes the case, so the pointer jumps back to where it was just before the tap and stays there briefly.
 
