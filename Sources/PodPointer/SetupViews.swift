@@ -79,14 +79,20 @@ struct InstructionList: View {
     let items: [String]
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            ForEach(Array(items.enumerated()), id: \.offset) { index, item in
-                HStack(alignment: .firstTextBaseline, spacing: 10) {
-                    Text("\(index + 1).")
-                        .fontWeight(.semibold)
-                        .monospacedDigit()
-                    Text(item)
-                        .fixedSize(horizontal: false, vertical: true)
+        Card {
+            VStack(alignment: .leading, spacing: 12) {
+                ForEach(Array(items.enumerated()), id: \.offset) { index, item in
+                    HStack(alignment: .top, spacing: 12) {
+                        Text("\(index + 1)")
+                            .font(.callout.weight(.semibold))
+                            .monospacedDigit()
+                            .foregroundStyle(.white)
+                            .frame(width: 22, height: 22)
+                            .background(.tint, in: Circle())
+                        Text(item)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .padding(.top, 2)
+                    }
                 }
             }
         }
