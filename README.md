@@ -42,14 +42,16 @@ Use the script rather than `swift run`, because macOS only shows the motion perm
 
 ## Set up
 
-1. Connect your AirPods to your Mac and select them as the sound output.
-2. Open the AirPods section of System Settings and turn off **Automatic Ear Detection**. You can turn it back on when you're done.
-3. Put the AirPods in the case and **keep the lid open**. Closing the lid disconnects them.
-4. Open PodPointer and allow motion access.
-5. Select **Calibrate** and follow the steps while holding the case the way you'll use it.
-6. Choose **Presenter** or **Mouse**. Taps only appear in the log until you turn on **Send keys and clicks** and allow Accessibility access.
+Open the app and follow the steps on screen. Setup takes about 5 minutes and covers:
 
-If you use Mouse mode, moving a real mouse or trackpad pauses the case until you stop.
+1. Connecting your AirPods
+2. Turning off **Automatic Ear Detection**, which you need to do yourself because no Shortcut or public API can change it
+3. Putting the AirPods in the case with the **lid open**
+4. Calibrating for your grip
+5. Scored tests for tapping, single, double, and triple taps, false taps, and aiming
+6. Trying real slides
+
+You can run setup again from **Advanced**.
 
 ## Permissions and privacy
 
@@ -59,6 +61,8 @@ If you use Mouse mode, moving a real mouse or trackpad pauses the case until you
 | Accessibility | Sends arrow keys and clicks | Only if you turn on sending |
 
 PodPointer has no network code. It saves your calibration and settings on your Mac only. Test reports are copied to your clipboard only when you ask, and they leave out your AirPods' name.
+
+During setup, PodPointer also records raw motion to `~/Library/Application Support/PodPointer/last-setup-motion.csv` so tap detection can be tuned against real taps. Each setup run replaces that file, and it stays on your Mac unless you share it.
 
 ## Known limits
 
