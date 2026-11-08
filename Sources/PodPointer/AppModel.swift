@@ -228,39 +228,33 @@ final class AppModel: ObservableObject {
         guard now.timeIntervalSince(lastPublishDate) >= 0.2 else { return }
         lastPublishDate = now
         rate = tracker.snapshot
-        attitude = String(
-            format: "yaw %.0f°, pitch %.0f°, roll %.0f°",
-            sample.yaw * 180 / .pi,
-            sample.pitch * 180 / .pi,
-            sample.roll * 180 / .pi
-        )
+        strongestJolt = joltSinceLastPublish
+        joltSinceLastPublish = 0
     }
 
-    private func handle(_ press: StemPress) {
-        guard debouncer.shouldAccept(press, at: ProcessInfo.processInfo.systemUptime) else { return }
-        pressCounts[press, default: 0] += 1
-        let action = StemAction(press: press)
-        hasAccessibility = KeySender.isTrusted
+    private func continueCalibration(with reading: MotionReading) {
+        guard var session = calibrationSession else { return }
+        let status = session.process(reading)
+        calibrationSession = session
+        calibrationStep = session.step
+        calibrationProgress = session.progress
+        calibrationTaps = session.tapsFound
 
-        switch action {
-        case .recenter:
-            mapper.recenter()
-            addLog("Stem press: double, recentered")
-        case .nextSlide, .previousSlide:
-            guard sendsSlideKeys else {
-                addLog("Stem press: \(press.rawValue), would send \(action.rawValue) (sending is off)")
-                return
-            }
-            guard hasAccessibility else {
-                addLog("Stem press: \(press.rawValue), not sent because Accessibility is off")
-                return
-            }
-            if action == .nextSlide {
-                KeySender.nextSlide()
-            } else {
-                KeySender.previousSlide()
-            }
-            addLog("Stem press: \(press.rawValue), sent \(action.rawValue)")
+        switch status {
+        case .inProgress:
+            break
+        case let .finished(result):
+            calibrationSession = nil
+            calibrationStep = nil
+            use(result)
+            save(result)
+            calibrationMessage = "Calibrated. Choose a mode to start."
+            addLog(String(format: "Calibrated on the %@ AirPod, tap threshold %.2f g", result.sensorLocation, result.tapThreshold))
+        case let .failed(failure):
+            calibrationSession = nil
+            calibrationStep = nil
+            calibrationMessage = failure.rawValue
+            addLog("Calibration failed: \(failure.rawValue)")
         }
     }
 
