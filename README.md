@@ -44,3 +44,34 @@ Use the script rather than `swift run`, because macOS only shows the motion perm
 4. Turn on **Listen for stem presses** and press a stem. The presses appear in the log.
 5. To control slides, turn on **Send arrow keys to the front app** and allow Accessibility access. Then bring your slides to the front.
 
+If you use **Mouse cursor** mode, moving a real mouse or trackpad turns head control off.
+
+## Permissions and privacy
+
+| Permission | Why it's needed | When |
+|---|---|---|
+| Motion & Fitness | Reads head motion from your AirPods | At launch |
+| Accessibility | Sends arrow keys to your slide app | Only if you turn on sending keys |
+
+PodPointer has no network code and doesn't save your data. A test report is only copied to your clipboard when you ask for one, and it leaves out your AirPods' name.
+
+While it's listening for stem presses, PodPointer plays silent audio so it can act as the Mac's Now Playing app. That means stem presses won't control your music while listening is on.
+
+## Project layout
+
+| Path | Contents |
+|---|---|
+| `Sources/PodPointerCore` | Tested logic: filtering, pointer mapping, timing, and press handling |
+| `Sources/PodPointer` | The Mac app: motion, media commands, key sending, overlay, and window |
+| `Tests/PodPointerCoreTests` | Unit tests |
+| `docs` | Feasibility notes and the hardware test plan |
+
+## Contributing
+
+Hardware test results are the most useful contribution right now. See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## License
+
+[MIT](LICENSE)
+
+PodPointer is an independent project and isn't affiliated with or endorsed by Apple Inc. AirPods, Mac, and macOS are trademarks of Apple Inc.
