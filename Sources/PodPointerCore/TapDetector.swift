@@ -53,10 +53,22 @@ public struct TapDetector: Sendable {
             return false
         }
 
-        guard time >= ignoreUntil else { return .none }
-        if impulse >= threshold, isHandStill(at: time) {
-            impulseStart = time
-            return .impulseStarted
+        let jolt = (acceleration - previous).magnitude
+        shake *= exp(-(time - previousTime) / Self.shakeFadeSeconds)
+        recentJolts.removeAll { time - $0.time > Self.movementWindowSeconds }
+        recentRotation.removeAll { time - $0.time > Self.rotationWindowSeconds }
+
+        // Triple is the longest gesture, so a fourth tap gets the normal checks.
+        // Otherwise, one false tap while moving could set off a chain of them.
+        let isInTapGroup = time - lastTapTime < Self.tapGroupSeconds && tapsInGroup < Self.longestTapGroup
+        let isTap = jolt >= threshold
+            && time - lastTapTime >= Self.minimumTapSpacing
+            && jolt >= shake * Self.aboveShakeRatio
+            && (isInTapGroup || (jolt >= recentMovement * Self.aboveMovementRatio && isSteady))
+
+        if isTap {
+            tapsInGroup = time - lastTapTime < Self.tapGroupSeconds ? tapsInGroup + 1 : 1
+            lastTapTime = time
         }
         // A tap jolts the gyroscope too, so samples during and after a tap
         // aren't recorded. Otherwise the second tap of a double tap would fail.
