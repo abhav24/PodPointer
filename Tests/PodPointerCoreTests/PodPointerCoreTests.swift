@@ -434,6 +434,16 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
         return PointerEngine(configuration: configuration)
     }
 
+    @Test func flipsReverseDirection() {
+        var configuration = PointerConfiguration()
+        configuration.invertHorizontal = true
+        configuration.invertVertical = true
+        var pointer = PointerEngine(configuration: configuration)
+        let point = sweep(&pointer, horizontal: 30, vertical: 30, seconds: 0.5)
+        #expect(point.x < 0.5)
+        #expect(point.y > 0.5)
+    }
+
     @Test func rotatingRightAndUpMovesRightAndUp() {
         var pointer = engine()
         let point = sweep(&pointer, horizontal: 10, vertical: 5, seconds: 1)
@@ -576,6 +586,248 @@ private func calibration(tapThreshold: Double = 0.3) -> CaseCalibration {
         tracker.record(10)
         tracker.record(10.1)
         #expect(tracker.snapshot.longestGapMilliseconds < 101)
+    }
+}
+
+@Suite struct CaseCheckTests {
+    private let wide = 16.0 / 10.0
+
+    /// A check that has reached the tap test, with motion arriving up to the given time.
+    private func checkAtTapTest(at time: Double = 10) -> CaseCheck {
+        var check = CaseCheck()
+        check.processMotion(rotationSpeed: 0, at: time - 5)
+        check.confirmEarDetectionOff()
+        check.confirmInCase(at: time - 4)
+        var clock = time - 3.5
+        while check.step == .watchingCase {
+            check.processMotion(rotationSpeed: 2, at: clock)
+            clock += 0.02
+        }
+        check.processMotion(rotationSpeed: 0, at: time)
+        check.calibrationFinished(at: time)
+        return check
+    }
+
+    /// From the tap test, answers every gesture prompt correctly. Returns the time it ends.
+    private func finishGestures(_ check: inout CaseCheck, from start: Double) -> Double {
+        let tapEnd = start + Double(CaseCheck.tapPrompts) * CaseCheck.tapIntervalSeconds
+        advance(&check, from: start, to: tapEnd + 0.5)
+        #expect(check.step == .gestureTest)
+
+        var clock = tapEnd + 0.5
+        advance(&check, from: clock, to: clock + CaseCheck.getReadySeconds + 0.5)
+        clock += CaseCheck.getReadySeconds + 1
+        for gesture in CaseCheck.gesturePrompts {
+            check.registerGesture(gesture, at: clock)
+            advance(&check, from: clock, to: clock + CaseCheck.gesturePauseSeconds)
+            clock += CaseCheck.gesturePauseSeconds + 0.5
+        }
+        #expect(check.step == .moveTest)
+        return clock
+    }
+
+    /// Advances time with motion arriving, so the check doesn't think motion stopped.
+    private func advance(_ check: inout CaseCheck, from start: Double, to end: Double) {
+        var clock = start
+        while clock <= end {
+            check.processMotion(rotationSpeed: 0, at: clock)
+            check.tick(at: clock)
+            clock += 0.5
+        }
+    }
+
+    @Test func motionMovesPastConnecting() {
+        var check = CaseCheck()
+        #expect(check.step == .connect)
+        check.processMotion(rotationSpeed: 0, at: 1)
+        #expect(check.step == .earDetection)
+    }
+
+    @Test func movingTheCaseLeadsToCalibration() {
+        var check = CaseCheck()
+        check.processMotion(rotationSpeed: 0, at: 1)
+        check.confirmEarDetectionOff()
+        check.confirmInCase(at: 2)
+        #expect(check.step == .watchingCase)
+
+        check.processMotion(rotationSpeed: 0, at: 2.1)
+        check.processMotion(rotationSpeed: 0, at: 2.2)
+        #expect(check.step == .watchingCase)
+
+        var clock = 2.3
+        for _ in 0..<40 {
+            check.processMotion(rotationSpeed: 2, at: clock)
+            clock += 0.02
+        }
+        #expect(check.step == .calibrate)
+    }
+
+    @Test func motionStoppingInTheCaseIsReported() {
+        var check = CaseCheck()
+        check.processMotion(rotationSpeed: 0, at: 1)
+        check.confirmEarDetectionOff()
+        check.confirmInCase(at: 50)
+        check.tick(at: 52)
+        #expect(check.step == .watchingCase)
+        check.tick(at: 53.1)
+        #expect(check.step == .motionLost)
+
+        check.returnToEarDetection()
+        #expect(check.step == .earDetection)
+    }
+
+    @Test func motionReturningResumesWatching() {
+        var check = CaseCheck()
+        check.processMotion(rotationSpeed: 0, at: 1)
+        check.confirmEarDetectionOff()
+        check.confirmInCase(at: 50)
+        check.tick(at: 54)
+        check.processMotion(rotationSpeed: 0, at: 55)
+        #expect(check.step == .watchingCase)
+    }
+
+    @Test func tapsBeforePromptsAreIgnored() {
+        var check = checkAtTapTest()
+        check.registerTap(at: 11, point: .center, aspectRatio: wide)
+        #expect(check.results.tapsHit == 0)
+        #expect(check.tapPromptNumber(at: 11) == nil)
+        #expect(check.secondsUntilTapsStart(at: 11) == 2)
+    }
+
+    @Test func tapsAreScoredPerPrompt() {
+        var check = checkAtTapTest()
+        let start = 10 + CaseCheck.getReadySeconds
+        #expect(check.tapPromptNumber(at: start) == 1)
+        #expect(check.tapPromptNumber(at: start + 2.6) == 2)
+
+        check.registerTap(at: start + 1, point: .center, aspectRatio: wide)
+        check.registerTap(at: start + 1.5, point: .center, aspectRatio: wide)
+        check.registerTap(at: start + 3, point: .center, aspectRatio: wide)
+        #expect(check.results.tapsHit == 2)
+        #expect(check.results.extraTaps == 1)
+    }
+
+    @Test func runsThroughEveryTestToResults() {
+        var check = checkAtTapTest()
+        let start = 10 + CaseCheck.getReadySeconds
+        for prompt in 0..<CaseCheck.tapPrompts {
+            check.registerTap(
+                at: start + Double(prompt) * CaseCheck.tapIntervalSeconds + 1,
+                point: .center,
+                aspectRatio: wide
+            )
+        }
+        let gestureEnd = finishGestures(&check, from: start)
+
+        check.registerTap(at: gestureEnd + 1, point: .center, aspectRatio: wide)
+        advance(&check, from: gestureEnd, to: gestureEnd + 1 + CaseCheck.moveSeconds)
+        #expect(check.step == .pointTest)
+        #expect(check.currentTarget == CaseCheck.targets[0])
+
+        // A miss keeps the same target.
+        check.registerTap(at: gestureEnd + 17, point: PointerPoint(x: 1, y: 1), aspectRatio: wide)
+        #expect(check.targetIndex == 0)
+
+        for target in CaseCheck.targets {
+            check.registerTap(at: gestureEnd + 18, point: target, aspectRatio: wide)
+        }
+        #expect(check.step == .results)
+        #expect(check.currentTarget == nil)
+        #expect(check.results.tapsHit == 10)
+        #expect(check.results.gesturesHit == CaseCheck.gesturePrompts.count)
+        #expect(check.results.falseTapsWhileMoving == 1)
+        #expect(check.results.targetsHit == 5)
+        #expect(check.results.passed)
+    }
+
+    @Test func testsCanRunAgainFromResults() {
+        var check = checkAtTapTest()
+        let start = 10 + CaseCheck.getReadySeconds
+        check.registerTap(at: start + 1, point: .center, aspectRatio: wide)
+        let gestureEnd = finishGestures(&check, from: start)
+        let moveEnd = gestureEnd + CaseCheck.moveSeconds
+        advance(&check, from: gestureEnd, to: moveEnd + 1)
+        for target in CaseCheck.targets {
+            check.registerTap(at: moveEnd + 2, point: target, aspectRatio: wide)
+        }
+        #expect(check.step == .results)
+
+        check.restartTests(at: moveEnd + 3)
+        #expect(check.step == .tapTest)
+        #expect(check.results == CaseCheckResults())
+        #expect(check.tapPromptNumber(at: moveEnd + 3 + CaseCheck.getReadySeconds) == 1)
+    }
+
+    @Test func aMissedTargetTimesOut() {
+        var check = checkAtTapTest()
+        let start = 10 + CaseCheck.getReadySeconds
+        let moveEnd = finishGestures(&check, from: start) + CaseCheck.moveSeconds
+        advance(&check, from: moveEnd - CaseCheck.moveSeconds, to: moveEnd + 1)
+        #expect(check.step == .pointTest)
+        advance(&check, from: moveEnd + 1, to: moveEnd + 2 + CaseCheck.targetTimeoutSeconds)
+        #expect(check.targetIndex == 1)
+        #expect(check.results.targetsHit == 0)
+    }
+
+    @Test func wrongAndMissingGesturesAreScored() {
+        var check = checkAtTapTest()
+        let start = 10 + CaseCheck.getReadySeconds
+        let tapEnd = start + Double(CaseCheck.tapPrompts) * CaseCheck.tapIntervalSeconds
+        advance(&check, from: start, to: tapEnd + 0.5)
+        var clock = tapEnd + 0.5
+
+        // A gesture during the countdown doesn't count.
+        check.registerGesture(.single, at: clock)
+        #expect(check.gestureIndex == 0)
+
+        clock += CaseCheck.getReadySeconds + 0.5
+        #expect(check.gesturePrompt(at: clock) == .single)
+        check.registerGesture(.double, at: clock)
+        #expect(check.lastGestureAnswer == .recognized(.double))
+        #expect(check.results.gesturesHit == 0)
+        #expect(check.gesturePrompt(at: clock) == nil)
+
+        clock += CaseCheck.gesturePauseSeconds
+        #expect(check.gesturePrompt(at: clock) == .double)
+        advance(&check, from: clock, to: clock + CaseCheck.gestureTimeoutSeconds + 0.5)
+        #expect(check.lastGestureAnswer == .nothing)
+        #expect(check.gestureIndex == 2)
+    }
+
+    @Test func motionStoppingDuringATestIsReported() {
+        var check = checkAtTapTest()
+        check.tick(at: 14)
+        #expect(check.step == .motionLost)
+    }
+
+    @Test func passMarks() {
+        var results = CaseCheckResults()
+        results.tapsHit = 8
+        results.extraTaps = 1
+        results.falseTapsWhileMoving = 1
+        results.targetsHit = 4
+        results.gesturesHit = 7
+        #expect(results.passed)
+
+        results.tapsHit = 7
+        #expect(!results.tapsPassed)
+        #expect(!results.passed)
+    }
+
+    @Test func aReportIncludesCheckResults() {
+        var results = CaseCheckResults()
+        results.tapsHit = 9
+        let report = SessionReport(
+            appVersion: "0.1.0",
+            macOSVersion: "27.0",
+            motion: .empty,
+            sensorLocations: [],
+            isCalibrated: true,
+            gestureCounts: [:],
+            checkResults: results,
+            events: []
+        ).markdown
+        #expect(report.contains("Taps detected: 9 of 10, with 0 extra"))
     }
 }
 
