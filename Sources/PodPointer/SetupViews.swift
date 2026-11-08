@@ -514,3 +514,33 @@ struct AllowControlPage: View {
     }
 }
 
+struct TrySlidesPage: View {
+    @ObservedObject var model: AppModel
+
+    var body: some View {
+        SetupPage(
+            progress: "Step 9 of 9",
+            symbol: "play.rectangle",
+            title: "Try it with real slides",
+            detail: "Your case is live. The red dot follows it everywhere.",
+            onStartOver: { model.startOver() }
+        ) {
+            InstructionList(items: [
+                "Open a deck in Keynote or PowerPoint.",
+                "Start the slideshow.",
+                "Tap the case for the next slide, or double-tap for the previous one.",
+                "Aim with the red dot. Triple-tap to turn it on or off.",
+                "When you're done, leave the slideshow and come back here."
+            ])
+            if let lastAction = model.lastAction {
+                Text("Last tap: \(lastAction)")
+                    .font(.headline)
+            }
+            Text("Taps go to whichever app is in front, so keep your slideshow in front while you try it.")
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
+            PrimaryButton("Finish Setup") { model.finishSetup() }
+        }
+    }
+}
