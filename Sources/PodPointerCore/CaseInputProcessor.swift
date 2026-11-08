@@ -82,31 +82,22 @@ public struct CaseInputProcessor: Sendable {
 
         let lastTap = sequence.lastTap
         var gesture: CaseGesture?
+        if !detector.isChecking, let finished = sequence.poll(at: time),
+           detector.hasSettled(since: lastTap + Self.settleCheckDelay) {
+            gesture = finished
+        }
 
-        let tapped = detector.process(
-            acceleration: reading.userAcceleration,
-            rotationSpeed: rotation.magnitude,
+        let point = advancePointer(
+            horizontalRate: rotation.dot(calibration.horizontalAxis) * Self.degreesPerRadian,
+            verticalRate: rotation.dot(calibration.verticalAxis) * Self.degreesPerRadian,
             at: time
         )
-        if tapped {
-            // A tap also shakes the pointer, so undo that and hold it in place.
-            engine.rollBack(from: time)
-            holdUntil = time + Self.holdAfterTapSeconds
-            gesture = sequence.registerTap(at: time)
-        }
-        gesture = gesture ?? sequence.poll(at: time)
-
-        let point: PointerPoint
-        if time < holdUntil {
-            point = engine.hold(at: time)
-        } else {
-            point = engine.advance(
-                horizontalRate: rotation.dot(calibration.horizontalAxis) * Self.degreesPerRadian,
-                verticalRate: rotation.dot(calibration.verticalAxis) * Self.degreesPerRadian,
-                at: time
-            )
-        }
-        return CaseOutput(point: point, gesture: gesture, tapped: tapped)
+        return CaseOutput(
+            point: point,
+            gesture: gesture,
+            gestureAge: gesture == nil ? 0 : time - lastTap,
+            tapped: tap != nil
+        )
     }
 
     public mutating func setPosition(_ point: PointerPoint) {
