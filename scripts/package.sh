@@ -24,3 +24,10 @@ mkdir "$mount"
 hdiutil attach -quiet -nobrowse -mountpoint "$mount" "$dmg"
 trap 'hdiutil detach -quiet "$mount" || true; rm -rf "$staging"' EXIT
 codesign --verify --deep --strict "$mount/PodPointer.app"
+architectures="$(lipo -archs "$mount/PodPointer.app/Contents/MacOS/PodPointer")"
+[[ "$architectures" == *arm64* && "$architectures" == *x86_64* ]]
+test -f "$mount/PodPointer.app/Contents/Resources/AppIcon.icns"
+test -L "$mount/Applications"
+
+echo "Built and checked $dmg"
+shasum -a 256 "$dmg"
