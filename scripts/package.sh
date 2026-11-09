@@ -17,3 +17,10 @@ ln -s /Applications "$staging/Applications"
 
 mkdir -p dist
 rm -f "$dmg"
+hdiutil create -quiet -volname "PodPointer" -srcfolder "$staging" -ov -format UDZO "$dmg"
+
+mount="$staging/mount"
+mkdir "$mount"
+hdiutil attach -quiet -nobrowse -mountpoint "$mount" "$dmg"
+trap 'hdiutil detach -quiet "$mount" || true; rm -rf "$staging"' EXIT
+codesign --verify --deep --strict "$mount/PodPointer.app"
