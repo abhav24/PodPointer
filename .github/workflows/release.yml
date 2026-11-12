@@ -8,3 +8,8 @@ permissions:
   contents: write
 
 jobs:
+  release:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test
