@@ -13,3 +13,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Test
+        run: scripts/test.sh
+      - name: Build disk image
+        run: scripts/package.sh
+      - name: Publish release
+        env:
