@@ -17,7 +17,7 @@ The AirPods sit at an unknown angle in your hand, so the sensor's axes don't mat
 3. **Turn right and stop:** sets which way along that axis is right, using the total angle turned.
 4. **Sweep up and down:** does the same for vertical movement, then removes any overlap with the sideways axis.
 5. **Tilt up and stop:** sets which way is up.
-6. **Tap five times:** sets the tap threshold at 60% of your typical tap strength, and above the noise.
+6. **Tap five times:** sets the tap threshold at 60% of your typical tap strength, within a fixed range so hard taps here don't make lighter taps stop counting later. Motion that doesn't look like a tap is ignored here too.
 
 Each step waits for your hand to stop first, so motion left over from the previous step can't affect it. If a direction still comes out reversed, there are flip switches during the aiming test and under **Advanced**.
 
@@ -45,7 +45,7 @@ Following the shake as it fades lets quick double and triple taps through, while
 
 The pointer waits while a jolt is being checked. A tap then puts the pointer back where it was just before the tap and holds it briefly. If the jolt was the hand moving, which usually shows within a few samples, the pointer catches up and no movement is lost.
 
-A single tap waits 0.4 seconds in case another tap follows. That's the delay you'll notice before the next slide appears, and you can adjust it with **Time between taps**.
+Hard knocks that swing the case look just like moving it, so they don't count. Tap lightly with one finger while holding the case steady.
 
 The AirPods bounce inside the case, so one real tap can show up as two jolts up to about 100 ms apart. Jolts closer than 140 ms count as one tap.
 
