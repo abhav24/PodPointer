@@ -36,10 +36,9 @@ This doesn't depend on an absolute direction, so drift doesn't build up the way 
 
 Moving or shaking the case can cause jolts larger than a tap, so size alone can't tell them apart. A jolt counts as a tap only if all of these are true:
 
-- is above your calibrated threshold
-- stands out from recent movement
-- isn't explained by the fading shake from an earlier tap
-- doesn't happen during fast rotation, unless it's part of a tap group
+- **It's strong enough:** it's above your calibrated threshold, and stands out from any shake left by an earlier tap.
+- **The case was calm before it:** it wasn't turning quickly, accelerating, or jolting. Later taps in a group skip this check, because the shake from earlier taps is expected.
+- **It was brief and sharp:** over the next 140 ms, the case barely turned and the acceleration appeared suddenly instead of building up.
 
 Following the shake as it fades lets quick double and triple taps through, while the shake itself doesn't count as extra taps.
 
@@ -49,7 +48,9 @@ Hard knocks that swing the case look just like moving it, so they don't count. T
 
 A single tap waits 0.4 seconds in case another tap follows. That's the delay you'll notice before the next slide appears, and you can adjust it with **Time between taps**. A triple tap waits 0.3 seconds.
 
-These values were tuned on one recording from one person using AirPods Pro, which is saved as a test in `Tests/PodPointerCoreTests/Fixtures`. Setup records raw motion locally so they can be tuned against more real taps.
+The AirPods bounce inside the case, so one real tap can show up as two jolts up to about 100 ms apart. Jolts closer than 140 ms count as one tap, and so does a much weaker jolt within 250 ms.
+
+These values were tuned on two setup recordings from one person using AirPods, plus simulated shaking. The recordings are saved as tests in `Tests/PodPointerCoreTests/Fixtures`. Setup records raw motion locally so they can be tuned against more real taps.
 
 ## Open questions
 
