@@ -40,7 +40,7 @@ Moving or shaking the case can cause jolts larger than a tap, so size alone can'
 - **The case was calm before it:** it wasn't turning quickly, accelerating, or jolting. Later taps in a group skip this check, because the shake from earlier taps is expected.
 - **It was brief and sharp:** over the next 140 ms, the case barely turned and the acceleration appeared suddenly instead of building up.
 
-Following the shake as it fades lets quick double and triple taps through, while the shake itself doesn't count as extra taps.
+A tap group only counts once the case stops jolting, so shaking the case doesn't trigger a gesture even if some jolts look like taps.
 
 The pointer waits while a jolt is being checked. A tap then puts the pointer back where it was just before the tap and holds it briefly. If the jolt was the hand moving, which usually shows within a few samples, the pointer catches up and no movement is lost.
 
@@ -54,8 +54,8 @@ These values were tuned on two setup recordings from one person using AirPods, p
 
 ## Open questions
 
-- Does motion arrive reliably from the open case, on which AirPods models?
-- Can taps be told apart from hand movement at the motion rate the AirPods provide?
+- Which other AirPods models send motion from the open case?
+- Do the tap limits work for other people's hands and tap styles?
 - Does motion stay on one AirPod? The two AirPods sit at different angles, so a switch needs a new calibration.
 - Does the laser dot stay above full-screen slideshows?
 - How quickly does this use battery with the lid open?
