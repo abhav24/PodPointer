@@ -34,7 +34,7 @@ This doesn't depend on an absolute direction, so drift doesn't build up the way 
 
 ## Tapping
 
-A tap is a sudden change in acceleration between two samples that:
+Moving or shaking the case can cause jolts larger than a tap, so size alone can't tell them apart. A jolt counts as a tap only if all of these are true:
 
 - is above your calibrated threshold
 - stands out from recent movement
@@ -47,7 +47,7 @@ The pointer waits while a jolt is being checked. A tap then puts the pointer bac
 
 Hard knocks that swing the case look just like moving it, so they don't count. Tap lightly with one finger while holding the case steady.
 
-The AirPods bounce inside the case, so one real tap can show up as two jolts up to about 100 ms apart. Jolts closer than 140 ms count as one tap.
+A single tap waits 0.4 seconds in case another tap follows. That's the delay you'll notice before the next slide appears, and you can adjust it with **Time between taps**. A triple tap waits 0.3 seconds.
 
 These values were tuned on one recording from one person using AirPods Pro, which is saved as a test in `Tests/PodPointerCoreTests/Fixtures`. Setup records raw motion locally so they can be tuned against more real taps.
 
