@@ -31,4 +31,4 @@ This passes if clicks land where you aim.
 
 ## Share your results
 
-On the home screen, open **Advanced** and select **Copy Test Report**, then paste it into a [test report issue](https://github.com/abhav24/PodPointer/issues/new?template=test-report.md).
+On the home screen, open **Diagnostics** and select **Copy Test Report**, then paste it into a [test report issue](https://github.com/abhav24/PodPointer/issues/new?template=test-report.md).
