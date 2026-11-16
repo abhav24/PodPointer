@@ -20,3 +20,4 @@ open build/PodPointer.app
 - Keep Apple framework code in the `PodPointer` app target.
 - Test changes to motion, tapping, or the overlay on real AirPods, and say so in your pull request.
 - Discuss anything that relies on undocumented AirPods Bluetooth data in an issue first.
+
