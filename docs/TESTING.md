@@ -4,7 +4,7 @@ Testing is built into the app's setup, so you don't need to count anything or ju
 
 ## 1. Follow setup
 
-Build and open the app by following the [README](../README.md). Setup starts by itself the first time. To run it again, open **Advanced** and select **Run Setup Again**.
+Install and open the app by following the [README](../README.md). Setup starts by itself the first time. To run it again, select **Run Setup Again** on the home screen.
 
 It tests these in order:
 
