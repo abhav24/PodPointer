@@ -14,7 +14,7 @@ It tests these in order:
 | Calibration | Hold still, sweep the case, and tap | Calibration finishes |
 | Tapping | Tap once at each of 10 prompts | At least 8 taps counted, and no more than 1 extra |
 | Tap groups | Do 9 single, double, and triple taps in a mixed order | At least 7 recognized correctly |
-| False taps | Wave the case for 15 seconds without tapping | No more than 1 false tap |
+| False taps | Move and shake the case for 15 seconds without tapping | No more than 1 false tap |
 | Pointing | Aim at 5 rings and tap on each | At least 4 rings hit |
 
 If motion stops, the app explains what to try and continues by itself once motion returns.
