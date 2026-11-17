@@ -24,3 +24,5 @@ open build/PodPointer.app
 ## Publish a release
 
 1. Set the version in `Resources/Info.plist`.
+2. Add release notes at `docs/release-notes/v<version>.md`.
+3. Commit, then push a matching tag, such as `v1`. GitHub Actions tests the code, builds the disk image, and publishes the release.
