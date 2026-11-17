@@ -23,3 +23,4 @@ open build/PodPointer.app
 
 ## Publish a release
 
+1. Set the version in `Resources/Info.plist`.
