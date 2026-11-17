@@ -22,3 +22,4 @@ open build/PodPointer.app
 - Discuss anything that relies on undocumented AirPods Bluetooth data in an issue first.
 
 ## Publish a release
+
