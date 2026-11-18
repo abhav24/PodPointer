@@ -4,7 +4,7 @@
 
 <h1 align="center">PodPointer</h1>
 
-> **Status: early and not yet proven on real hardware.** The logic has unit tests, but the full experience hasn't been confirmed with AirPods. [Help test it](docs/TESTING.md).
+<p align="center">Point your AirPods case at the screen and tap it to control your Mac.</p>
 
 ## How it works
 
