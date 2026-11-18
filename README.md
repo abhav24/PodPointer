@@ -6,7 +6,9 @@
 
 <p align="center">Point your AirPods case at the screen and tap it to control your Mac.</p>
 
-## How it works
+<p align="center">
+  <a href="https://github.com/abhav24/PodPointer/releases/download/v0/PodPointer-v0.dmg"><strong>Download PodPointer v0</strong></a>
+</p>
 
 The AirPods inside the case have motion sensors. When you move the case, they move with it, so PodPointer reads their motion through Apple's public `CMHeadphoneMotionManager` API.
 
