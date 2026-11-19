@@ -25,9 +25,8 @@ PodPointer turns your AirPods case into a presentation remote and an air mouse. 
 
 ## What you need
 
-- macOS 14 or later
-- AirPods that support head tracking, such as AirPods Pro
-- Swift 5.10 or later, from Xcode or the Command Line Tools
+- A Mac with macOS 14 or later
+- AirPods that support head tracking, such as AirPods Pro, with their case
 
 ## Build and run
 
