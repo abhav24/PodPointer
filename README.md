@@ -10,7 +10,7 @@
   <a href="https://github.com/abhav24/PodPointer/releases/download/v0/PodPointer-v0.dmg"><strong>Download PodPointer v0</strong></a>
 </p>
 
-The AirPods inside the case have motion sensors. When you move the case, they move with it, so PodPointer reads their motion through Apple's public `CMHeadphoneMotionManager` API.
+PodPointer turns your AirPods case into a presentation remote and an air mouse. There's nothing extra to buy, because the motion sensors in the AirPods inside the case do all the work.
 
 > **v0 is an early release.** It's been tested on one pair of AirPods Pro 2 with an Apple silicon Mac running macOS 27. Other AirPods, Macs, and hands may behave differently, so [your test results](docs/TESTING.md) help a lot.
 
