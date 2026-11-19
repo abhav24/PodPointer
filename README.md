@@ -23,7 +23,7 @@ PodPointer turns your AirPods case into a presentation remote and an air mouse. 
 | Double-tap | Previous slide | Double-click |
 | Triple-tap | Turns the laser dot on or off | Pauses or resumes the cursor |
 
-## Requirements
+## What you need
 
 - macOS 14 or later
 - AirPods that support head tracking, such as AirPods Pro
