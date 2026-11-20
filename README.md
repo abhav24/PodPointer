@@ -92,13 +92,7 @@ scripts/build-app.sh
 open build/PodPointer.app
 ```
 
-
-## Known limits
-
-- The lid has to stay open, and open-lid battery use hasn't been measured.
-- Automatic Ear Detection has to be off.
-- Calibration applies to one AirPod and one grip. If motion moves to the other AirPod, or you change your grip, calibrate again.
-- A closed-lid mode would need a private Bluetooth channel, so it isn't included.
+Use the script rather than `swift run`, because macOS only shows the motion permission to a real app bundle. To run the tests, use `scripts/test.sh`. To build the disk image, use `scripts/package.sh`.
 
 ## Related projects
 
