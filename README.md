@@ -92,12 +92,6 @@ scripts/build-app.sh
 open build/PodPointer.app
 ```
 
-1. Connecting your AirPods
-2. Turning off **Automatic Ear Detection**, which you need to do yourself because no Shortcut or public API can change it
-3. Putting the AirPods in the case with the **lid open**
-4. Calibrating for your grip
-5. Scored tests for tapping, single, double, and triple taps, false taps, and aiming
-6. Trying real slides
 
 You can run setup again from **Advanced**.
 
