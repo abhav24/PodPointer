@@ -92,13 +92,6 @@ scripts/build-app.sh
 open build/PodPointer.app
 ```
 
-
-You can run setup again from **Advanced**.
-
-## Permissions and privacy
-
-| Permission | Why it's needed | When |
-|---|---|---|
 | Motion & Fitness | Reads motion from your AirPods | At launch |
 | Accessibility | Sends arrow keys and clicks | Only if you turn on sending |
 
