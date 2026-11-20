@@ -92,12 +92,6 @@ scripts/build-app.sh
 open build/PodPointer.app
 ```
 
-Use the script rather than `swift run`, because macOS only shows the motion permission to a real app bundle.
-
-## Set up
-
-Open the app and follow the steps on screen. Setup takes about 5 minutes and covers:
-
 1. Connecting your AirPods
 2. Turning off **Automatic Ear Detection**, which you need to do yourself because no Shortcut or public API can change it
 3. Putting the AirPods in the case with the **lid open**
