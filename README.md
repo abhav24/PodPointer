@@ -92,12 +92,6 @@ scripts/build-app.sh
 open build/PodPointer.app
 ```
 
-| Motion & Fitness | Reads motion from your AirPods | At launch |
-| Accessibility | Sends arrow keys and clicks | Only if you turn on sending |
-
-PodPointer has no network code. It saves your calibration and settings on your Mac only. Test reports are copied to your clipboard only when you ask, and they leave out your AirPods' name.
-
-During setup, PodPointer also records raw motion to `~/Library/Application Support/PodPointer/last-setup-motion.csv` so tap detection can be tuned against real taps. Each setup run replaces that file, and it stays on your Mac unless you share it.
 
 ## Known limits
 
