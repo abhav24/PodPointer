@@ -24,5 +24,6 @@ jobs:
           if gh release view "$GITHUB_REF_NAME" > /dev/null 2>&1; then
             gh release upload "$GITHUB_REF_NAME" "$dmg" --clobber
           else
-            --title "PodPointer $GITHUB_REF_NAME" \
+            gh release create "$GITHUB_REF_NAME" "$dmg" \
+              --title "PodPointer $GITHUB_REF_NAME" \
             --notes-file "docs/release-notes/$GITHUB_REF_NAME.md"
