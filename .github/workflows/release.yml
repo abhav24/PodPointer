@@ -26,4 +26,5 @@ jobs:
           else
             gh release create "$GITHUB_REF_NAME" "$dmg" \
               --title "PodPointer $GITHUB_REF_NAME" \
-            --notes-file "docs/release-notes/$GITHUB_REF_NAME.md"
+              --notes-file "docs/release-notes/$GITHUB_REF_NAME.md"
+          fi
